@@ -21,7 +21,7 @@ using System.Windows.Media;
 using System.Globalization;
 using System;
 
-namespace FancyCandles
+namespace FancyCandles.Graphs
 {
     class VolumeTicksElement : FrameworkElement
     {

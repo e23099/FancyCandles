@@ -30,7 +30,7 @@ using System.ComponentModel;
 using System.Runtime.CompilerServices; // [CallerMemberName]
 using System.Diagnostics;
 
-namespace FancyCandles
+namespace FancyCandles.Graphs
 {
     class VolumeChartElement : FrameworkElement
     {
