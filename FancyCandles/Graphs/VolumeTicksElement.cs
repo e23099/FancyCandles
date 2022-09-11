@@ -16,10 +16,10 @@
     You should have received a copy of the GNU General Public License
     along with FancyCandles.  If not, see<https://www.gnu.org/licenses/>. */
 
+using System;
 using System.Windows;
 using System.Windows.Media;
 using System.Globalization;
-using System;
 
 namespace FancyCandles.Graphs
 {
@@ -27,7 +27,6 @@ namespace FancyCandles.Graphs
     {
         public static double TICK_LINE_WIDTH = 3.0;
         public static double TICK_LEFT_MARGIN = 2.0;
-        public static double TICK_RIGHT_MARGIN = 1.0;
         //---------------------------------------------------------------------------------------------------------------------------------------
         static VolumeTicksElement()
         {
@@ -36,14 +35,6 @@ namespace FancyCandles.Graphs
             GridlinesPenProperty = DependencyProperty.Register("GridlinesPen", typeof(Pen), typeof(VolumeTicksElement),
                 new FrameworkPropertyMetadata(defaultPen, null, CoerceGridlinesPen) { AffectsRender = true });
         }
-        //---------------------------------------------------------------------------------------------------------------------------------------
-        public CultureInfo Culture
-        {
-            get { return (CultureInfo)GetValue(CultureProperty); }
-            set { SetValue(CultureProperty, value); }
-        }
-        public static readonly DependencyProperty CultureProperty =
-            DependencyProperty.Register("Culture", typeof(CultureInfo), typeof(VolumeTicksElement), new FrameworkPropertyMetadata(CultureInfo.CurrentCulture) { AffectsRender = true });
         //---------------------------------------------------------------------------------------------------------------------------------------
         public VolumeTicksElement()
         {
@@ -55,13 +46,13 @@ namespace FancyCandles.Graphs
             }
         }
         //---------------------------------------------------------------------------------------------------------------------------------------
-        public bool IsGridlinesEnabled
+        public CultureInfo Culture
         {
-            get { return (bool)GetValue(IsGridlinesEnabledProperty); }
-            set { SetValue(IsGridlinesEnabledProperty, value); }
+            get { return (CultureInfo)GetValue(CultureProperty); }
+            set { SetValue(CultureProperty, value); }
         }
-        public static readonly DependencyProperty IsGridlinesEnabledProperty
-            = DependencyProperty.Register("IsGridlinesEnabled", typeof(bool), typeof(VolumeTicksElement), new FrameworkPropertyMetadata(true) { AffectsRender = true });
+        public static readonly DependencyProperty CultureProperty =
+            DependencyProperty.Register("Culture", typeof(CultureInfo), typeof(VolumeTicksElement), new FrameworkPropertyMetadata(CultureInfo.CurrentCulture) { AffectsRender = true });
         //---------------------------------------------------------------------------------------------------------------------------------------
         public Pen GridlinesPen
         {
@@ -74,6 +65,31 @@ namespace FancyCandles.Graphs
         {
             Pen newPenValue = (Pen)newDPValue;
             return newPenValue.IsFrozen ? newDPValue : newPenValue.GetCurrentValueAsFrozen();
+        }
+        //---------------------------------------------------------------------------------------------------------------------------------------
+        public bool IsGridlinesEnabled
+        {
+            get { return (bool)GetValue(IsGridlinesEnabledProperty); }
+            set { SetValue(IsGridlinesEnabledProperty, value); }
+        }
+        public static readonly DependencyProperty IsGridlinesEnabledProperty
+            = DependencyProperty.Register("IsGridlinesEnabled", typeof(bool), typeof(VolumeTicksElement), new FrameworkPropertyMetadata(true) { AffectsRender = true });
+        //---------------------------------------------------------------------------------------------------------------------------------------
+        private Typeface currentTypeFace = new Typeface(SystemFonts.MessageFontFamily.ToString());
+
+        public FontFamily TickLabelFontFamily
+        {
+            get { return (FontFamily)GetValue(TickLabelFontFamilyProperty); }
+            set { SetValue(TickLabelFontFamilyProperty, value); }
+        }
+        public static readonly DependencyProperty TickLabelFontFamilyProperty =
+            DependencyProperty.Register("TickLabelFontFamily", typeof(FontFamily), typeof(VolumeTicksElement), new FrameworkPropertyMetadata(SystemFonts.MessageFontFamily, OnTickLabelFontFamilyChanged));
+
+        static void OnTickLabelFontFamilyChanged(DependencyObject obj, DependencyPropertyChangedEventArgs e)
+        {
+            VolumeTicksElement thisElement = obj as VolumeTicksElement;
+            if (thisElement == null) return;
+            thisElement.currentTypeFace = new Typeface(thisElement.TickLabelFontFamily.ToString());
         }
         //---------------------------------------------------------------------------------------------------------------------------------------
         public CandleExtremums VisibleCandlesExtremums
@@ -108,23 +124,6 @@ namespace FancyCandles.Graphs
         }
         public static readonly DependencyProperty ChartTopMarginProperty
             = DependencyProperty.Register("ChartTopMargin", typeof(double), typeof(VolumeTicksElement), new FrameworkPropertyMetadata(15.0) { AffectsRender = true });
-        //---------------------------------------------------------------------------------------------------------------------------------------
-        private Typeface currentTypeFace = new Typeface(SystemFonts.MessageFontFamily.ToString());
-
-        public FontFamily TickLabelFontFamily
-        {
-            get { return (FontFamily)GetValue(TickLabelFontFamilyProperty); }
-            set { SetValue(TickLabelFontFamilyProperty, value); }
-        }
-        public static readonly DependencyProperty TickLabelFontFamilyProperty =
-            DependencyProperty.Register("TickLabelFontFamily", typeof(FontFamily), typeof(VolumeTicksElement), new FrameworkPropertyMetadata(SystemFonts.MessageFontFamily, OnTickLabelFontFamilyChanged));
-
-        static void OnTickLabelFontFamilyChanged(DependencyObject obj, DependencyPropertyChangedEventArgs e)
-        {
-            VolumeTicksElement thisElement = obj as VolumeTicksElement;
-            if (thisElement == null) return;
-            thisElement.currentTypeFace = new Typeface(thisElement.TickLabelFontFamily.ToString());
-        }
         //---------------------------------------------------------------------------------------------------------------------------------------
         public double TickLabelFontSize
         {

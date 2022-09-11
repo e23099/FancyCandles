@@ -76,19 +76,19 @@ namespace FancyCandles
         //----------------------------------------------------------------------------------------------------------------------------------
         internal void OpenCandleChartPropertiesWindow(object sender, RoutedEventArgs e)
         {
-            string overlayIndicatorArrayJson = SerializeToJson(OverlayIndicators);
-            RecordAllUndoableProperties();
+            string overlayIndicatorArrayJson = SerializeToJson(OverlayIndicators); // 先把現在的狀況存成 Json
+            RecordAllUndoableProperties(); // 把所有 "可回復的 property" 儲存起來
 
             CandleChartPropertiesWindow popup = new CandleChartPropertiesWindow(this);
-            if (popup.ShowDialog() == true)
+            if (popup.ShowDialog() == true) // ShowDialog 顯示 CandleChartPropertiesWindow, 並在關閉後回傳 true/false
             {
-                ClearUndoablePropertyRecords();
+                ClearUndoablePropertyRecords(); // 清除暫存的 "可回復的 property"
             }
             else
             {
-                ObservableCollection<OverlayIndicator> new_overlayIndicators = DeserializeOverlayIndicatorsFromJson(overlayIndicatorArrayJson);
+                ObservableCollection<OverlayIndicator> new_overlayIndicators = DeserializeOverlayIndicatorsFromJson(overlayIndicatorArrayJson); // 回復原本的狀態
                 OverlayIndicators = new_overlayIndicators;
-                UndoRecordedUndoableProperties();
+                UndoRecordedUndoableProperties(); // 重設 "可回復的 property" 並清除暫存
             }
         }
         //----------------------------------------------------------------------------------------------------------------------------------
@@ -558,7 +558,7 @@ namespace FancyCandles
         /// <summary>Identifies the <see cref="AddInIndicatorsFolder"/> dependency property.</summary>
         /// <value><see cref="DependencyProperty"/></value>
         public static readonly DependencyProperty AddInIndicatorsFolderProperty =
-            DependencyProperty.Register("AddInIndicatorsFolder", typeof(string), typeof(CandleChart), new PropertyMetadata(""));
+            DependencyProperty.Register("AddInIndicatorsFolder", typeof(string), typeof(CandleChart), new PropertyMetadata("AddinIndicators"));
         //----------------------------------------------------------------------------------------------------------------------------------
 
         #endregion **********************************************************************************************************************************************
@@ -1115,174 +1115,6 @@ namespace FancyCandles
             return true;
         }
         #endregion **********************************************************************************************************************************************
-        //----------------------------------------------------------------------------------------------------------------------------------
-        #region VOLUME HISTOGRAM PROPERTIES *********************************************************************************************************************
-        //----------------------------------------------------------------------------------------------------------------------------------
-        /// <summary>Gets or sets the visibility for the volume histogram panel.</summary>
-        ///<value>The boolean value that means whether the volume histogram panel is visible or not. The default is determined by the <see cref="DefaultIsVolumePanelVisible"/> value.</value>
-        ///<remarks> 
-        ///<h3>Dependency Property Information</h3>
-        ///<table border="1" frame="hsides" rules="rows" style="margin: 0 0 10 20"> 
-        ///<tr><td>Identifier field</td><td><see cref="IsVolumePanelVisibleProperty"/></td></tr> 
-        ///<tr><td>Metadata properties set to <c>True</c></td><td>-</td></tr> </table>
-        ///</remarks>
-        [UndoableProperty]
-        [JsonProperty]
-        public bool IsVolumePanelVisible
-        {
-            get { return (bool)GetValue(IsVolumePanelVisibleProperty); }
-            set { SetValue(IsVolumePanelVisibleProperty, value); }
-        }
-        /// <summary>Identifies the <see cref="IsVolumePanelVisible"/> dependency property.</summary>
-        /// <value><see cref="DependencyProperty"/></value>
-        public static readonly DependencyProperty IsVolumePanelVisibleProperty =
-            DependencyProperty.Register("IsVolumePanelVisible", typeof(bool), typeof(CandleChart), new PropertyMetadata(DefaultIsVolumePanelVisible));
-
-        ///<summary>Gets the default value for the IsVolumePanelVisible property.</summary>
-        ///<value>The default value for the <see cref="IsVolumePanelVisible"/> property: <c>True</c>.</value>
-        public static bool DefaultIsVolumePanelVisible { get { return true; } }
-        //----------------------------------------------------------------------------------------------------------------------------------
-        ///<summary>Gets or sets the volume bar width to the candle width ratio that eventually defines the width of the volume bar.</summary>
-        ///<value>The ratio of the volume bar width to the candle width. The default is determined by the <see cref="DefaultVolumeBarWidthToCandleWidthRatio"/> value.</value>
-        ///<remarks> 
-        ///We define the width of the volume bar as a variable that is dependent on the candle width as follows:
-        ///<p style="margin: 0 0 0 20"><em>Volume bar width</em> = <see cref="VolumeBarWidthToCandleWidthRatio"/> * <see cref="CandleWidth"/></p>
-        ///The value of this property must be in the range [0, 1]. If the value of this property is zero then the volume bar width will be 1.0 in device-independent units, irrespective of the candle width.
-        ///<h3>Dependency Property Information</h3>
-        ///<table border="1" frame="hsides" rules="rows" style="margin: 0 0 10 20"> 
-        ///<tr><td>Identifier field</td><td><see cref="VolumeBarWidthToCandleWidthRatioProperty"/></td></tr> 
-        ///<tr><td>Metadata properties set to <c>True</c></td><td>-</td></tr> </table>
-        ///</remarks>
-        [UndoableProperty]
-        [JsonProperty]
-        public double VolumeBarWidthToCandleWidthRatio
-        {
-            get { return (double)GetValue(VolumeBarWidthToCandleWidthRatioProperty); }
-            set { SetValue(VolumeBarWidthToCandleWidthRatioProperty, value); }
-        }
-        /// <summary>Identifies the <see cref="VolumeBarWidthToCandleWidthRatio"/> dependency property.</summary>
-        /// <value><see cref="DependencyProperty"/></value>
-        public static readonly DependencyProperty VolumeBarWidthToCandleWidthRatioProperty =
-            DependencyProperty.Register("VolumeBarWidthToCandleWidthRatio", typeof(double), typeof(CandleChart), new PropertyMetadata(DefaultVolumeBarWidthToCandleWidthRatio, null, CoerceVolumeBarWidthToCandleWidthRatio));
-
-        private static object CoerceVolumeBarWidthToCandleWidthRatio(DependencyObject objWithOldDP, object newDPValue)
-        {
-            //CandleChart thisCandleChart = (CandleChart)objWithOldDP; // Содержит старое значение для изменяемого свойства.
-            double newValue = (double)newDPValue;
-            return Math.Min(1.0, Math.Max(0.0, newValue));
-        }
-
-        ///<summary>Gets the default value for the VolumeBarWidthToCandleWidthRatio property.</summary>
-        ///<value>The default value for the <see cref="VolumeBarWidthToCandleWidthRatio"/> property: <c>0.3</c>.</value>
-        ///<seealso cref = "VolumeBarWidthToCandleWidthRatio">VolumeBarWidthToCandleWidthRatio</seealso>
-        public static double DefaultVolumeBarWidthToCandleWidthRatio { get { return 0.3; } }
-        //----------------------------------------------------------------------------------------------------------------------------------
-        ///<summary>Gets or sets the top margin for the volume histogram.</summary>
-        ///<value>The top margin of the volume histogram, in device-independent units. The default is determined by the <see cref="DefaultVolumeHistogramTopMargin"/> value.</value>
-        ///<remarks> 
-        ///You can set up top and bottom margins for the volume histogram inside its area by setting the <see cref="VolumeHistogramTopMargin"/> and <see cref="VolumeHistogramBottomMargin"/> properties respectively.
-        ///<h3>Dependency Property Information</h3>
-        ///<table border="1" frame="hsides" rules="rows" style="margin: 0 0 10 20"> 
-        ///<tr><td>Identifier field</td><td><see cref="VolumeHistogramTopMarginProperty"/></td></tr> 
-        ///<tr><td>Metadata properties set to <c>True</c></td><td>-</td></tr> </table>
-        ///</remarks>
-        [UndoableProperty]
-        [JsonProperty]
-        public double VolumeHistogramTopMargin
-        {
-            get { return (double)GetValue(VolumeHistogramTopMarginProperty); }
-            set { SetValue(VolumeHistogramTopMarginProperty, value); }
-        }
-        /// <summary>Identifies the <see cref="VolumeHistogramTopMargin"/> dependency property.</summary>
-        /// <value><see cref="DependencyProperty"/></value>
-        public static readonly DependencyProperty VolumeHistogramTopMarginProperty =
-            DependencyProperty.Register("VolumeHistogramTopMargin", typeof(double), typeof(CandleChart), new PropertyMetadata(DefaultVolumeHistogramTopMargin));
-
-        ///<summary>Gets the default value for VolumeHistogramTopMargin property.</summary>
-        ///<value>The default value for the <see cref="VolumeHistogramTopMargin"/> property, in device-independent units: <c>10.0</c>.</value>
-        public static double DefaultVolumeHistogramTopMargin { get { return 10.0; } }
-        //----------------------------------------------------------------------------------------------------------------------------------
-        /// <summary>Gets or sets the bottom margin for the volume histogram.</summary>
-        ///<value>The bottom margin of the volume histogram, in device-independent units. The default is determined by the <see cref="DefaultVolumeHistogramBottomMargin"/> value.</value>
-        ///<remarks> 
-        ///You can set up top and bottom margins for the volume histogram inside its area by setting the <see cref="VolumeHistogramTopMargin"/> and <see cref="VolumeHistogramBottomMargin"/> properties respectively.
-        ///<h3>Dependency Property Information</h3>
-        ///<table border="1" frame="hsides" rules="rows" style="margin: 0 0 10 20"> 
-        ///<tr><td>Identifier field</td><td><see cref="VolumeHistogramBottomMarginProperty"/></td></tr> 
-        ///<tr><td>Metadata properties set to <c>True</c></td><td>-</td></tr> </table>
-        ///</remarks>
-        [UndoableProperty]
-        [JsonProperty]
-        public double VolumeHistogramBottomMargin
-        {
-            get { return (double)GetValue(VolumeHistogramBottomMarginProperty); }
-            set { SetValue(VolumeHistogramBottomMarginProperty, value); }
-        }
-        /// <summary>Identifies the <see cref="VolumeHistogramBottomMargin"/> dependency property.</summary>
-        /// <value><see cref="DependencyProperty"/></value>
-        public static readonly DependencyProperty VolumeHistogramBottomMarginProperty =
-            DependencyProperty.Register("VolumeHistogramBottomMargin", typeof(double), typeof(CandleChart), new PropertyMetadata(DefaultVolumeHistogramBottomMargin));
-
-        ///<summary>Gets the default value for VolumeHistogramBottomMargin property.</summary>
-        ///<value>The default value for the <see cref="VolumeHistogramBottomMargin"/> property, in device-independent units: <c>5.0</c>.</value>
-        public static double DefaultVolumeHistogramBottomMargin { get { return 5.0; } }
-        //----------------------------------------------------------------------------------------------------------------------------------
-        /// <summary>Gets or sets the color of the bullish volume bar.</summary>
-        ///<value>The brush to fill all bullish volume bars. The default is determined by the <see cref="DefaultBullishVolumeBarFill"/> value.</value>
-        ///<remarks> 
-        /// We separate all volume bars to "bullish" or "bearish" according to whether the correspondent candle is bullish or bearish. A candle is bullish if its Close higher than its Open. A candle is Bearish if its Close lower than its Open. To visualize such a separation all bars are painted into two different colors - 
-        /// <see cref="BullishVolumeBarFill"/> and <see cref="BearishVolumeBarFill"/> for bullish and bearish bars respectively. Likewise you can set the <see cref="BullishCandleFill"/> and <see cref="BearishCandleFill"/> properties to change the appearance of bullish and bearish price candles.
-        ///<h3>Dependency Property Information</h3>
-        ///<table border="1" frame="hsides" rules="rows" style="margin: 0 0 10 20"> 
-        ///<tr><td>Identifier field</td><td><see cref="BullishVolumeBarFillProperty"/></td></tr> 
-        ///<tr><td>Metadata properties set to <c>True</c></td><td>-</td></tr> </table>
-        ///</remarks>
-        [UndoableProperty]
-        [JsonProperty]
-        public Brush BullishVolumeBarFill
-        {
-            get { return (Brush)GetValue(BullishVolumeBarFillProperty); }
-            set { SetValue(BullishVolumeBarFillProperty, value); }
-        }
-        /// <summary>Identifies the <see cref="BullishVolumeBarFill"/> dependency property.</summary>
-        /// <value><see cref="DependencyProperty"/></value>
-        public static readonly DependencyProperty BullishVolumeBarFillProperty =
-            DependencyProperty.Register("BullishVolumeBarFill", typeof(Brush), typeof(CandleChart), new PropertyMetadata(DefaultBullishVolumeBarFill));
-
-        ///<summary>Gets the default value for the BullishVolumeBarFill property.</summary>
-        ///<value>The default value for the BullishVolumeBarFill property: <c>Brushes.Green</c>.</value>
-        ///<seealso cref = "BullishVolumeBarFill">BullishVolumeBarFill</seealso>
-        public static Brush DefaultBullishVolumeBarFill { get { return (Brush)(new SolidColorBrush(Colors.Green)).GetCurrentValueAsFrozen(); } }
-        //----------------------------------------------------------------------------------------------------------------------------------
-        /// <summary>Gets or sets the color of the bearish volume bar.</summary>
-        ///<value>The brush to fill all bearish volume bars. The default is determined by the <see cref="DefaultBearishVolumeBarFill"/> value.</value>
-        ///<remarks> 
-        /// We separate all volume bars to "bullish" or "bearish" according to whether the correspondent candle is bullish or bearish. The Bullish candle has its Close higher than its Open. The Bearish candle has its Close lower than its Open. To visualize such a separation all bars are painted into two different colors - 
-        /// <see cref="BullishVolumeBarFill"/> and <see cref="BearishVolumeBarFill"/> for bullish and bearish bars respectively. Likewise you can set the <see cref="BullishCandleFill"/> and <see cref="BearishCandleFill"/> properties to change the appearance of bullish and bearish price candles.
-        ///<h3>Dependency Property Information</h3>
-        ///<table border="1" frame="hsides" rules="rows" style="margin: 0 0 10 20"> 
-        ///<tr><td>Identifier field</td><td><see cref="BearishVolumeBarFillProperty"/></td></tr> 
-        ///<tr><td>Metadata properties set to <c>True</c></td><td>-</td></tr> </table>
-        ///</remarks>
-        [UndoableProperty]
-        [JsonProperty]
-        public Brush BearishVolumeBarFill
-        {
-            get { return (Brush)GetValue(BearishVolumeBarFillProperty); }
-            set { SetValue(BearishVolumeBarFillProperty, value); }
-        }
-        /// <summary>Identifies the <see cref="BearishVolumeBarFill"/> dependency property.</summary>
-        /// <value><see cref="DependencyProperty"/></value>
-        public static readonly DependencyProperty BearishVolumeBarFillProperty =
-            DependencyProperty.Register("BearishVolumeBarFill", typeof(Brush), typeof(CandleChart), new PropertyMetadata(DefaultBearishVolumeBarFill));
-
-        ///<summary>Gets the default value for the BearishVolumeBarFill property.</summary>
-        ///<value>The default value for the BearishVolumeBarFill property: <c>Brushes.Red</c>.</value>
-        ///<seealso cref = "BearishVolumeBarFill">BearishVolumeBarFill</seealso>
-        public static Brush DefaultBearishVolumeBarFill { get { return (Brush)(new SolidColorBrush(Colors.Red)).GetCurrentValueAsFrozen(); } }
-
-        #endregion **********************************************************************************************************************************************
-        //----------------------------------------------------------------------------------------------------------------------------------
         #region COMMON PROPERTIES FOR THE PRICE AXIS AND THE TIME AXIS*******************************************************************************************
         ///<summary>Gets or sets the color of ticks and its labels for all the axises.</summary>
         ///<value>The color of ticks and its labels for all the axises. The default is determined by the <see cref="DefaultAxisTickColor"/> value.</value>
@@ -1460,7 +1292,7 @@ namespace FancyCandles
 
         ///<summary>Gets the default value for the <see cref="GapBetweenPriceTickLabels">GapBetweenPriceTickLabels</see> property.</summary>
         ///<value>The default value for the <see cref="GapBetweenPriceTickLabels"/> property: <c>0.0</c>.</value>
-        public static double DefaultGapBetweenPriceTickLabels { get { return 0.0; } }
+        public static double DefaultGapBetweenPriceTickLabels { get { return 10.0; } }
         //----------------------------------------------------------------------------------------------------------------------------------
         private int maxNumberOfCharsInPrice = 0;
         private readonly double correctPriceValueProbability = 0.93;
@@ -1918,6 +1750,82 @@ namespace FancyCandles
 
         #endregion **********************************************************************************************************************************************
         //----------------------------------------------------------------------------------------------------------------------------------
+        #region VOLUME PROPERTIES
+        [UndoableProperty]
+        [JsonProperty]
+        public bool IsVolumePanelVisible
+        {
+            get { return (bool)GetValue(IsVolumePanelVisibleProperty); }
+            set { SetValue(IsVolumePanelVisibleProperty, value); }
+        }
+        public static readonly DependencyProperty IsVolumePanelVisibleProperty =
+            DependencyProperty.Register("IsVolumePanelVisible", typeof(bool), typeof(CandleChart), new PropertyMetadata(DefaultIsVolumePanelVisible));
+
+        public static bool DefaultIsVolumePanelVisible { get { return true; } }
+
+        [UndoableProperty]
+        [JsonProperty]
+        public double VolumeBarWidthToCandleWidthRatio
+        {
+            get { return (double)GetValue(VolumeBarWidthToCandleWidthRatioProperty); }
+            set { SetValue(VolumeBarWidthToCandleWidthRatioProperty, value); }
+        }
+
+        public static readonly DependencyProperty VolumeBarWidthToCandleWidthRatioProperty =
+            DependencyProperty.Register("VolumeBarWidthToCandleWidthRatio", typeof(double), typeof(CandleChart), new PropertyMetadata(DefaultVolumeBarWidthToCandleWidthRatio, null, CoerceVolumeBarWidthToCandleWidthRatio));
+
+        private static object CoerceVolumeBarWidthToCandleWidthRatio(DependencyObject objWithOldDP, object newDPValue)
+        {
+            //CandleChart thisCandleChart = (CandleChart)objWithOldDP; // Содержит старое значение для изменяемого свойства.
+            double newValue = (double)newDPValue;
+            return Math.Min(1.0, Math.Max(0.0, newValue));
+        }
+
+        public static double DefaultVolumeBarWidthToCandleWidthRatio { get { return 0.8; } }
+
+        [UndoableProperty]
+        [JsonProperty]
+        public double VolumeHistogramTopMargin
+        {
+            get { return (double)GetValue(VolumeHistogramTopMarginProperty); }
+            set { SetValue(VolumeHistogramTopMarginProperty, value); }
+        }
+        public static readonly DependencyProperty VolumeHistogramTopMarginProperty =
+            DependencyProperty.Register("VolumeHistogramTopMargin", typeof(double), typeof(CandleChart), new PropertyMetadata(DefaultVolumeHistogramTopMargin));
+        public static double DefaultVolumeHistogramTopMargin { get { return 10.0; } }
+
+        [UndoableProperty]
+        [JsonProperty]
+        public double VolumeHistogramBottomMargin
+        {
+            get { return (double)GetValue(VolumeHistogramBottomMarginProperty); }
+            set { SetValue(VolumeHistogramBottomMarginProperty, value); }
+        }
+        public static readonly DependencyProperty VolumeHistogramBottomMarginProperty =
+            DependencyProperty.Register("VolumeHistogramBottomMargin", typeof(double), typeof(CandleChart), new PropertyMetadata(DefaultVolumeHistogramBottomMargin));
+        public static double DefaultVolumeHistogramBottomMargin { get { return 5.0; } }
+        [UndoableProperty]
+        [JsonProperty]
+        public Brush BullishVolumeBarFill
+        {
+            get { return (Brush)GetValue(BullishVolumeBarFillProperty); }
+            set { SetValue(BullishVolumeBarFillProperty, value); }
+        }
+        public static readonly DependencyProperty BullishVolumeBarFillProperty =
+            DependencyProperty.Register("BullishVolumeBarFill", typeof(Brush), typeof(CandleChart), new PropertyMetadata(DefaultBullishVolumeBarFill));
+
+        public static Brush DefaultBullishVolumeBarFill { get { return (Brush)(new SolidColorBrush(Colors.Green)).GetCurrentValueAsFrozen(); } }
+        [UndoableProperty]
+        [JsonProperty]
+        public Brush BearishVolumeBarFill
+        {
+            get { return (Brush)GetValue(BearishVolumeBarFillProperty); }
+            set { SetValue(BearishVolumeBarFillProperty, value); }
+        }
+        public static readonly DependencyProperty BearishVolumeBarFillProperty =
+            DependencyProperty.Register("BearishVolumeBarFill", typeof(Brush), typeof(CandleChart), new PropertyMetadata(DefaultBearishVolumeBarFill));
+
+        public static Brush DefaultBearishVolumeBarFill { get { return (Brush)(new SolidColorBrush(Colors.Red)).GetCurrentValueAsFrozen(); } }
         private void ChangeCurrentTimeFrame(TimeFrame newTimeFrame)
         {
             string secID = (CandlesSource as ICandlesSourceFromProvider).SecID;
@@ -1927,6 +1835,7 @@ namespace FancyCandles
             ISecurityInfo secInfo = CandlesSourceProvider.GetSecFromCatalog(secID);
             SetCurrentValue(LegendTextProperty, $"{secInfo.Ticker}, {newTimeFrame}");
         }
+        #endregion
 
         private void ChangeCurrentTimeFrame(object sender, RoutedEventArgs e)
         {
@@ -2490,14 +2399,10 @@ namespace FancyCandles
             }
         }
         //----------------------------------------------------------------------------------------------------------------------------------
-        private void OnMouseMoveInsidePriceChartContainer(object sender, MouseEventArgs e)
+        private void OnMouseMoveInsideFrameworkElement(object sender, MouseEventArgs e)
         {
-            CurrentMousePosition = Mouse.GetPosition(priceChartContainer);
-        }
-
-        private void OnMouseMoveInsideVolumeHistogramContainer(object sender, MouseEventArgs e)
-        {
-            CurrentMousePosition = Mouse.GetPosition(volumeHistogramContainer);
+            FrameworkElement element = sender as FrameworkElement;
+            CurrentMousePosition = Mouse.GetPosition(element);
         }
 
         Point currentMousePosition;

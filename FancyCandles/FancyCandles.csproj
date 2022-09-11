@@ -66,6 +66,7 @@
     <Compile Include="CandleStructs.cs" />
     <Compile Include="Converters.cs" />
     <Compile Include="DateTimeMilestones.cs" />
+    <Compile Include="Graphs\GraphTicksElement.cs" />
     <Compile Include="Graphs\Volume.xaml.cs">
       <DependentUpon>Volume.xaml</DependentUpon>
     </Compile>
@@ -150,6 +151,9 @@
       <Project>{cefe18e3-e073-4cc7-8cb9-c277c8d5b76f}</Project>
       <Name>FancyPrimitives</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="CandleChart structure.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

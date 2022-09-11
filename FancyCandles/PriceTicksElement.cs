@@ -28,6 +28,9 @@ namespace FancyCandles
         public static double TICK_LINE_WIDTH = 3.0;
         public static double TICK_HORIZ_MARGIN = 2.0;
 
+        private Typeface currentTypeFace = new Typeface(SystemFonts.MessageFontFamily.ToString());
+        private Pen tickPen;
+
         //---------------------------------------------------------------------------------------------------------------------------------------
         static PriceTicksElement()
         {
@@ -55,6 +58,123 @@ namespace FancyCandles
         public static readonly DependencyProperty CultureProperty =
             DependencyProperty.Register("Culture", typeof(CultureInfo), typeof(PriceTicksElement), new FrameworkPropertyMetadata(CultureInfo.CurrentCulture) { AffectsRender = true });
         //---------------------------------------------------------------------------------------------------------------------------------------
+        public Pen GridlinesPen
+        {
+            get { return (Pen)GetValue(GridlinesPenProperty); }
+            set { SetValue(GridlinesPenProperty, value); }
+        }
+        public static readonly DependencyProperty GridlinesPenProperty;
+
+        private static object CoerceGridlinesPen(DependencyObject objWithOldDP, object newDPValue)
+        {
+            Pen newPenValue = (Pen)newDPValue;
+            return newPenValue.IsFrozen ? newDPValue : newPenValue.GetCurrentValueAsFrozen();
+        }
+        //---------------------------------------------------------------------------------------------------------------------------------------
+        public bool IsGridlinesEnabled
+        {
+            get { return (bool)GetValue(IsGridlinesEnabledProperty); }
+            set { SetValue(IsGridlinesEnabledProperty, value); }
+        }
+        public static readonly DependencyProperty IsGridlinesEnabledProperty
+            = DependencyProperty.Register("IsGridlinesEnabled", typeof(bool), typeof(PriceTicksElement), new FrameworkPropertyMetadata(true) { AffectsRender = true });
+        //---------------------------------------------------------------------------------------------------------------------------------------
+        public FontFamily TickLabelFontFamily
+        {
+            get { return (FontFamily)GetValue(TickLabelFontFamilyProperty); }
+            set { SetValue(TickLabelFontFamilyProperty, value); }
+        }
+        public static readonly DependencyProperty TickLabelFontFamilyProperty =
+            DependencyProperty.Register("TickLabelFontFamily", typeof(FontFamily), typeof(PriceTicksElement), new FrameworkPropertyMetadata(SystemFonts.MessageFontFamily, OnTickLabelFontFamilyChanged));
+
+        static void OnTickLabelFontFamilyChanged(DependencyObject obj, DependencyPropertyChangedEventArgs e)
+        {
+            PriceTicksElement thisElement = obj as PriceTicksElement;
+            if (thisElement == null) return;
+            thisElement.currentTypeFace = new Typeface(thisElement.TickLabelFontFamily.ToString());
+        }
+        //---------------------------------------------------------------------------------------------------------------------------------------
+        public CandleExtremums VisibleCandlesExtremums
+        {
+            get { return (CandleExtremums)GetValue(VisibleCandlesExtremumsProperty); }
+            set { SetValue(VisibleCandlesExtremumsProperty, value); }
+        }
+        public static readonly DependencyProperty VisibleCandlesExtremumsProperty
+            = DependencyProperty.Register("VisibleCandlesExtremums", typeof(CandleExtremums), typeof(PriceTicksElement), new FrameworkPropertyMetadata(new CandleExtremums(1.0, 1.0, 0L, 0L)) { AffectsRender = true });
+        //---------------------------------------------------------------------------------------------------------------------------------------
+        public double GapBetweenTickLabels
+        {
+            get { return (double)GetValue(GapBetweenTickLabelsProperty); }
+            set { SetValue(GapBetweenTickLabelsProperty, value); }
+        }
+        public static readonly DependencyProperty GapBetweenTickLabelsProperty
+            = DependencyProperty.Register("GapBetweenTickLabels", typeof(double), typeof(PriceTicksElement), new FrameworkPropertyMetadata(0.0) { AffectsRender = true });
+        //---------------------------------------------------------------------------------------------------------------------------------------
+        public double ChartBottomMargin
+        {
+            get { return (double)GetValue(ChartBottomMarginProperty); }
+            set { SetValue(ChartBottomMarginProperty, value); }
+        }
+        public static readonly DependencyProperty ChartBottomMarginProperty
+            = DependencyProperty.Register("ChartBottomMargin", typeof(double), typeof(PriceTicksElement), new FrameworkPropertyMetadata(15.0) { AffectsRender = true });
+        //---------------------------------------------------------------------------------------------------------------------------------------
+        public double ChartTopMargin
+        {
+            get { return (double)GetValue(ChartTopMarginProperty); }
+            set { SetValue(ChartTopMarginProperty, value); }
+        }
+        public static readonly DependencyProperty ChartTopMarginProperty
+            = DependencyProperty.Register("ChartTopMargin", typeof(double), typeof(PriceTicksElement), new FrameworkPropertyMetadata(15.0) { AffectsRender = true });
+        //---------------------------------------------------------------------------------------------------------------------------------------
+        public double TickLabelFontSize
+        {
+            get { return (double)GetValue(TickLabelFontSizeProperty); }
+            set { SetValue(TickLabelFontSizeProperty, value); }
+        }
+        public static readonly DependencyProperty TickLabelFontSizeProperty
+            = DependencyProperty.Register("TickLabelFontSize", typeof(double), typeof(PriceTicksElement), new FrameworkPropertyMetadata(9.0) { AffectsRender = true });
+        //---------------------------------------------------------------------------------------------------------------------------------------
+        public Brush TickColor
+        {
+            get { return (Brush)GetValue(TickColorProperty); }
+            set { SetValue(TickColorProperty, value); }
+        }
+        public static readonly DependencyProperty TickColorProperty
+            = DependencyProperty.Register("TickColor", typeof(Brush), typeof(PriceTicksElement),
+                new FrameworkPropertyMetadata(CandleChart.DefaultAxisTickColor, null, CoerceTickColor) { AffectsRender = true });
+
+        private static object CoerceTickColor(DependencyObject objWithOldDP, object newDPValue)
+        {
+            PriceTicksElement thisElement = (PriceTicksElement)objWithOldDP;
+            Brush newBrushValue = (Brush)newDPValue;
+
+            if (newBrushValue.IsFrozen)
+            {
+                Pen p = new Pen(newBrushValue, 1.0);
+                p.Freeze();
+                thisElement.tickPen = p;
+                return newDPValue;
+            }
+            else
+            {
+                Brush b = (Brush)newBrushValue.GetCurrentValueAsFrozen();
+                Pen p = new Pen(b, 1.0);
+                p.Freeze();
+                thisElement.tickPen = p;
+                return b;
+            }
+        }
+        //---------------------------------------------------------------------------------------------------------------------------------------
+        public double PriceAxisWidth
+        {
+            get { return (double)GetValue(PricePanelWidthProperty); }
+            set { SetValue(PricePanelWidthProperty, value); }
+        }
+        public static readonly DependencyProperty PricePanelWidthProperty
+            = DependencyProperty.Register("PriceAxisWidth", typeof(double), typeof(PriceTicksElement), new FrameworkPropertyMetadata(0.0) { AffectsRender = true });
+        //---------------------------------------------------------------------------------------------------------------------------------------
+
+        #region Current Price
         public double CurrentPrice
         {
             get { return (double)GetValue(CurrentPriceProperty); }
@@ -124,125 +244,9 @@ namespace FancyCandles
                 return (Brush)newBrushValue.GetCurrentValueAsFrozen();
         }
         //---------------------------------------------------------------------------------------------------------------------------------------
-        private Pen tickPen;
+        #endregion
 
-        public Brush TickColor
-        {
-            get { return (Brush)GetValue(TickColorProperty); }
-            set { SetValue(TickColorProperty, value); }
-        }
-        public static readonly DependencyProperty TickColorProperty
-            = DependencyProperty.Register("TickColor", typeof(Brush), typeof(PriceTicksElement),
-                new FrameworkPropertyMetadata(CandleChart.DefaultAxisTickColor, null, CoerceTickColor) { AffectsRender = true });
 
-        private static object CoerceTickColor(DependencyObject objWithOldDP, object newDPValue)
-        {
-            PriceTicksElement thisElement = (PriceTicksElement)objWithOldDP;
-            Brush newBrushValue = (Brush)newDPValue;
-
-            if (newBrushValue.IsFrozen)
-            {
-                Pen p = new Pen(newBrushValue, 1.0);
-                p.Freeze();
-                thisElement.tickPen = p;
-                return newDPValue;
-            }
-            else
-            {
-                Brush b = (Brush)newBrushValue.GetCurrentValueAsFrozen();
-                Pen p = new Pen(b, 1.0);
-                p.Freeze();
-                thisElement.tickPen = p;
-                return b;
-            }
-        }
-        //---------------------------------------------------------------------------------------------------------------------------------------
-        private Typeface currentTypeFace = new Typeface(SystemFonts.MessageFontFamily.ToString());
-
-        public FontFamily TickLabelFontFamily
-        {
-            get { return (FontFamily)GetValue(TickLabelFontFamilyProperty); }
-            set { SetValue(TickLabelFontFamilyProperty, value); }
-        }
-        public static readonly DependencyProperty TickLabelFontFamilyProperty =
-            DependencyProperty.Register("TickLabelFontFamily", typeof(FontFamily), typeof(PriceTicksElement), new FrameworkPropertyMetadata(SystemFonts.MessageFontFamily, OnTickLabelFontFamilyChanged));
-
-        static void OnTickLabelFontFamilyChanged(DependencyObject obj, DependencyPropertyChangedEventArgs e)
-        {
-            PriceTicksElement thisElement = obj as PriceTicksElement;
-            if (thisElement == null) return;
-            thisElement.currentTypeFace = new Typeface(thisElement.TickLabelFontFamily.ToString());
-        }
-        //---------------------------------------------------------------------------------------------------------------------------------------
-        public Pen GridlinesPen
-        {
-            get { return (Pen)GetValue(GridlinesPenProperty); }
-            set { SetValue(GridlinesPenProperty, value); }
-        }
-        public static readonly DependencyProperty GridlinesPenProperty;
-
-        private static object CoerceGridlinesPen(DependencyObject objWithOldDP, object newDPValue)
-        {
-            Pen newPenValue = (Pen)newDPValue;
-            return newPenValue.IsFrozen ? newDPValue : newPenValue.GetCurrentValueAsFrozen();
-        }
-        //---------------------------------------------------------------------------------------------------------------------------------------
-        public bool IsGridlinesEnabled
-        {
-            get { return (bool)GetValue(IsGridlinesEnabledProperty); }
-            set { SetValue(IsGridlinesEnabledProperty, value); }
-        }
-        public static readonly DependencyProperty IsGridlinesEnabledProperty
-            = DependencyProperty.Register("IsGridlinesEnabled", typeof(bool), typeof(PriceTicksElement), new FrameworkPropertyMetadata(true) { AffectsRender = true });
-        //---------------------------------------------------------------------------------------------------------------------------------------
-        public CandleExtremums VisibleCandlesExtremums
-        {
-            get { return (CandleExtremums)GetValue(VisibleCandlesExtremumsProperty); }
-            set { SetValue(VisibleCandlesExtremumsProperty, value); }
-        }
-        public static readonly DependencyProperty VisibleCandlesExtremumsProperty
-            = DependencyProperty.Register("VisibleCandlesExtremums", typeof(CandleExtremums), typeof(PriceTicksElement), new FrameworkPropertyMetadata(new CandleExtremums(1.0, 1.0, 0L, 0L)) { AffectsRender = true });
-        //---------------------------------------------------------------------------------------------------------------------------------------
-        public double GapBetweenTickLabels
-        {
-            get { return (double)GetValue(GapBetweenTickLabelsProperty); }
-            set { SetValue(GapBetweenTickLabelsProperty, value); }
-        }
-        public static readonly DependencyProperty GapBetweenTickLabelsProperty
-            = DependencyProperty.Register("GapBetweenTickLabels", typeof(double), typeof(PriceTicksElement), new FrameworkPropertyMetadata(0.0) { AffectsRender = true });
-        //---------------------------------------------------------------------------------------------------------------------------------------
-        public double ChartBottomMargin
-        {
-            get { return (double)GetValue(ChartBottomMarginProperty); }
-            set { SetValue(ChartBottomMarginProperty, value); }
-        }
-        public static readonly DependencyProperty ChartBottomMarginProperty
-            = DependencyProperty.Register("ChartBottomMargin", typeof(double), typeof(PriceTicksElement), new FrameworkPropertyMetadata(15.0) { AffectsRender = true });
-        //---------------------------------------------------------------------------------------------------------------------------------------
-        public double ChartTopMargin
-        {
-            get { return (double)GetValue(ChartTopMarginProperty); }
-            set { SetValue(ChartTopMarginProperty, value); }
-        }
-        public static readonly DependencyProperty ChartTopMarginProperty
-            = DependencyProperty.Register("ChartTopMargin", typeof(double), typeof(PriceTicksElement), new FrameworkPropertyMetadata(15.0) { AffectsRender = true });
-        //---------------------------------------------------------------------------------------------------------------------------------------
-        public double TickLabelFontSize
-        {
-            get { return (double)GetValue(TickLabelFontSizeProperty); }
-            set { SetValue(TickLabelFontSizeProperty, value); }
-        }
-        public static readonly DependencyProperty TickLabelFontSizeProperty
-            = DependencyProperty.Register("TickLabelFontSize", typeof(double), typeof(PriceTicksElement), new FrameworkPropertyMetadata(9.0) { AffectsRender = true });
-        //---------------------------------------------------------------------------------------------------------------------------------------
-        public double PriceAxisWidth
-        {
-            get { return (double)GetValue(PricePanelWidthProperty); }
-            set { SetValue(PricePanelWidthProperty, value); }
-        }
-        public static readonly DependencyProperty PricePanelWidthProperty
-            = DependencyProperty.Register("PriceAxisWidth", typeof(double), typeof(PriceTicksElement), new FrameworkPropertyMetadata(0.0) { AffectsRender = true });
-        //---------------------------------------------------------------------------------------------------------------------------------------
         public int MaxNumberOfFractionalDigitsInPrice
         {
             get { return (int)GetValue(MaxNumberOfFractionalDigitsInPriceProperty); }

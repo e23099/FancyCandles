@@ -40,7 +40,7 @@ namespace FancyCandles.Graphs
             tt.Content = "";
             ToolTip = tt;
 
-            // Зададим время задержки появления подсказок здесь, а расположение подсказок (если его нужно поменять) зададим в XAML:
+            // We set the delay time for the appearance of hints here, and the location of the hints (if it needs to be changed) is set in XAML:
             ToolTipService.SetShowDuration(this, int.MaxValue);
             ToolTipService.SetInitialShowDelay(this, 0);
 

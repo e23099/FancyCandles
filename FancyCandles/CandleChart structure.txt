@@ -1,0 +1,161 @@
+﻿
+
+CandleChart : UserControl, INotifyPropertyChanged
+
+DependencyProperties:
+		public static readonly DependencyProperty CultureProperty
+        public static readonly DependencyProperty IsCurrentPriceLabelVisibleProperty =
+        public static readonly DependencyProperty WaitIndicatorForegroundProperty =
+        public static readonly DependencyProperty ChartAreaBackgroundProperty =
+        public static readonly DependencyProperty ChartAreaBorderColorProperty =
+        public static readonly DependencyProperty DisabledFillProperty =
+        public static readonly DependencyProperty OverlayIndicatorsProperty =
+        public static readonly DependencyProperty AddInIndicatorsFolderProperty =
+
+        public static readonly DependencyProperty LegendTextProperty =
+        public static readonly DependencyProperty LegendFontFamilyProperty =
+        public static readonly DependencyProperty LegendFontSizeProperty =
+        public static readonly DependencyProperty LegendFontStyleProperty =
+        public static readonly DependencyProperty LegendFontWeightProperty =
+        public static readonly DependencyProperty LegendForegroundProperty =
+        public static readonly DependencyProperty LegendHorizontalAlignmentProperty =
+        public static readonly DependencyProperty LegendVerticalAlignmentProperty =
+        public static readonly DependencyProperty LegendMarginProperty =
+
+        public static readonly DependencyProperty PriceChartTopMarginProperty =
+        public static readonly DependencyProperty PriceChartBottomMarginProperty =
+
+        public static readonly DependencyProperty BullishCandleFillProperty =
+        public static readonly DependencyProperty BearishCandleFillProperty =
+        public static readonly DependencyProperty BullishCandleStrokeProperty =
+        public static readonly DependencyProperty BearishCandleStrokeProperty =
+
+        public static readonly DependencyProperty IsVolumePanelVisibleProperty =
+        public static readonly DependencyProperty VolumeBarWidthToCandleWidthRatioProperty =
+        public static readonly DependencyProperty VolumeHistogramTopMarginProperty =
+        public static readonly DependencyProperty VolumeHistogramBottomMarginProperty =
+        public static readonly DependencyProperty BullishVolumeBarFillProperty =
+        public static readonly DependencyProperty BearishVolumeBarFillProperty =
+
+        public static readonly DependencyProperty AxisTickColorProperty =
+        public static readonly DependencyProperty AxisTickLabelFontFamilyProperty =
+
+        public static readonly DependencyProperty CurrentPriceLabelForegroundProperty =
+        public static readonly DependencyProperty CurrentPriceLabelBackgroundProperty =
+        public static readonly DependencyProperty PriceAxisTickLabelFontSizeProperty =
+
+        public static readonly DependencyProperty GapBetweenPriceTickLabelsProperty =
+        public static readonly DependencyProperty TimeAxisTickLabelFontSizeProperty =
+
+        public static readonly DependencyProperty HorizontalGridlinesPenProperty =
+        public static readonly DependencyProperty VerticalGridlinesPenProperty =
+        public static readonly DependencyProperty IsHorizontalGridlinesEnabledProperty =
+        public static readonly DependencyProperty IsVerticalGridlinesEnabledProperty =
+        public static readonly DependencyProperty HideMinorVerticalGridlinesProperty =
+        public static readonly DependencyProperty CrossLinesBrushProperty =
+        public static readonly DependencyProperty IsCrossLinesVisibleProperty =
+        public static readonly DependencyProperty IsCrossPriceLabelVisibleProperty =
+        public static readonly DependencyProperty CrossPriceLabelForegroundProperty =
+        public static readonly DependencyProperty CrossPriceLabelBackgroundProperty =
+        public static readonly DependencyProperty ScrollBarBackgroundProperty =
+        public static readonly DependencyProperty ScrollBarHeightProperty =
+        public static readonly DependencyProperty CandlesSourceProviderProperty =
+        public static readonly DependencyProperty CandlesSourceProperty =
+        public static readonly DependencyProperty VisibleCandlesRangeProperty =
+        public static readonly DependencyProperty MouseWheelModifierKeyForCandleWidthChangingProperty =
+        public static readonly DependencyProperty MouseWheelModifierKeyForScrollingThroughCandlesProperty =
+
+
+Static variable:
+        public static readonly double ToolTipFontSize = 9.0;
+        public static Brush DefaultWaitIndicatorForeground { get { return (Brush)Brushes.DarkGray.GetCurrentValueAsFrozen(); } }
+        public static Brush DefaultChartAreaBackground { get { return (Brush)Brushes.Cornsilk.GetCurrentValueAsFrozen(); } }
+        public static Brush DefaultChartAreaBorderColor { get { return (Brush)Brushes.Black.GetCurrentValueAsFrozen(); } }
+        public static Brush DefaultDisabledFill { get { return (Brush)(new SolidColorBrush(Color.FromArgb(204, 170, 170, 170))).GetCurrentValueAsFrozen(); } } // #CCAAAAAA
+        public static string DefaultLegendText { get { return "DefaultLegend"; } }
+        public static double DefaultLegendFontSize { get { return 30.0; } }
+        public static FontStyle DefaultLegendFontStyle { get { return FontStyles.Normal; } }
+        public static FontWeight DefaultLegendFontWeight { get { return FontWeights.Bold; } }
+        public static Brush DefaultLegendForeground { get { return (Brush)(new SolidColorBrush(Color.FromArgb(60, 0, 0, 0))).GetCurrentValueAsFrozen(); } } // #3C000000
+        public static HorizontalAlignment DefaultLegendHorizontalAlignment { get { return HorizontalAlignment.Left; } }
+        public static VerticalAlignment DefaultLegendVerticalAlignment { get { return VerticalAlignment.Bottom; } }
+        public static Thickness DefaultLegendMargin { get { return new Thickness(10, 0, 10, 0); } }
+        public static double DefaultPriceChartTopMargin { get { return 15.0; } }
+        public static double DefaultPriceChartBottomMargin { get { return 15.0; } }
+        public static Brush DefaultBullishCandleFill { get { return (Brush)(new SolidColorBrush(Colors.Green)).GetCurrentValueAsFrozen(); } }
+        public static Brush DefaultBearishCandleFill { get { return (Brush)(new SolidColorBrush(Colors.Red)).GetCurrentValueAsFrozen(); } }
+        public static Brush DefaultBullishCandleStroke { get { return (Brush)(new SolidColorBrush(Colors.Green)).GetCurrentValueAsFrozen(); } }
+        public static Brush DefaultBearishCandleStroke { get { return (Brush)(new SolidColorBrush(Colors.Red)).GetCurrentValueAsFrozen(); } }
+        public static bool DefaultIsVolumePanelVisible { get { return true; } }
+        public static double DefaultVolumeBarWidthToCandleWidthRatio { get { return 0.3; } }
+        public static double DefaultVolumeHistogramTopMargin { get { return 10.0; } }
+        public static double DefaultVolumeHistogramBottomMargin { get { return 5.0; } }
+        public static Brush DefaultBullishVolumeBarFill { get { return (Brush)(new SolidColorBrush(Colors.Green)).GetCurrentValueAsFrozen(); } }
+        public static Brush DefaultBearishVolumeBarFill { get { return (Brush)(new SolidColorBrush(Colors.Red)).GetCurrentValueAsFrozen(); } }
+        public static Brush DefaultAxisTickColor { get { return (Brush)(new SolidColorBrush(Colors.Black)).GetCurrentValueAsFrozen(); } }
+        public static Brush DefaultCurrentPriceLabelForeground { get { return (Brush)(new SolidColorBrush(Colors.Red)).GetCurrentValueAsFrozen(); } }
+        public static Brush DefaultCurrentPriceLabelBackground { get { return (Brush)(new SolidColorBrush(Color.FromArgb(255, 232, 237, 255))).GetCurrentValueAsFrozen(); } } // #FFE8EDFF
+        public static double DefaultPriceAxisTickLabelFontSize { get { return 11.0; } }
+        public static double DefaultGapBetweenPriceTickLabels { get { return 0.0; } }
+        public static double DefaultTimeAxisTickLabelFontSize { get { return 10.0; } }
+        public static Brush DefaultHorizontalGridlinesBrush { get { return (Brush)(new SolidColorBrush(Color.FromArgb(30, 0, 0, 0))).GetCurrentValueAsFrozen(); } } // #1E000000
+        public static double DefaultHorizontalGridlinesThickness { get { return 1.0; } }
+        public static Brush DefaultVerticalGridlinesBrush { get { return (Brush)(new SolidColorBrush(Color.FromArgb(50, 105, 42, 0))).GetCurrentValueAsFrozen(); } } // #32692A00
+        public static double DefaultVerticalGridlinesThickness { get { return 1.0; } }
+        public static bool DefaultIsHorizontalGridlinesEnabled { get { return true; } }
+        public static bool DefaultIsVerticalGridlinesEnabled { get { return true; } }
+        public static bool DefaultHideMinorVerticalGridlines { get { return false; } }
+        public static Brush DefaultCrossLinesBrush { get { return (Brush)(new SolidColorBrush(Color.FromArgb(30, 0, 10, 151))).GetCurrentValueAsFrozen(); } } // #1E000A97
+        public static bool DefaultIsCrossLinesVisible { get { return true; } }
+        public static bool DefaultIsCrossPriceLabelVisible { get { return true; } }
+        public static Brush DefaultCrossPriceLabelForeground { get { return (Brush)(Brushes.Black).GetCurrentValueAsFrozen(); } }
+        public static Brush DefaultCrossPriceLabelBackground { get { return (Brush)(Brushes.Gainsboro).GetCurrentValueAsFrozen(); } } // #FFE8EDFF
+        public static Brush DefaultScrollBarBackground { get { return (Brush)(new SolidColorBrush(Color.FromArgb(255, 240, 240, 240))).GetCurrentValueAsFrozen(); } } // #FFF0F0F0
+        public static double DefaultScrollBarHeight { get { return 15.0; } }
+
+        private static Pen DefaultHorizontalGridlinesPen { get { return (Pen)(new Pen(DefaultHorizontalGridlinesBrush, DefaultHorizontalGridlinesThickness)).GetCurrentValueAsFrozen(); } }
+        private static Pen DefaultVerticalGridlinesPen { get { return (Pen)(new Pen(DefaultVerticalGridlinesBrush, DefaultVerticalGridlinesThickness)).GetCurrentValueAsFrozen(); } }
+        private static Pen DefaultHorizontalGridlinesPen { get { return (Pen)(new Pen(DefaultHorizontalGridlinesBrush, DefaultHorizontalGridlinesThickness)).GetCurrentValueAsFrozen(); } }
+        private static Pen DefaultVerticalGridlinesPen { get { return (Pen)(new Pen(DefaultVerticalGridlinesBrush, DefaultVerticalGridlinesThickness)).GetCurrentValueAsFrozen(); } }
+
+static method:
+        private static void OnOverlayIndicatorsChanged(DependencyObject obj, DependencyPropertyChangedEventArgs e)
+        private static object CoerceVolumeBarWidthToCandleWidthRatio(DependencyObject objWithOldDP, object newDPValue)
+        private static object CoerceCandlesSource(DependencyObject objWithOldDP, object newDPValue)
+        private static object CoerceVisibleCandlesRange(DependencyObject objWithOldDP, object baseValue)
+        private static int FindCandleByDatetime(IList<ICandle> candles, DateTime t)
+
+
+event handler:
+        private void OnUserControlLoaded(object sender, RoutedEventArgs e)
+        protected void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        private static void OnOverlayIndicatorsChanged(DependencyObject obj, DependencyPropertyChangedEventArgs e)
+        static void OnPriceAxisTickLabelFontSizeChanged(DependencyObject obj, DependencyPropertyChangedEventArgs e)
+        static void OnTimeTickFontSizeChanged(DependencyObject obj, DependencyPropertyChangedEventArgs e)
+        static void OnCandlesSourceChanged(DependencyObject obj, DependencyPropertyChangedEventArgs e)
+        private void OnCandlesSourceCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        static void OnVisibleCanlesRangeChanged(DependencyObject obj, DependencyPropertyChangedEventArgs e)
+        internal void OnMouseWheel(object sender, MouseWheelEventArgs e)
+        private void OnMouseMoveInsidePriceChartContainer(object sender, MouseEventArgs e)
+        private void OnMouseMoveInsideVolumeHistogramContainer(object sender, MouseEventArgs e)
+        private void OnPanelCandlesContainerSizeChanged(object sender, SizeChangedEventArgs e)
+
+other methods:
+        private void ReCalc_MaxNumberOfCharsInPrice_and_MaxNumberOfFractionalDigitsInPrice()
+        private void Update_MaxNumberOfCharsInPrice_and_MaxNumberOfFractionalDigitsInPrice(ICandle newCandle)
+        private void ChangeCurrentTimeFrame(TimeFrame newTimeFrame)
+        private void ChangeCurrentTimeFrame(object sender, RoutedEventArgs e)
+        private void ReCalc_VisibleCandlesExtremums()
+        private void ReCalc_VisibleCandlesExtremums_AfterOneCandleChanged(int changedCandle_i)
+        private void ReCalc_VisibleCandlesRange()
+        public void SetVisibleCandlesRangeCenter(DateTime visibleCandlesRangeCenter)
+        public void SetVisibleCandlesRangeBounds(DateTime lowerBound, DateTime upperBound)
+
+        private string SerializeToJson(object objToSerialize)
+        private ObservableCollection<OverlayIndicator> DeserializeOverlayIndicatorsFromJson(string overlayIndicatorsJsonString)
+        private ObservableCollection<OverlayIndicator> DeserializeOverlayIndicatorsFromJson(JArray overlayIndicatorsJArray)
+        private void RestoreFromJson(string candleChartJson)
+        private Type FindOverlayIndicatorType(string overlayIndicatorTypeName)
+        internal void OpenSaveSettingsAsDialog(object sender, RoutedEventArgs e)
+        internal void OpenLoadSettingsDialog(object sender, RoutedEventArgs e)
+        public void LoadSettings(string pathToSettingsFile)
