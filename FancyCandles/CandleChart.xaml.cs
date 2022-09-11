@@ -72,6 +72,7 @@ namespace FancyCandles
             VisibleCandlesRange = IntRange.Undefined;
             VisibleCandlesExtremums = new CandleExtremums(0.0, 0.0, 0L, 0L);
             Loaded += new RoutedEventHandler(OnUserControlLoaded);
+            //_splitPanel.Children.Add(new Graphs.Volume(this));
         }
         //----------------------------------------------------------------------------------------------------------------------------------
         internal void OpenCandleChartPropertiesWindow(object sender, RoutedEventArgs e)
@@ -2399,7 +2400,7 @@ namespace FancyCandles
             }
         }
         //----------------------------------------------------------------------------------------------------------------------------------
-        private void OnMouseMoveInsideFrameworkElement(object sender, MouseEventArgs e)
+        internal void OnMouseMoveInsideFrameworkElement(object sender, MouseEventArgs e)
         {
             FrameworkElement element = sender as FrameworkElement;
             CurrentMousePosition = Mouse.GetPosition(element);
@@ -2438,5 +2439,35 @@ namespace FancyCandles
         //----------------------------------------------------------------------------------------------------------------------------------
         //----------------------------------------------------------------------------------------------------------------------------------
         //----------------------------------------------------------------------------------------------------------------------------------
+
+
+        public void AddSubChart(UserControl control)
+        {
+            _splitPanel.Children.Add(control);
+        }
+
+        public void DelSubChart(UserControl control)
+        {
+            _splitPanel.Children.Remove(control);
+        }
+
+        public static readonly DependencyProperty IsVolumeChartExistsProperty = DependencyProperty.Register(
+            "IsVolumeChartExistsProperty", typeof(bool), typeof(CandleChartPropertiesWindow));
+        public bool IsVolumeChartExists
+        {
+            get { return (bool)GetValue(IsVolumeChartExistsProperty); }
+            set { SetValue(IsVolumeChartExistsProperty, value); }
+        }
+        public UserControl VolumeChart { get; set; }
+
+
+        public static readonly DependencyProperty IsVolumeChart2ExistsProperty = DependencyProperty.Register(
+            "IsVolumeChart2ExistsProperty", typeof(bool), typeof(CandleChartPropertiesWindow));
+        public bool IsVolumeChart2Exists
+        {
+            get { return (bool)GetValue(IsVolumeChart2ExistsProperty); }
+            set { SetValue(IsVolumeChart2ExistsProperty, value); }
+        }
+        public UserControl VolumeChart2 { get; set; }
     }
 }

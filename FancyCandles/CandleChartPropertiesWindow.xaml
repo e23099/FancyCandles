@@ -495,8 +495,14 @@
                     <ListBox control:SplitPanel.Size="0.3">
                         <ListBoxItem>
                             <StackPanel Orientation="Horizontal">
-                                <CheckBox />
-                                <TextBlock Text="Volume Histogram" />
+                                <CheckBox Click="CheckBox_Click" IsChecked="{Binding IsVolumeChartExists}"/>
+                                <TextBlock Text="Vol1" />
+                            </StackPanel>
+                        </ListBoxItem>
+                        <ListBoxItem>
+                            <StackPanel Orientation="Horizontal">
+                                <CheckBox Click="CheckBox2_Click" IsChecked="{Binding IsVolumeChart2Exists}"/>
+                                <TextBlock Text="Vol2" />
                             </StackPanel>
                         </ListBoxItem>
                     </ListBox>

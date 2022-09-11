@@ -4,7 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:FancyCandles.Graphs"
-             xmlns:fc="clr-namespace:FancyCandles"
+             xmlns:fc="clr-namespace:FancyCandles" d:DataContext="{d:DesignInstance Type=fc:CandleChart}"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <UserControl.Resources>
@@ -29,48 +29,30 @@
                 RenderOptions.EdgeMode="Aliased" />
 
         <Grid x:Name="volumeHistogramContainer" Grid.Column="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" 
-              MouseWheel="OnMouseWheel" MouseMove="OnMouseMoveInsideVolumeHistogramContainer" Panel.ZIndex="2">
-            <Rectangle HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Fill="Transparent">
-                <Rectangle.ContextMenu>
-                    <ContextMenu x:Name="volumeHistogramContextMenu">
-                        <MenuItem Header="Settings" Click="OpenCandleChartPropertiesWindow"/>
-                        <MenuItem Header="Load Settings" Click="OpenLoadSettingsDialog"/>
-                        <MenuItem Header="Save Settings As" Click="OpenSaveSettingsAsDialog"/>
-                        <MenuItem Header="Select New Security" Command="{Binding Path=OpenSelectCandleSourceWindowCommand, Mode=OneWay}"/>
-                        <MenuItem Header="Time Frame" ItemsSource="{Binding Path=CandlesSourceProvider.SupportedTimeFrames, Mode=OneWay}" 
-                                  Command="{Binding Path=ChangeCurrentTimeframeCommand}">
-                            <MenuItem.ItemContainerStyle>
-                                <Style TargetType="MenuItem">
-                                    <Setter Property="Command" Value="{Binding Path=PlacementTarget.DataContext.ChangeCurrentTimeframeCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"/>
-                                    <Setter Property="CommandParameter" Value="{Binding Path=.}"/>
-                                </Style>
-                            </MenuItem.ItemContainerStyle>
-                        </MenuItem>
-                    </ContextMenu>
-                </Rectangle.ContextMenu>
-            </Rectangle>
+              MouseWheel="OnMouseWheel" MouseMove="OnMouseMoveInsideFrameworkElement" Panel.ZIndex="2">
+            <Rectangle HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Fill="Transparent" />
 
             <local:VolumeChartElement 
-                CandlesSource="{Binding _chart.CandleSource, Mode=OneWay}"
-                Culture="{Binding _chart.Culture, Mode=OneWay}"
-                VisibleCandlesRange="{Binding _chart.VisibleCandlesRange, Mode=OneWay}"
-                VisibleCandlesExtremums="{Binding _chart.VisibleCandlesExtremums, Mode=OneWay}"
-                VolumeBarWidthToCandleWidthRatio="{Binding _chart.VolumeBarWidthToCandleWidthRatio, Mode=OneWay}"
-                BullishBarFill="{Binding _chart.BullishVolumeBarFill, Mode=OneWay}"
-                BearishBarFill="{Binding _chart.BearishVolumeBarFill, Mode=OneWay}" 
+                CandlesSource="{Binding CandlesSource, Mode=OneWay}"
+                Culture="{Binding Culture, Mode=OneWay}"
+                VisibleCandlesRange="{Binding VisibleCandlesRange, Mode=OneWay}"
+                VisibleCandlesExtremums="{Binding VisibleCandlesExtremums, Mode=OneWay}"
+                VolumeBarWidthToCandleWidthRatio="{Binding VolumeBarWidthToCandleWidthRatio, Mode=OneWay}"
+                BullishBarFill="{Binding BullishVolumeBarFill, Mode=OneWay}"
+                BearishBarFill="{Binding BearishVolumeBarFill, Mode=OneWay}" 
                 ToolTipService.PlacementTarget="{Binding ElementName=volumeHistogramContainer, Path=., Mode=OneWay}"
                 ToolTipService.Placement="Relative"
                 RenderOptions.EdgeMode="Aliased">
                 <local:VolumeChartElement.CandleWidthAndGap>
                     <MultiBinding Converter="{StaticResource candleDrawingParametersConverter}">
-                        <Binding ElementName="thisUserControl" Path="CandleWidth" Mode="OneWay"/>
-                        <Binding ElementName="thisUserControl" Path="CandleGap" Mode="OneWay"/>
+                        <Binding Path="CandleWidth" Mode="OneWay"/>
+                        <Binding Path="CandleGap" Mode="OneWay"/>
                     </MultiBinding>
                 </local:VolumeChartElement.CandleWidthAndGap>
                 <local:VolumeChartElement.Margin>
                     <MultiBinding Converter="{StaticResource topBottomMarginConverter}">
-                        <Binding ElementName="thisUserControl" Path="VolumeHistogramTopMargin" Mode="OneWay"/>
-                        <Binding ElementName="thisUserControl" Path="VolumeHistogramBottomMargin" Mode="OneWay"/>
+                        <Binding Path="VolumeHistogramTopMargin" Mode="OneWay"/>
+                        <Binding Path="VolumeHistogramBottomMargin" Mode="OneWay"/>
                     </MultiBinding>
                 </local:VolumeChartElement.Margin>
             </local:VolumeChartElement>
@@ -105,7 +87,7 @@
             </Line>
         </Grid>
 
-        <Grid Grid.Column="1">
+        <Grid Grid.Column="1" Panel.ZIndex="2">
             <Grid.Visibility>
                 <MultiBinding Converter="{StaticResource squareBoolToVisibilityConverter}">
                     <Binding Path="IsCrossPriceLabelVisible" Mode="OneWay"/>

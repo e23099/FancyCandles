@@ -184,6 +184,43 @@ namespace FancyCandles
                     listElement.SelectedIndex = 0;
             }
         }
+
+
+
+        private void CheckBox_Click(object sender, RoutedEventArgs e)
+        {
+            bool isChecked = ((CheckBox)sender).IsChecked ?? false;
+            if (isChecked)
+            {
+                parentCandleChart.VolumeChart = new Graphs.Volume(parentCandleChart);
+                parentCandleChart.AddSubChart(parentCandleChart.VolumeChart);
+                parentCandleChart.IsVolumeChartExists = true;
+            }
+
+            else
+            {
+                parentCandleChart.DelSubChart(parentCandleChart.VolumeChart);
+                parentCandleChart.IsVolumeChartExists = false;
+                parentCandleChart.VolumeChart = null;
+            }
+        }
+        private void CheckBox2_Click(object sender, RoutedEventArgs e)
+        {
+            bool isChecked = ((CheckBox)sender).IsChecked ?? false;
+            if (isChecked)
+            {
+                parentCandleChart.VolumeChart2 = new Graphs.Volume(parentCandleChart);
+                parentCandleChart.AddSubChart(parentCandleChart.VolumeChart2);
+                parentCandleChart.IsVolumeChart2Exists = true;
+            }
+
+            else
+            {
+                parentCandleChart.DelSubChart(parentCandleChart.VolumeChart2);
+                parentCandleChart.IsVolumeChart2Exists = false;
+                parentCandleChart.VolumeChart2 = null;
+            }
+        }
         //----------------------------------------------------------------------------------------------------------------------------------
         //----------------------------------------------------------------------------------------------------------------------------------
         //----------------------------------------------------------------------------------------------------------------------------------

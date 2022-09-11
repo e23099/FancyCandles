@@ -349,7 +349,7 @@
             
             
             <!-- Volume chart all in one grid -->
-            <Grid>
+            <!--Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition />
                     <ColumnDefinition Width="{Binding Path=PriceAxisWidth, Mode=OneWay}"/>
@@ -420,7 +420,7 @@
                         </Line.Visibility>
                     </Line>
                 </Grid>
-                <!-- crosshair volume for volume histogram (浮動標籤) -->
+                <!- crosshair volume for volume histogram (浮動標籤) ->
                 <Grid Grid.Column="1" Panel.ZIndex="2">
                     <Grid.Visibility>
                         <MultiBinding Converter="{StaticResource squareBoolToVisibilityConverter}">
@@ -459,7 +459,7 @@
                           Stroke="{Binding CrossPriceLabelForeground, Mode=OneWay}"
                           RenderOptions.EdgeMode="Aliased"/>
                 </Grid>
-                <!-- Veritcal scale with volume marks: -->
+                <!- Veritcal scale with volume marks: ->
                 <graph:VolumeTicksElement Grid.Column="0" Grid.ColumnSpan="2" VerticalAlignment="Stretch"
                                           Culture="{Binding Path=Culture, Mode=OneWay}"
                                           TickLabelFontFamily="{Binding Path=AxisTickLabelFontFamily, Mode=OneWay}"
@@ -474,7 +474,7 @@
                                           GridlinesPen="{Binding Path=HorizontalGridlinesPen, Mode=OneWay}"
                                           RenderOptions.EdgeMode="Aliased"
                                           Visibility="{Binding Path=IsVolumePanelVisible, Converter={StaticResource boolToVisibilityConverter}}"/>
-            </Grid>
+            </Grid-->
 
         </control:SplitPanel>
 
