@@ -4,7 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:FancyCandles.Graphs"
-             xmlns:fc="clr-namespace:FancyCandles" d:DataContext="{d:DesignInstance Type=fc:CandleChart}"
+             xmlns:fc="clr-namespace:FancyCandles" 
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <UserControl.Resources>
@@ -78,10 +78,9 @@
                     X2="{Binding RelativeSource={RelativeSource Mode=Self}, Path=X1, Mode=OneWay}" 
                     Y2="{Binding ElementName=volumeHistogramContainer, Path=ActualHeight, Mode=OneWay}">
                 <Line.Visibility>
-                    <MultiBinding Converter="{StaticResource verticalCrossLineVisibilityConverter}">
+                    <MultiBinding Converter="{StaticResource squareBoolToVisibilityConverter}">
                         <Binding Path="IsCrossLinesVisible" Mode="OneWay"/>
-                        <Binding ElementName="priceChartContainer" Path="IsMouseOver" Mode="OneWay"/>
-                        <Binding ElementName="volumeHistogramContainer" Path="IsMouseOver" Mode="OneWay"/>
+                        <Binding ElementName="_splitPanel" Path="IsMouseOver" Mode="OneWay"/>
                     </MultiBinding>
                 </Line.Visibility>
             </Line>
@@ -137,7 +136,6 @@
                                   VisibleCandlesExtremums="{Binding Path=VisibleCandlesExtremums, Mode=OneWay}"
                                   IsGridlinesEnabled="{Binding Path=IsHorizontalGridlinesEnabled, Mode=OneWay}"
                                   GridlinesPen="{Binding Path=HorizontalGridlinesPen, Mode=OneWay}"
-                                  RenderOptions.EdgeMode="Aliased"
-                                  Visibility="{Binding Path=IsVolumePanelVisible, Converter={StaticResource boolToVisibilityConverter}}"/>
+                                  RenderOptions.EdgeMode="Aliased"/>
     </Grid>
 </UserControl>

@@ -192,7 +192,7 @@ namespace FancyCandles
             bool isChecked = ((CheckBox)sender).IsChecked ?? false;
             if (isChecked)
             {
-                parentCandleChart.VolumeChart = new Graphs.Volume(parentCandleChart);
+                parentCandleChart.VolumeChart = new Graphs.Volume();// { ParentCandleChart = parentCandleChart };
                 parentCandleChart.AddSubChart(parentCandleChart.VolumeChart);
                 parentCandleChart.IsVolumeChartExists = true;
             }
@@ -209,7 +209,7 @@ namespace FancyCandles
             bool isChecked = ((CheckBox)sender).IsChecked ?? false;
             if (isChecked)
             {
-                parentCandleChart.VolumeChart2 = new Graphs.Volume(parentCandleChart);
+                parentCandleChart.VolumeChart2 = new Graphs.Volume();// { ParentCandleChart = parentCandleChart };
                 parentCandleChart.AddSubChart(parentCandleChart.VolumeChart2);
                 parentCandleChart.IsVolumeChart2Exists = true;
             }

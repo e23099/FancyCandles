@@ -36,6 +36,14 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="clib, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\share-lib\Split Panel\Common\bin\Debug\clib.dll</HintPath>
+    </Reference>
+    <Reference Include="FancyPrimitives, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\FancyPrimitives\bin\Debug\FancyPrimitives.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.Expression.Interactions, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>C:\Users\DDD\.nuget\packages\System.Windows.Interactivity.WPF.2.0.20525\lib\net40\Microsoft.Expression.Interactions.dll</HintPath>
     </Reference>
@@ -66,6 +74,7 @@
     <Compile Include="CandleStructs.cs" />
     <Compile Include="Converters.cs" />
     <Compile Include="DateTimeMilestones.cs" />
+    <Compile Include="Graphs\AbstractGraphElement.cs" />
     <Compile Include="Graphs\GraphTicksElement.cs" />
     <Compile Include="Graphs\Volume.xaml.cs">
       <DependentUpon>Volume.xaml</DependentUpon>
@@ -143,17 +152,10 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\cs\Split Panel\Common\Common.csproj">
-      <Project>{adebe16f-e301-4032-b3d0-0a801e8aa635}</Project>
-      <Name>Common</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\FancyPrimitives\FancyPrimitives.csproj">
-      <Project>{cefe18e3-e073-4cc7-8cb9-c277c8d5b76f}</Project>
-      <Name>FancyPrimitives</Name>
-    </ProjectReference>
+    <Resource Include="CandleChart structure.txt" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="CandleChart structure.txt" />
+    <WCFMetadata Include="Connected Services\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

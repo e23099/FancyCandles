@@ -254,8 +254,8 @@ namespace FancyCandles
         // values[1] - double CandleGap
         public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
         {
-            double candleW = (double)values[0];
-            double candleG = (double)values[1];
+            double candleW = values[0] == DependencyProperty.UnsetValue ? 0.0 : (double)values[0];
+            double candleG = values[1] == DependencyProperty.UnsetValue ? 0.0 : (double)values[1];
             return new CandleDrawingParameters(candleW, candleG);
         }
 

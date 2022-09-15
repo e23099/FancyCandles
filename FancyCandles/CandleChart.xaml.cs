@@ -72,7 +72,7 @@ namespace FancyCandles
             VisibleCandlesRange = IntRange.Undefined;
             VisibleCandlesExtremums = new CandleExtremums(0.0, 0.0, 0L, 0L);
             Loaded += new RoutedEventHandler(OnUserControlLoaded);
-            //_splitPanel.Children.Add(new Graphs.Volume(this));
+            VolumeChart = _defaultVolumeGraph;
         }
         //----------------------------------------------------------------------------------------------------------------------------------
         internal void OpenCandleChartPropertiesWindow(object sender, RoutedEventArgs e)
@@ -1354,8 +1354,8 @@ namespace FancyCandles
                 int charsInPrice = CandlesSource.Select(c => MyNumberFormatting.PriceToString(c.H, priceNumberFormat, Culture, decimalSeparator, decimalSeparatorArray).Length).Max();
 
                 int charsInVolume = 0;
-                if (IsVolumePanelVisible)
-                    charsInVolume = MyNumberFormatting.MaxVolumeStringLength;
+                //if (IsVolumePanelVisible)
+                charsInVolume = MyNumberFormatting.MaxVolumeStringLength;
 
                 MaxNumberOfCharsInPrice = Math.Max(charsInPrice, charsInVolume);
             }
@@ -1372,8 +1372,8 @@ namespace FancyCandles
             int L1 = MyNumberFormatting.PriceToString(newCandle.H, priceNumberFormat, Culture, decimalSeparator, decimalSeparatorArray).Length;
 
             int L2 = 0;
-            if (IsVolumePanelVisible)
-                L2 = MyNumberFormatting.MaxVolumeStringLength;
+            // if (IsVolumePanelVisible)
+            L2 = MyNumberFormatting.MaxVolumeStringLength;
 
             int L = Math.Max(L1, L2);
 
@@ -1754,18 +1754,6 @@ namespace FancyCandles
         #region VOLUME PROPERTIES
         [UndoableProperty]
         [JsonProperty]
-        public bool IsVolumePanelVisible
-        {
-            get { return (bool)GetValue(IsVolumePanelVisibleProperty); }
-            set { SetValue(IsVolumePanelVisibleProperty, value); }
-        }
-        public static readonly DependencyProperty IsVolumePanelVisibleProperty =
-            DependencyProperty.Register("IsVolumePanelVisible", typeof(bool), typeof(CandleChart), new PropertyMetadata(DefaultIsVolumePanelVisible));
-
-        public static bool DefaultIsVolumePanelVisible { get { return true; } }
-
-        [UndoableProperty]
-        [JsonProperty]
         public double VolumeBarWidthToCandleWidthRatio
         {
             get { return (double)GetValue(VolumeBarWidthToCandleWidthRatioProperty); }
@@ -1933,8 +1921,13 @@ namespace FancyCandles
             DependencyProperty.Register("CandlesSource", typeof(ICandlesSource), typeof(CandleChart), new UIPropertyMetadata(null, OnCandlesSourceChanged, CoerceCandlesSource));
 
         DateTime lastCenterCandleDateTime;
-        private static object CoerceCandlesSource(DependencyObject objWithOldDP, object newDPValue)
+        internal static object CoerceCandlesSource(DependencyObject objWithOldDP, object newDPValue)
         {
+            /* CoerceCandlesSource( a , b )
+             *   a: the object that the property exists on
+             *   b: the new value of the property before coercion
+             *   return: the coerced value
+             */
             CandleChart thisCandleChart = (CandleChart)objWithOldDP;
 
             IntRange vcRange = thisCandleChart.VisibleCandlesRange;
@@ -1944,7 +1937,7 @@ namespace FancyCandles
             {
                 if (thisCandleChart.CandlesSource != null && (vcRange.Start_i + vcRange.Count) < thisCandleChart.CandlesSource.Count())
                 {
-                    int centralCandle_i = (2 * vcRange.Start_i + vcRange.Count) / 2;
+                    int centralCandle_i = vcRange.Start_i + vcRange.Count / 2;
                     thisCandleChart.lastCenterCandleDateTime = thisCandleChart.CandlesSource[centralCandle_i].t;
                 }
                 else
@@ -1954,7 +1947,7 @@ namespace FancyCandles
             return newDPValue;
         }
 
-        static void OnCandlesSourceChanged(DependencyObject obj, DependencyPropertyChangedEventArgs e)
+        internal static void OnCandlesSourceChanged(DependencyObject obj, DependencyPropertyChangedEventArgs e)
         {
             CandleChart thisCandleChart = obj as CandleChart;
             if (thisCandleChart == null) return;
@@ -2154,26 +2147,26 @@ namespace FancyCandles
         /// <summary>Identifies the <see cref="VisibleCandlesRange"/> dependency property.</summary>
         /// <value><see cref="DependencyProperty"/></value>
         public static readonly DependencyProperty VisibleCandlesRangeProperty =
-            DependencyProperty.Register("VisibleCandlesRange", typeof(IntRange), typeof(CandleChart), new PropertyMetadata(IntRange.Undefined, OnVisibleCanlesRangeChanged, CoerceVisibleCandlesRange));
+            DependencyProperty.Register("VisibleCandlesRange", typeof(IntRange), typeof(CandleChart), new PropertyMetadata(IntRange.Undefined, OnVisibleCandlesRangeChanged, CoerceVisibleCandlesRange));
 
-        static void OnVisibleCanlesRangeChanged(DependencyObject obj, DependencyPropertyChangedEventArgs e)
+        internal static void OnVisibleCandlesRangeChanged(DependencyObject obj, DependencyPropertyChangedEventArgs e)
         {
             CandleChart thisCandleChart = (CandleChart)obj;
             if (thisCandleChart.IsLoaded)
                 thisCandleChart.ReCalc_VisibleCandlesExtremums();
         }
 
-        private static object CoerceVisibleCandlesRange(DependencyObject objWithOldDP, object baseValue)
+        internal static object CoerceVisibleCandlesRange(DependencyObject objWithOldDP, object baseValue)
         {
-            CandleChart thisCandleChart = (CandleChart)objWithOldDP; // Содержит старое значение для изменяемого свойства.
+            CandleChart thisCandleChart = (CandleChart)objWithOldDP; // Contains the old value for the property being changed.
             IntRange newValue = (IntRange)baseValue;
 
             if (IntRange.IsUndefined(newValue))
                 return newValue;
-            // Это хак для привязки к скроллеру, когда передается только компонента IntRange.Start_i, а компонента IntRange.Count берется из старого значения свойства:
+            // This is a hack to bind to the scroller when only the IntRange.Start_i component is passed and the IntRange.Count component is taken from the old property value:
             else if (IntRange.IsContainsOnlyStart_i(newValue))
                 return new IntRange(newValue.Start_i, thisCandleChart.VisibleCandlesRange.Count);
-            // А это обычная ситуация:
+            // And this is a common situation.:
             else
             {
                 int newVisibleCandlesStart_i = Math.Max(0, newValue.Start_i);
@@ -2440,7 +2433,6 @@ namespace FancyCandles
         //----------------------------------------------------------------------------------------------------------------------------------
         //----------------------------------------------------------------------------------------------------------------------------------
 
-
         public void AddSubChart(UserControl control)
         {
             _splitPanel.Children.Add(control);
@@ -2451,23 +2443,24 @@ namespace FancyCandles
             _splitPanel.Children.Remove(control);
         }
 
+        public UserControl VolumeChart { get; set; } 
+        public UserControl VolumeChart2 { get; set; }
+
         public static readonly DependencyProperty IsVolumeChartExistsProperty = DependencyProperty.Register(
-            "IsVolumeChartExistsProperty", typeof(bool), typeof(CandleChartPropertiesWindow));
+            "IsVolumeChartExistsProperty", typeof(bool), typeof(CandleChartPropertiesWindow), new PropertyMetadata(true));
+        public static readonly DependencyProperty IsVolumeChart2ExistsProperty = DependencyProperty.Register(
+            "IsVolumeChart2ExistsProperty", typeof(bool), typeof(CandleChartPropertiesWindow));
+
         public bool IsVolumeChartExists
         {
             get { return (bool)GetValue(IsVolumeChartExistsProperty); }
             set { SetValue(IsVolumeChartExistsProperty, value); }
         }
-        public UserControl VolumeChart { get; set; }
 
-
-        public static readonly DependencyProperty IsVolumeChart2ExistsProperty = DependencyProperty.Register(
-            "IsVolumeChart2ExistsProperty", typeof(bool), typeof(CandleChartPropertiesWindow));
         public bool IsVolumeChart2Exists
         {
             get { return (bool)GetValue(IsVolumeChart2ExistsProperty); }
             set { SetValue(IsVolumeChart2ExistsProperty, value); }
         }
-        public UserControl VolumeChart2 { get; set; }
     }
 }

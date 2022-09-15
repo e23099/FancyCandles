@@ -42,7 +42,7 @@ namespace FancyCandles
         string SecID { get; }
     }
 
-    ///<summary>Represents some resource that a counter of its users.</summary>
+    ///<summary>Represents some resource with a counter of its users.</summary>
     public interface IResourceWithUserCounter
     {
         ///<summary>Gets the number of users of this resource.</summary>

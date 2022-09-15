@@ -33,6 +33,8 @@ namespace FancyCandles
 {
     class PriceChartElement : FrameworkElement
     {
+        private Pen bearishCandleStrokePen;
+        private Pen bullishCandleStrokePen;
         //---------------------------------------------------------------------------------------------------------------------------------------
         public PriceChartElement() 
         {
@@ -177,7 +179,6 @@ namespace FancyCandles
             set { SetValue(BullishCandleStrokeProperty, value); }
         }
 
-        private Pen bullishCandleStrokePen;
 
         private static object CoerceBullishCandleStroke(DependencyObject objWithOldDP, object newDPValue)
         {
@@ -225,8 +226,6 @@ namespace FancyCandles
             set { SetValue(BearishCandleStrokeProperty, value); }
         }
 
-        private Pen bearishCandleStrokePen;
-
         private static object CoerceBearishCandleStroke(DependencyObject objWithOldDP, object newDPValue)
         {
             PriceChartElement thisElement = (PriceChartElement)objWithOldDP;
@@ -273,9 +272,10 @@ namespace FancyCandles
             set { SetValue(CandleWidthAndGapProperty, value); }
         }
         //---------------------------------------------------------------------------------------------------------------------------------------
+
         protected override void OnRender(DrawingContext drawingContext)
         {
-            //drawingContext.DrawRectangle(transparentFrozenBrush, null, new Rect(0, 0, RenderSize.Width, RenderSize.Height));
+            // drawingContext.DrawRectangle(transparentFrozenBrush, null, new Rect(0, 0, RenderSize.Width, RenderSize.Height));
             double range = VisibleCandlesExtremums.PriceHigh - VisibleCandlesExtremums.PriceLow;
             double correctedCndlWidth = CandleWidthAndGap.Width - 1.0;
             double candleWidthPlusGap = CandleWidthAndGap.Width + CandleWidthAndGap.Gap;
@@ -293,14 +293,16 @@ namespace FancyCandles
 
                 double cndlLeftX = i * candleWidthPlusGap;
                 double cndlCenterX = cndlLeftX + 0.5 * CandleWidthAndGap.Width;
-                drawingContext.DrawLine(cndlPen, new Point(cndlCenterX, wnd_L), new Point(cndlCenterX, wnd_H));
+                drawingContext.DrawLine(cndlPen, new Point(cndlCenterX, wnd_L), new Point(cndlCenterX, wnd_H)); // 上下影線
                 double cndlBodyH = Math.Abs(wnd_O - wnd_C);
                 if (cndlBodyH > 1.0)
                 {
-                    drawingContext.DrawRectangle(cndlBrush, cndlPen, new Rect(cndlLeftX + 0.5, Math.Min(wnd_O, wnd_C) + 0.5, correctedCndlWidth, cndlBodyH - 1.0));
+                    drawingContext.DrawRectangle(cndlBrush, cndlPen, new Rect(cndlLeftX + 0.5, Math.Min(wnd_O, wnd_C) + 0.5, correctedCndlWidth, cndlBodyH - 1.0)); // candle stroke 應該是 0.5
+                    // new Rect(左邊過來多遠, 上面過來多遠, 寬, 高);
                 }
                 else
-                    drawingContext.DrawLine(cndlPen, new Point(cndlLeftX, wnd_O), new Point(cndlLeftX + CandleWidthAndGap.Width, wnd_O));
+                    drawingContext.DrawLine(cndlPen, new Point(cndlLeftX, wnd_O), new Point(cndlLeftX + CandleWidthAndGap.Width, wnd_O)); // 實體K棒一點以下就畫一條橫線
+                    // new Point(左邊過來多遠, 上面過來多遠);
             }
 
             for (int i = 0; i < Indicators.Count; i++)

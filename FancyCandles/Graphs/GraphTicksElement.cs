@@ -5,6 +5,9 @@ using System.Globalization;
 
 namespace FancyCandles.Graphs
 {
+    /// <summary>
+    /// 一般化 Chart 的 Y 軸刻度和座標數值
+    /// </summary>
     class GraphTicksElement : FrameworkElement
     {
         public static double TICK_LINE_WIDTH = 3.0;

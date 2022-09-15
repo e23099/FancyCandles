@@ -13,6 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.ComponentModel;
+using System.Runtime.CompilerServices; // [CallerMemberName]
 
 namespace FancyCandles.Graphs
 {
@@ -22,23 +23,29 @@ namespace FancyCandles.Graphs
     public partial class Volume : UserControl
     {
 
-        private CandleChart parentChart;
-        public Volume(CandleChart parentChart)
+        /// <summary>
+        /// compose of:
+        ///     VolumeChartElement
+        ///     VolumeTickElement
+        ///     Grid for showing Y label
+        /// </summary>
+        public Volume()
         {
-            this.parentChart = parentChart;
-            this.DataContext = this.parentChart;
             InitializeComponent();
         }
 
         private void OnMouseWheel(object sender, MouseWheelEventArgs e)
         {
-            parentChart.OnMouseWheel(sender, e);
+            CandleChart chart = this.DataContext as CandleChart;
+            if (chart == null) return;
+            chart.OnMouseWheel(sender, e);
         }
 
         private void OnMouseMoveInsideFrameworkElement(object sender, MouseEventArgs e)
         {
-            parentChart.OnMouseMoveInsideFrameworkElement(sender, e);
+            CandleChart chart = this.DataContext as CandleChart;
+            if (chart == null) return;
+            chart.OnMouseMoveInsideFrameworkElement(sender, e);
         }
-
     }
 }

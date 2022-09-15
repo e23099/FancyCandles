@@ -49,6 +49,10 @@
         <Brush x:Key="contextMenuBackground">Whitesmoke</Brush>
         <Brush x:Key="contextMenuBorderBrush">DimGray</Brush>
 
+        <Style TargetType="{x:Type control:SplitPanel+Splitter}">
+            <Setter Property="Height" Value="3" /> <!-- 控制 splitPanel 內部 Children 之間的 Gap 大小 -->
+        </Style>
+
         <Style TargetType="{x:Type ContextMenu}">
             <Setter Property="SnapsToDevicePixels" Value="True" />
             <Setter Property="OverridesDefaultStyle" Value="True" />
@@ -200,7 +204,6 @@
                 <Grid x:Name="priceChartContainer" Grid.Column="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" 
                       ClipToBounds="True"
                       SizeChanged="OnPanelCandlesContainerSizeChanged" MouseWheel="OnMouseWheel" MouseMove="OnMouseMoveInsideFrameworkElement" Panel.ZIndex="2">
-
                     <!-- You need to fill the entire container with transparent content, otherwise the crosshair does not work: -->
                     <Rectangle HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Fill="Transparent" Panel.ZIndex="1"/>
 
@@ -349,133 +352,7 @@
             
             
             <!-- Volume chart all in one grid -->
-            <!--Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition />
-                    <ColumnDefinition Width="{Binding Path=PriceAxisWidth, Mode=OneWay}"/>
-                </Grid.ColumnDefinitions>
-                <Border Grid.Column="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" 
-                        Background="{Binding Path=ChartAreaBackground, Mode=OneWay}"
-                        BorderBrush="{Binding Path=ChartAreaBorderColor}"
-                        BorderThickness="1"
-                        RenderOptions.EdgeMode="Aliased"
-                        Visibility="{Binding Path=IsVolumePanelVisible, Converter={StaticResource boolToVisibilityConverter}}" />
-
-                <Grid x:Name="volumeHistogramContainer" Grid.Column="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" 
-                      MouseWheel="OnMouseWheel" MouseMove="OnMouseMoveInsideFrameworkElement" Panel.ZIndex="2"
-                      Visibility="{Binding Path=IsVolumePanelVisible, Converter={StaticResource boolToVisibilityConverter}}" >
-
-                    <Rectangle HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Fill="Transparent"/>
-
-                    <graph:VolumeChartElement 
-                        CandlesSource="{Binding Path=CandlesSource, Mode=OneWay}"
-                        Culture="{Binding Path=Culture, Mode=OneWay}"
-                        VisibleCandlesRange="{Binding Path=VisibleCandlesRange, Mode=OneWay}"
-                        VisibleCandlesExtremums="{Binding Path=VisibleCandlesExtremums, Mode=OneWay}"
-                        VolumeBarWidthToCandleWidthRatio="{Binding Path=VolumeBarWidthToCandleWidthRatio, Mode=OneWay}"
-                        BullishBarFill="{Binding Path=BullishVolumeBarFill, Mode=OneWay}"
-                        BearishBarFill="{Binding Path=BearishVolumeBarFill, Mode=OneWay}" 
-                        ToolTipService.PlacementTarget="{Binding ElementName=volumeHistogramContainer, Path=., Mode=OneWay}"
-                        ToolTipService.Placement="Relative"
-                        RenderOptions.EdgeMode="Aliased">
-                        <graph:VolumeChartElement.CandleWidthAndGap>
-                            <MultiBinding Converter="{StaticResource candleDrawingParametersConverter}">
-                                <Binding ElementName="thisUserControl" Path="CandleWidth" Mode="OneWay"/>
-                                <Binding ElementName="thisUserControl" Path="CandleGap" Mode="OneWay"/>
-                            </MultiBinding>
-                        </graph:VolumeChartElement.CandleWidthAndGap>
-                        <graph:VolumeChartElement.Margin>
-                            <MultiBinding Converter="{StaticResource topBottomMarginConverter}">
-                                <Binding ElementName="thisUserControl" Path="VolumeHistogramTopMargin" Mode="OneWay"/>
-                                <Binding ElementName="thisUserControl" Path="VolumeHistogramBottomMargin" Mode="OneWay"/>
-                            </MultiBinding>
-                        </graph:VolumeChartElement.Margin>
-                    </graph:VolumeChartElement>
-
-                    
-                    <Line Stroke="{Binding Path=CrossLinesBrush, Mode=OneWay}" StrokeThickness="1"
-                            IsHitTestVisible="False" RenderOptions.EdgeMode="Aliased"
-                            X1="0" 
-                            Y1="{Binding Path=CurrentMousePosition.Y, Mode=OneWay}" 
-                            X2="{Binding ElementName=volumeHistogramContainer, Path=ActualWidth, Mode=OneWay}" 
-                            Y2="{Binding RelativeSource={RelativeSource Mode=Self}, Path=Y1, Mode=OneWay}">
-                        <Line.Visibility>
-                            <MultiBinding Converter="{StaticResource squareBoolToVisibilityConverter}">
-                                <Binding Path="IsCrossLinesVisible" Mode="OneWay"/>
-                                <Binding ElementName="volumeHistogramContainer" Path="IsMouseOver" Mode="OneWay"/>
-                            </MultiBinding>
-                        </Line.Visibility>
-                    </Line>
-                    <Line Stroke="{Binding Path=CrossLinesBrush, Mode=OneWay}" StrokeThickness="1"
-                            IsHitTestVisible="False" RenderOptions.EdgeMode="Aliased"
-                            X1="{Binding Path=CurrentMousePosition.X, Mode=OneWay}" 
-                            Y1="0" 
-                            X2="{Binding RelativeSource={RelativeSource Mode=Self}, Path=X1, Mode=OneWay}" 
-                            Y2="{Binding ElementName=volumeHistogramContainer, Path=ActualHeight, Mode=OneWay}">
-                        <Line.Visibility>
-                            <MultiBinding Converter="{StaticResource squareBoolToVisibilityConverter}">
-                                <Binding Path="IsCrossLinesVisible" Mode="OneWay"/>
-                                <Binding ElementName="_splitPanel" Path="IsMouseOver" Mode="OneWay" />
-                            </MultiBinding>
-                        </Line.Visibility>
-                    </Line>
-                </Grid>
-                <!- crosshair volume for volume histogram (浮動標籤) ->
-                <Grid Grid.Column="1" Panel.ZIndex="2">
-                    <Grid.Visibility>
-                        <MultiBinding Converter="{StaticResource squareBoolToVisibilityConverter}">
-                            <Binding Path="IsCrossPriceLabelVisible" Mode="OneWay"/>
-                            <Binding ElementName="volumeHistogramContainer" Path="IsMouseOver" Mode="OneWay"/>
-                        </MultiBinding>
-                    </Grid.Visibility>
-
-                    <Border BorderThickness="1" VerticalAlignment="Top" HorizontalAlignment="Left"
-                            Background="{Binding CrossPriceLabelBackground, Mode=OneWay}" 
-                            BorderBrush="{Binding CrossPriceLabelForeground, Mode=OneWay}"
-                            RenderOptions.EdgeMode="Aliased">
-                        <Border.Margin>
-                            <MultiBinding Converter="{StaticResource crossPriceMarginConverter}">
-                                <Binding Path="CurrentMousePosition" Mode="OneWay"/>
-                                <Binding Path="PriceAxisTickLabelHeight" Mode="OneWay"/>
-                            </MultiBinding>
-                        </Border.Margin>
-
-                        <TextBlock Foreground="{Binding CrossPriceLabelForeground, Mode=OneWay}" FontSize="{Binding PriceAxisTickLabelFontSize, Mode=OneWay}" Margin="5 0 2 0">
-                            <TextBlock.Text>
-                                <MultiBinding Converter="{StaticResource crossVolumeConverter}">
-                                    <Binding Path="CurrentMousePosition" Mode="OneWay"/>
-                                    <Binding ElementName="volumeHistogramContainer" Path="ActualHeight" Mode="OneWay"/>
-                                    <Binding Path="VisibleCandlesExtremums" Mode="OneWay"/>
-                                    <Binding Path="VolumeHistogramTopMargin" Mode="OneWay"/>
-                                    <Binding Path="VolumeHistogramBottomMargin" Mode="OneWay"/>
-                                    <Binding Path="Culture" Mode="OneWay"/>
-                                </MultiBinding>
-                            </TextBlock.Text>
-                        </TextBlock>
-                    </Border>
-
-                    <Line X1="0" Y1="{Binding Path=CurrentMousePosition.Y, Mode=OneWay}" 
-                          X2="3" Y2="{Binding Path=CurrentMousePosition.Y, Mode=OneWay}" 
-                          Stroke="{Binding CrossPriceLabelForeground, Mode=OneWay}"
-                          RenderOptions.EdgeMode="Aliased"/>
-                </Grid>
-                <!- Veritcal scale with volume marks: ->
-                <graph:VolumeTicksElement Grid.Column="0" Grid.ColumnSpan="2" VerticalAlignment="Stretch"
-                                          Culture="{Binding Path=Culture, Mode=OneWay}"
-                                          TickLabelFontFamily="{Binding Path=AxisTickLabelFontFamily, Mode=OneWay}"
-                                          TickLabelFontSize="{Binding Path=PriceAxisTickLabelFontSize, Mode=OneWay}"
-                                          TickColor="{Binding Path=AxisTickColor, Mode=OneWay}"
-                                          GapBetweenTickLabels="{Binding Path=GapBetweenPriceTickLabels, Mode=OneWay}"
-                                          ChartBottomMargin="{Binding Path=VolumeHistogramBottomMargin, Mode=OneWay}"
-                                          ChartTopMargin="{Binding Path=VolumeHistogramTopMargin, Mode=OneWay}"
-                                          PriceAxisWidth="{Binding Path=PriceAxisWidth, Mode=OneWay}"
-                                          VisibleCandlesExtremums="{Binding Path=VisibleCandlesExtremums, Mode=OneWay}"
-                                          IsGridlinesEnabled="{Binding Path=IsHorizontalGridlinesEnabled, Mode=OneWay}"
-                                          GridlinesPen="{Binding Path=HorizontalGridlinesPen, Mode=OneWay}"
-                                          RenderOptions.EdgeMode="Aliased"
-                                          Visibility="{Binding Path=IsVolumePanelVisible, Converter={StaticResource boolToVisibilityConverter}}"/>
-            </Grid-->
-
+            <graph:Volume x:Name="_defaultVolumeGraph"/>
         </control:SplitPanel>
 
         <!-- ============================================================================================================================================================== -->

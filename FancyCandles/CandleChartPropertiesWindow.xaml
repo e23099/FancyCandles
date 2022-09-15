@@ -364,7 +364,7 @@
                         <RowDefinition Height="*"/>
                     </Grid.RowDefinitions>
 
-                    <Label Content="Idicator to add:" Grid.Column="0" Grid.Row="0" Style="{StaticResource listCaption}"/>
+                    <Label Content="Indicator to add:" Grid.Column="0" Grid.Row="0" Style="{StaticResource listCaption}"/>
                     <ListBox x:Name="listOverlayIndicatorTypes" Grid.Column="0" Grid.Row="1" Grid.RowSpan="2"
                                 ItemsSource="{Binding ElementName=thisWindow, Path=OverlayIndicatorTypes}" 
                                 SelectedIndex="0">
@@ -384,7 +384,7 @@
                     </Button>
 
 
-                    <Label Content="Idicators on the price chart:" Grid.Column="2" Grid.Row="0" Style="{StaticResource listCaption}"/>
+                    <Label Content="Indicators on the price chart:" Grid.Column="2" Grid.Row="0" Style="{StaticResource listCaption}"/>
                     <ListBox x:Name="listOverlayIndicators" Grid.Column="2" Grid.Row="1"
                                 ItemsSource="{Binding OverlayIndicators}"
                                 SelectionChanged="ListOverlayIndicators_SelectionChanged"
@@ -494,66 +494,56 @@
                 <control:SplitPanel>
                     <ListBox control:SplitPanel.Size="0.3">
                         <ListBoxItem>
-                            <StackPanel Orientation="Horizontal">
-                                <CheckBox Click="CheckBox_Click" IsChecked="{Binding IsVolumeChartExists}"/>
-                                <TextBlock Text="Vol1" />
-                            </StackPanel>
+                            <CheckBox Click="CheckBox_Click" IsChecked="{Binding IsVolumeChartExists}">
+                                <CheckBox.Content>
+                                    <TextBlock Text="Vol1" />
+                                </CheckBox.Content>
+                            </CheckBox>
                         </ListBoxItem>
                         <ListBoxItem>
-                            <StackPanel Orientation="Horizontal">
-                                <CheckBox Click="CheckBox2_Click" IsChecked="{Binding IsVolumeChart2Exists}"/>
-                                <TextBlock Text="Vol2" />
-                            </StackPanel>
+                            <CheckBox Click="CheckBox2_Click" IsChecked="{Binding IsVolumeChart2Exists}">
+                                <CheckBox.Content>
+                                    <TextBlock Text="Vol2" />
+                                </CheckBox.Content>
+                            </CheckBox>
                         </ListBoxItem>
                     </ListBox>
                     <Grid x:Name="_SubchartSettingContainer">
                         <StackPanel VerticalAlignment="Top" Margin="5 10 0 0">
-                            <StackPanel Style="{StaticResource settingsItem}">
-                                <TextBlock Style="{StaticResource horizontalCaption}">Volume histogram:</TextBlock>
-                                <CheckBox x:Name="checkBoxIsVolumePanelVisible" IsChecked="{Binding IsVolumePanelVisible, Mode=TwoWay}"/>
-                            </StackPanel>
-                            
                             <StackPanel Style="{StaticResource settingsItem}" ToolTip="The gap between the highest point of the visible bars and the top border of the volume histogram panel.">
                                 <TextBlock Style="{StaticResource horizontalCaption}">Indent from top:</TextBlock>
                                 <fp:IntegerTextBox x:Name="txtBoxVolumeHistogramTopMargin" 
                                                    MinValue="0" Width="30"
-                                                   Text="{Binding VolumeHistogramTopMargin, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                                   IsEnabled="{Binding ElementName=checkBoxIsVolumePanelVisible, Path=IsChecked}"/>
+                                                   Text="{Binding VolumeHistogramTopMargin, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                                 <fp:UpDownButtonBlock Height="{Binding ElementName=txtBoxVolumeHistogramTopMargin, Path=ActualHeight}" Width="20"
                                                       UpButtonPressedCommand="{Binding ElementName=txtBoxVolumeHistogramTopMargin, Path=IncrementValueCommand}"
-                                                      DownButtonPressedCommand="{Binding ElementName=txtBoxVolumeHistogramTopMargin, Path=DecrementValueCommand}"
-                                                      IsEnabled="{Binding ElementName=checkBoxIsVolumePanelVisible, Path=IsChecked}"/>
+                                                      DownButtonPressedCommand="{Binding ElementName=txtBoxVolumeHistogramTopMargin, Path=DecrementValueCommand}"/>
                             </StackPanel>
 
                             <StackPanel Style="{StaticResource settingsItem}" ToolTip="The gap between the lowest point of the visible bars and the bottom border of the volume histogram panel.">
                                 <TextBlock Style="{StaticResource horizontalCaption}">Indent from bottom:</TextBlock>
                                 <fp:IntegerTextBox x:Name="txtBoxVolumeHistogramBottomMargin" 
                                                    MinValue="0" Width="30"
-                                                   Text="{Binding VolumeHistogramBottomMargin, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                                   IsEnabled="{Binding ElementName=checkBoxIsVolumePanelVisible, Path=IsChecked}"/>
+                                                   Text="{Binding VolumeHistogramBottomMargin, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                                 <fp:UpDownButtonBlock Height="{Binding ElementName=txtBoxVolumeHistogramBottomMargin, Path=ActualHeight}" Width="20"
                                                       UpButtonPressedCommand="{Binding ElementName=txtBoxVolumeHistogramBottomMargin, Path=IncrementValueCommand}"
-                                                      DownButtonPressedCommand="{Binding ElementName=txtBoxVolumeHistogramBottomMargin, Path=DecrementValueCommand}"
-                                                      IsEnabled="{Binding ElementName=checkBoxIsVolumePanelVisible, Path=IsChecked}"/>
+                                                      DownButtonPressedCommand="{Binding ElementName=txtBoxVolumeHistogramBottomMargin, Path=DecrementValueCommand}"/>
                             </StackPanel>
                             
                             <StackPanel Style="{StaticResource settingsItem}">
                                 <TextBlock Style="{StaticResource horizontalCaption}">Bullish volume bar fill:</TextBlock>
-                                <fp:StandardColorPicker SelectedColor="{Binding BullishVolumeBarFill, Converter={StaticResource symColorBrushStringConverter}, Mode=TwoWay}" VerticalAlignment="Bottom"
-                                                        IsEnabled="{Binding ElementName=checkBoxIsVolumePanelVisible, Path=IsChecked}"/>
+                                <fp:StandardColorPicker SelectedColor="{Binding BullishVolumeBarFill, Converter={StaticResource symColorBrushStringConverter}, Mode=TwoWay}" VerticalAlignment="Bottom"/>
                             </StackPanel>
                             
                             <StackPanel Style="{StaticResource settingsItem}">
                                 <TextBlock Style="{StaticResource horizontalCaption}">Bearish volume bar fill:</TextBlock>
-                                <fp:StandardColorPicker SelectedColor="{Binding BearishVolumeBarFill, Converter={StaticResource symColorBrushStringConverter}, Mode=TwoWay}" VerticalAlignment="Bottom"
-                                                        IsEnabled="{Binding ElementName=checkBoxIsVolumePanelVisible, Path=IsChecked}"/>
+                                <fp:StandardColorPicker SelectedColor="{Binding BearishVolumeBarFill, Converter={StaticResource symColorBrushStringConverter}, Mode=TwoWay}" VerticalAlignment="Bottom"/>
                             </StackPanel>
 
                             <StackPanel Style="{StaticResource settingsItem}">
                                 <TextBlock Style="{StaticResource horizontalCaption}">Volume bar width:</TextBlock>
                                 <Slider Value="{Binding VolumeBarWidthToCandleWidthRatio, Mode=TwoWay}" 
-                                        VerticalAlignment="Bottom" Width="70" Minimum="0" Maximum="1.0"
-                                        IsEnabled="{Binding ElementName=checkBoxIsVolumePanelVisible, Path=IsChecked}"/>
+                                        VerticalAlignment="Bottom" Width="70" Minimum="0" Maximum="1.0"/>
                             </StackPanel>
                         </StackPanel>
                     </Grid>
