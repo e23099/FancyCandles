@@ -80,7 +80,7 @@
                 <Line.Visibility>
                     <MultiBinding Converter="{StaticResource squareBoolToVisibilityConverter}">
                         <Binding Path="IsCrossLinesVisible" Mode="OneWay"/>
-                        <Binding ElementName="_splitPanel" Path="IsMouseOver" Mode="OneWay"/>
+                        <Binding Path="IsMouseOver" Mode="OneWay"/>
                     </MultiBinding>
                 </Line.Visibility>
             </Line>

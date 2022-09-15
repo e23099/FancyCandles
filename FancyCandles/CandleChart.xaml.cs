@@ -66,9 +66,6 @@ namespace FancyCandles
 
             InitializeComponent();
 
-            priceChartContextMenu.DataContext = this;
-            //volumeHistogramContextMenu.DataContext = this;
-
             VisibleCandlesRange = IntRange.Undefined;
             VisibleCandlesExtremums = new CandleExtremums(0.0, 0.0, 0L, 0L);
             Loaded += new RoutedEventHandler(OnUserControlLoaded);
@@ -2462,5 +2459,6 @@ namespace FancyCandles
             get { return (bool)GetValue(IsVolumeChart2ExistsProperty); }
             set { SetValue(IsVolumeChart2ExistsProperty, value); }
         }
+
     }
 }

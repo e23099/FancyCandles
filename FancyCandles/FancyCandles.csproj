@@ -53,7 +53,9 @@
     <Reference Include="PresentationFramework.Aero" />
     <Reference Include="System" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Numerics" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Windows.Interactivity, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>C:\Users\DDD\.nuget\packages\System.Windows.Interactivity.WPF.2.0.20525\lib\net40\System.Windows.Interactivity.dll</HintPath>
     </Reference>
@@ -74,7 +76,7 @@
     <Compile Include="CandleStructs.cs" />
     <Compile Include="Converters.cs" />
     <Compile Include="DateTimeMilestones.cs" />
-    <Compile Include="Graphs\AbstractGraphElement.cs" />
+    <Compile Include="Graphs\AbsCandleSubgraphControl.cs" />
     <Compile Include="Graphs\GraphTicksElement.cs" />
     <Compile Include="Graphs\Volume.xaml.cs">
       <DependentUpon>Volume.xaml</DependentUpon>
@@ -89,12 +91,12 @@
     <Compile Include="MyNumberFormatting.cs" />
     <Compile Include="MyWpfMath.cs" />
     <Compile Include="DiscreteRandomVariableSample.cs" />
-    <Compile Include="PriceChartElement.cs" />
+    <Compile Include="Graphs\PriceChartElement.cs" />
     <Compile Include="Indicators\OverlayIndicator.cs" />
     <Compile Include="CandleChartPropertiesWindow.xaml.cs">
       <DependentUpon>CandleChartPropertiesWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="PriceTicksElement.cs" />
+    <Compile Include="Graphs\PriceTicksElement.cs" />
     <Compile Include="SelectCandleSourceWindow.xaml.cs">
       <DependentUpon>SelectCandleSourceWindow.xaml</DependentUpon>
     </Compile>

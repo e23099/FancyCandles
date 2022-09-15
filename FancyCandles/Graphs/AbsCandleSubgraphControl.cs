@@ -7,7 +7,7 @@ using System.ComponentModel; // For PropertyChange
 
 namespace FancyCandles.Graphs
 {
-    public abstract class AbstractGraphElement : UserControl
+    public abstract class AbsCandleSubgraphControl : UserControl
     {
         #region Properties
         /// <summary>
@@ -21,7 +21,7 @@ namespace FancyCandles.Graphs
         /// <summary>Identifies the <see cref="CandlesSource"/> dependency property.</summary>
         /// <value><see cref="DependencyProperty"/></value>
         public static readonly DependencyProperty CandlesSourceProperty =
-            DependencyProperty.Register("CandlesSource", typeof(ICandlesSource), typeof(AbstractGraphElement), new UIPropertyMetadata(null, CandleChart.OnCandlesSourceChanged, CandleChart.CoerceCandlesSource));
+            DependencyProperty.Register("CandlesSource", typeof(ICandlesSource), typeof(AbsCandleSubgraphControl), new UIPropertyMetadata(null, CandleChart.OnCandlesSourceChanged, CandleChart.CoerceCandlesSource));
 
 
         /// <summary>
@@ -35,7 +35,7 @@ namespace FancyCandles.Graphs
         /// <summary>Identifies the <see cref="Culture"/> dependency property.</summary>
         /// <value><see cref="DependencyProperty"/></value>
         public static readonly DependencyProperty CultureProperty =
-            DependencyProperty.Register("Culture", typeof(CultureInfo), typeof(AbstractGraphElement), new PropertyMetadata(CultureInfo.CurrentCulture));
+            DependencyProperty.Register("Culture", typeof(CultureInfo), typeof(AbsCandleSubgraphControl), new PropertyMetadata(CultureInfo.CurrentCulture));
 
         /// <summary>
         /// CandleChart 可視範圍
@@ -48,10 +48,10 @@ namespace FancyCandles.Graphs
         /// <summary>Identifies the <see cref="VisibleCandlesRange"/> dependency property.</summary>
         /// <value><see cref="DependencyProperty"/></value>
         public static readonly DependencyProperty VisibleCandlesRangeProperty =
-            DependencyProperty.Register("VisibleCandlesRange", typeof(IntRange), typeof(AbstractGraphElement), new PropertyMetadata(IntRange.Undefined, CandleChart.OnVisibleCandlesRangeChanged, CandleChart.CoerceVisibleCandlesRange));
+            DependencyProperty.Register("VisibleCandlesRange", typeof(IntRange), typeof(AbsCandleSubgraphControl), new PropertyMetadata(IntRange.Undefined, CandleChart.OnVisibleCandlesRangeChanged, CandleChart.CoerceVisibleCandlesRange));
 
         /// <summary>
-        /// 可是範圍內的價格、成交量極值
+        /// 可是範圍內的價格、成交量極值 // 未來應該去掉這個，讓不同 subgraph 自己計算自己的 extremums
         /// </summary>
         public CandleExtremums VisibleCandlesExtremums
         {
@@ -63,6 +63,9 @@ namespace FancyCandles.Graphs
             }
         }
         private CandleExtremums visibleCandlesExtremums;
+
+
+
         #endregion
 
         #region INotifyPropertyChange

@@ -181,12 +181,14 @@ namespace FancyCandles.Graphs
             double textHeight = (new FormattedText("1,23", Culture, FlowDirection.LeftToRight, currentTypeFace, TickLabelFontSize, Brushes.Black, VisualTreeHelper.GetDpi(this).PixelsPerDip)).Height;
             double halfTextHeight = textHeight / 2.0;
             double chartPanelWidth = ActualWidth - PriceAxisWidth;
-            double tickLabelX = chartPanelWidth + TICK_LINE_WIDTH + TICK_LEFT_MARGIN;
-            double tickLineEndX = chartPanelWidth + TICK_LINE_WIDTH;
+            double tickLabelX = chartPanelWidth + TICK_LINE_WIDTH + TICK_LEFT_MARGIN; // Y 座標文字起始位置
+            double tickLineEndX = chartPanelWidth + TICK_LINE_WIDTH; // Y 座標格線終點位置
             double chartHeight = ActualHeight - ChartBottomMargin - ChartTopMargin;
             if (chartHeight <= 0) return;
 
+            // 子圖 Y 座標每一格相當於子圖數值的多少
             double stepInVolumeUnits = VisibleCandlesExtremums.VolumeHigh * ((textHeight + GapBetweenTickLabels) / chartHeight);
+            // stepInVolumeUnits 的最大位數 (ex: 34 = 10 位數; 123 = 100 位數)
             double stepInVolumeUnits_HPlace = MyWpfMath.HighestDecimalPlace(stepInVolumeUnits, out _);
             stepInVolumeUnits = Math.Ceiling(stepInVolumeUnits / stepInVolumeUnits_HPlace) * stepInVolumeUnits_HPlace;
             //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

@@ -161,7 +161,6 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="4*"/>
             <RowDefinition Height="{Binding Path=TimeAxisHeight, Mode=OneWay}"/>
-            <RowDefinition Height="25"/>
             <RowDefinition Height="30"/>
         </Grid.RowDefinitions>
 
@@ -203,35 +202,36 @@
                 <!-- 真正的 Candle 部分，用 Panel.ZIndex="2" 來疊在背景之上-->
                 <Grid x:Name="priceChartContainer" Grid.Column="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" 
                       ClipToBounds="True"
-                      SizeChanged="OnPanelCandlesContainerSizeChanged" MouseWheel="OnMouseWheel" MouseMove="OnMouseMoveInsideFrameworkElement" Panel.ZIndex="2">
+                      SizeChanged="OnPanelCandlesContainerSizeChanged" 
+                      MouseWheel="OnMouseWheel" MouseMove="OnMouseMoveInsideFrameworkElement" Panel.ZIndex="2">
                     <!-- You need to fill the entire container with transparent content, otherwise the crosshair does not work: -->
                     <Rectangle HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Fill="Transparent" Panel.ZIndex="1"/>
 
                     <local:PriceChartElement x:Name="priceChart" 
-                        CandlesSource="{Binding ElementName=thisUserControl, Path=CandlesSource, Mode=OneWay}"
-                        Culture="{Binding ElementName=thisUserControl, Path=Culture, Mode=OneWay}"
-                        MaxNumberOfFractionalDigitsInPrice ="{Binding ElementName=thisUserControl, Path=MaxNumberOfFractionalDigitsInPrice, Mode=OneWay}"
-                        Indicators="{Binding ElementName=thisUserControl, Path=OverlayIndicators,Mode=OneWay}"
-                        VisibleCandlesRange="{Binding ElementName=thisUserControl, Path=VisibleCandlesRange, Mode=OneWay}"
-                        VisibleCandlesExtremums="{Binding ElementName=thisUserControl, Path=VisibleCandlesExtremums, Mode=OneWay}"
-                        BullishCandleFill="{Binding ElementName=thisUserControl, Path=BullishCandleFill, Mode=OneWay}"
-                        BearishCandleFill="{Binding ElementName=thisUserControl, Path=BearishCandleFill, Mode=OneWay}" 
-                        BullishCandleStroke="{Binding ElementName=thisUserControl, Path=BullishCandleStroke, Mode=OneWay}"
-                        BearishCandleStroke="{Binding ElementName=thisUserControl, Path=BearishCandleStroke, Mode=OneWay}" 
+                        CandlesSource="{Binding Path=CandlesSource, Mode=OneWay}"
+                        Culture="{Binding Path=Culture, Mode=OneWay}"
+                        MaxNumberOfFractionalDigitsInPrice ="{Binding Path=MaxNumberOfFractionalDigitsInPrice, Mode=OneWay}"
+                        Indicators="{Binding Path=OverlayIndicators,Mode=OneWay}"
+                        VisibleCandlesRange="{Binding Path=VisibleCandlesRange, Mode=OneWay}"
+                        VisibleCandlesExtremums="{Binding Path=VisibleCandlesExtremums, Mode=OneWay}"
+                        BullishCandleFill="{Binding Path=BullishCandleFill, Mode=OneWay}"
+                        BearishCandleFill="{Binding Path=BearishCandleFill, Mode=OneWay}" 
+                        BullishCandleStroke="{Binding Path=BullishCandleStroke, Mode=OneWay}"
+                        BearishCandleStroke="{Binding Path=BearishCandleStroke, Mode=OneWay}" 
                         ToolTipService.PlacementTarget="{Binding ElementName=priceChartContainer}"
                         ToolTipService.Placement="Relative"
                         RenderOptions.EdgeMode="Aliased" RenderOptions.BitmapScalingMode="NearestNeighbor">
 
                         <local:PriceChartElement.CandleWidthAndGap>
                             <MultiBinding Converter="{StaticResource candleDrawingParametersConverter}">
-                                <Binding ElementName="thisUserControl" Path="CandleWidth" Mode="OneWay"/>
-                                <Binding ElementName="thisUserControl" Path="CandleGap" Mode="OneWay"/>
+                                <Binding Path="CandleWidth" Mode="OneWay"/>
+                                <Binding Path="CandleGap" Mode="OneWay"/>
                             </MultiBinding>
                         </local:PriceChartElement.CandleWidthAndGap>
                         <local:PriceChartElement.Margin>
                             <MultiBinding Converter="{StaticResource topBottomMarginConverter}">
-                                <Binding ElementName="thisUserControl" Path="PriceChartTopMargin" Mode="OneWay"/>
-                                <Binding ElementName="thisUserControl" Path="PriceChartBottomMargin" Mode="OneWay"/>
+                                <Binding Path="PriceChartTopMargin" Mode="OneWay"/>
+                                <Binding Path="PriceChartBottomMargin" Mode="OneWay"/>
                             </MultiBinding>
                         </local:PriceChartElement.Margin>
                     </local:PriceChartElement>
@@ -273,19 +273,17 @@
                         <Line.Visibility>
                             <MultiBinding Converter="{StaticResource squareBoolToVisibilityConverter}">
                                 <Binding Path="IsCrossLinesVisible" Mode="OneWay"/>
-                                <Binding ElementName="_splitPanel" Path="IsMouseOver" Mode="OneWay" />
+                                <Binding Path="IsMouseOver" Mode="OneWay" />
                             </MultiBinding>
                         </Line.Visibility>
                     </Line>
-                <!-- Wait indicator -->
-                <fp:CircleWaitIndicator 
-                                        Fill="{Binding ElementName=thisUserControl, Path=WaitIndicatorForeground, Mode=OneWay}"
-                                        IsRunning="{Binding ElementName=thisUserControl, Path=CandlesSource.Count, Converter={StaticResource isCandlesLoadingConverter}, Mode=OneWay}" 
+                    <!-- Wait indicator -->
+                    <fp:CircleWaitIndicator Fill="{Binding Path=WaitIndicatorForeground, Mode=OneWay}"
+                                        IsRunning="{Binding Path=CandlesSource.Count, Converter={StaticResource isCandlesLoadingConverter}, Mode=OneWay}" 
                                         Height="30" Width="30"/>
 
                 </Grid>
 
-                <!-- Обертка для ItemsControl нужна для определения размеров. -->
                 <!-- Crosshair price for the price chart (Panel.ZIndex="2" 讓價格標籤可以疊在座標之上)-->
                 <Grid Grid.Column="1" Panel.ZIndex="2">
                     <Grid.Visibility>
@@ -328,7 +326,7 @@
                           RenderOptions.EdgeMode="Aliased"/>
                 </Grid>
                 <!-- ============================================================================================================================================================== -->
-                <!-- Vertical scale with price label: -->
+                <!-- horizontal scale with price label: -->
                 <local:PriceTicksElement Grid.Column="0" Grid.ColumnSpan="2" VerticalAlignment="Stretch"
                                          Culture="{Binding Path=Culture, Mode=OneWay}"
                                          CurrentPrice="{Binding Path=CurrentPrice, Mode=OneWay}"
@@ -356,10 +354,6 @@
         </control:SplitPanel>
 
         <!-- ============================================================================================================================================================== -->
-        <!-- Разделитель между графиком цены и диаграммой объема: -->
-        <!--GridSplitter Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" ShowsPreview="False" Height="3"
-        HorizontalAlignment="Stretch" VerticalAlignment="Center" Visibility="{Binding Path=IsVolumePanelVisible, Converter={StaticResource boolToVisibilityConverter}}"/-->
-        <!-- ============================================================================================================================================================== -->
         <!-- Horizontal scale with time marks: -->
         <local:TimeTicksElement Grid.Row="0" Grid.RowSpan="2" HorizontalAlignment="Stretch"
                                 TickLabelFontFamily="{Binding Path=AxisTickLabelFontFamily, Mode=OneWay}"
@@ -374,8 +368,8 @@
                                 RenderOptions.EdgeMode="Aliased">
             <local:TimeTicksElement.CandleWidthAndGap>
                 <MultiBinding Converter="{StaticResource candleDrawingParametersConverter}">
-                    <Binding ElementName="thisUserControl" Path="CandleWidth" Mode="OneWay"/>
-                    <Binding ElementName="thisUserControl" Path="CandleGap" Mode="OneWay"/>
+                    <Binding Path="CandleWidth" Mode="OneWay"/>
+                    <Binding Path="CandleGap" Mode="OneWay"/>
                 </MultiBinding>
             </local:TimeTicksElement.CandleWidthAndGap>
         </local:TimeTicksElement>
@@ -386,8 +380,8 @@
         <!-- ============================================================================================================================================================== -->
         <!-- Горизонтальный скроллер: -->
         <ScrollBar Grid.Row="2" Grid.Column="0" Orientation="Horizontal" Margin="0,0,0,0" Minimum="0" SmallChange="1" 
-                   Background="{Binding ElementName=thisUserControl, Path=ScrollBarBackground}"
-                   Height="{Binding ElementName=thisUserControl, Path=ScrollBarHeight}"
+                   Background="{Binding Path=ScrollBarBackground}"
+                   Height="{Binding Path=ScrollBarHeight}"
                    Value="{Binding Path=VisibleCandlesRange, Converter={StaticResource intRange_Start_i_Converter}, Mode=TwoWay}"
                    ViewportSize="{Binding Path=VisibleCandlesRange, Converter={StaticResource intRangeCountToNoNegativeConverter}, Mode=OneWay}">
             <ScrollBar.Maximum>
