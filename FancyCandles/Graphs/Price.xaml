@@ -54,7 +54,6 @@
                 ToolTipService.PlacementTarget="{Binding ElementName=priceChartContainer}"
                 ToolTipService.Placement="Relative"
                 RenderOptions.EdgeMode="Aliased" RenderOptions.BitmapScalingMode="NearestNeighbor">
-
                 <local:PriceChartElement.CandleWidthAndGap>
                     <MultiBinding Converter="{StaticResource candleDrawingParametersConverter}">
                         <Binding Path="CandleWidth" Mode="OneWay"/>

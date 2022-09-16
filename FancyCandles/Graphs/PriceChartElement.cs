@@ -275,7 +275,7 @@ namespace FancyCandles.Graphs
 
         protected override void OnRender(DrawingContext drawingContext)
         {
-            // drawingContext.DrawRectangle(transparentFrozenBrush, null, new Rect(0, 0, RenderSize.Width, RenderSize.Height));
+            // drawingContext.DrawRectangle(Brushes.Transparent, null, new Rect(0, 0, RenderSize.Width, RenderSize.Height));
             double range = VisibleCandlesExtremums.PriceHigh - VisibleCandlesExtremums.PriceLow;
             double correctedCndlWidth = CandleWidthAndGap.Width - 1.0;
             double candleWidthPlusGap = CandleWidthAndGap.Width + CandleWidthAndGap.Gap;

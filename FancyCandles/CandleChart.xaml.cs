@@ -2144,7 +2144,8 @@ namespace FancyCandles
         /// <summary>Identifies the <see cref="VisibleCandlesRange"/> dependency property.</summary>
         /// <value><see cref="DependencyProperty"/></value>
         public static readonly DependencyProperty VisibleCandlesRangeProperty =
-            DependencyProperty.Register("VisibleCandlesRange", typeof(IntRange), typeof(CandleChart), new PropertyMetadata(IntRange.Undefined, OnVisibleCandlesRangeChanged, CoerceVisibleCandlesRange));
+            DependencyProperty.Register("VisibleCandlesRange", typeof(IntRange), typeof(CandleChart),
+                new PropertyMetadata(IntRange.Undefined, OnVisibleCandlesRangeChanged, CoerceVisibleCandlesRange));
 
         internal static void OnVisibleCandlesRangeChanged(DependencyObject obj, DependencyPropertyChangedEventArgs e)
         {
