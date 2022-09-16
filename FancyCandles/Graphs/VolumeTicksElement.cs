@@ -46,6 +46,7 @@ namespace FancyCandles.Graphs
             }
         }
         //---------------------------------------------------------------------------------------------------------------------------------------
+        #region common properties
         public CultureInfo Culture
         {
             get { return (CultureInfo)GetValue(CultureProperty); }
@@ -91,15 +92,6 @@ namespace FancyCandles.Graphs
             if (thisElement == null) return;
             thisElement.currentTypeFace = new Typeface(thisElement.TickLabelFontFamily.ToString());
         }
-        //---------------------------------------------------------------------------------------------------------------------------------------
-        public CandleExtremums VisibleCandlesExtremums
-        {
-            get { return (CandleExtremums)GetValue(VisibleCandlesExtremumsProperty); }
-            set { SetValue(VisibleCandlesExtremumsProperty, value); }
-        }
-        public static readonly DependencyProperty VisibleCandlesExtremumsProperty
-            = DependencyProperty.Register("VisibleCandlesExtremums", typeof(CandleExtremums), typeof(VolumeTicksElement),
-                new FrameworkPropertyMetadata(new CandleExtremums()) { AffectsRender = true });
         //---------------------------------------------------------------------------------------------------------------------------------------
         public double GapBetweenTickLabels
         {
@@ -165,6 +157,8 @@ namespace FancyCandles.Graphs
                 return b;
             }
         }
+        #endregion
+
         //---------------------------------------------------------------------------------------------------------------------------------------
         public double PriceAxisWidth
         {
@@ -173,6 +167,15 @@ namespace FancyCandles.Graphs
         }
         public static readonly DependencyProperty PricePanelWidthProperty 
             = DependencyProperty.Register("PriceAxisWidth", typeof(double), typeof(VolumeTicksElement), new FrameworkPropertyMetadata(0.0) { AffectsRender = true });
+        //---------------------------------------------------------------------------------------------------------------------------------------
+        public CandleExtremums VisibleCandlesExtremums
+        {
+            get { return (CandleExtremums)GetValue(VisibleCandlesExtremumsProperty); }
+            set { SetValue(VisibleCandlesExtremumsProperty, value); }
+        }
+        public static readonly DependencyProperty VisibleCandlesExtremumsProperty
+            = DependencyProperty.Register("VisibleCandlesExtremums", typeof(CandleExtremums), typeof(VolumeTicksElement),
+                new FrameworkPropertyMetadata(new CandleExtremums()) { AffectsRender = true });
         //---------------------------------------------------------------------------------------------------------------------------------------
         protected override void OnRender(DrawingContext drawingContext)
         {

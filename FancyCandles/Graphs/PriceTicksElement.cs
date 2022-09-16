@@ -21,7 +21,7 @@ using System.Windows;
 using System.Windows.Media;
 using System.Globalization;
 
-namespace FancyCandles
+namespace FancyCandles.Graphs
 {
     class PriceTicksElement : FrameworkElement
     {
@@ -50,6 +50,7 @@ namespace FancyCandles
             }
         }
         //---------------------------------------------------------------------------------------------------------------------------------------
+        #region common properties
         public CultureInfo Culture
         {
             get { return (CultureInfo)GetValue(CultureProperty); }
@@ -93,14 +94,6 @@ namespace FancyCandles
             if (thisElement == null) return;
             thisElement.currentTypeFace = new Typeface(thisElement.TickLabelFontFamily.ToString());
         }
-        //---------------------------------------------------------------------------------------------------------------------------------------
-        public CandleExtremums VisibleCandlesExtremums
-        {
-            get { return (CandleExtremums)GetValue(VisibleCandlesExtremumsProperty); }
-            set { SetValue(VisibleCandlesExtremumsProperty, value); }
-        }
-        public static readonly DependencyProperty VisibleCandlesExtremumsProperty
-            = DependencyProperty.Register("VisibleCandlesExtremums", typeof(CandleExtremums), typeof(PriceTicksElement), new FrameworkPropertyMetadata(new CandleExtremums(1.0, 1.0, 0L, 0L)) { AffectsRender = true });
         //---------------------------------------------------------------------------------------------------------------------------------------
         public double GapBetweenTickLabels
         {
@@ -164,6 +157,7 @@ namespace FancyCandles
                 return b;
             }
         }
+        #endregion
         //---------------------------------------------------------------------------------------------------------------------------------------
         public double PriceAxisWidth
         {
@@ -173,8 +167,16 @@ namespace FancyCandles
         public static readonly DependencyProperty PricePanelWidthProperty
             = DependencyProperty.Register("PriceAxisWidth", typeof(double), typeof(PriceTicksElement), new FrameworkPropertyMetadata(0.0) { AffectsRender = true });
         //---------------------------------------------------------------------------------------------------------------------------------------
+        public CandleExtremums VisibleCandlesExtremums
+        {
+            get { return (CandleExtremums)GetValue(VisibleCandlesExtremumsProperty); }
+            set { SetValue(VisibleCandlesExtremumsProperty, value); }
+        }
+        public static readonly DependencyProperty VisibleCandlesExtremumsProperty
+            = DependencyProperty.Register("VisibleCandlesExtremums", typeof(CandleExtremums), typeof(PriceTicksElement), new FrameworkPropertyMetadata(new CandleExtremums(1.0, 1.0, 0L, 0L)) { AffectsRender = true });
+        //---------------------------------------------------------------------------------------------------------------------------------------
 
-        #region Current Price
+        #region Current Price properties
         public double CurrentPrice
         {
             get { return (double)GetValue(CurrentPriceProperty); }
@@ -282,14 +284,14 @@ namespace FancyCandles
                 string s = MyNumberFormatting.PriceToString(price, priceTickLabelNumberFormat, Culture, decimalSeparator, decimalSeparatorArray);
                 FormattedText priceTickFormattedText = new FormattedText(s, Culture, FlowDirection.LeftToRight, currentTypeFace, TickLabelFontSize, TickColor, VisualTreeHelper.GetDpi(this).PixelsPerDip);
                 double y = ChartTopMargin + (VisibleCandlesExtremums.PriceHigh - price) * chartHeight_candlesLHRange_Ratio;
-                drawingContext.DrawText(priceTickFormattedText, new Point(tickLabelX, y - halfTextHeight));
-                drawingContext.DrawLine(tickPen, new Point(chartPanelWidth, y), new Point(tickLineEndX, y));
+                drawingContext.DrawText(priceTickFormattedText, new Point(tickLabelX, y - halfTextHeight));  // label 文字
+                drawingContext.DrawLine(tickPen, new Point(chartPanelWidth, y), new Point(tickLineEndX, y)); // label 前面的橫線刻度
 
                 if (IsGridlinesEnabled && GridlinesPen != null)
-                    drawingContext.DrawLine(GridlinesPen, new Point(0, y), new Point(chartPanelWidth, y));
+                    drawingContext.DrawLine(GridlinesPen, new Point(0, y), new Point(chartPanelWidth, y));   // 格線
             }
             
-            void DrawCurrentPriceLabel()
+            void DrawCurrentPriceLabel() // 標記現在價格
             {
                 string currentPriceString = MyNumberFormatting.PriceToString(CurrentPrice, currentPriceLabelNumberFormat, Culture, decimalSeparator, decimalSeparatorArray);
                 FormattedText formattedText = new FormattedText(currentPriceString, Culture, FlowDirection.LeftToRight, currentTypeFace, TickLabelFontSize, CurrentPriceLabelForeground, VisualTreeHelper.GetDpi(this).PixelsPerDip);

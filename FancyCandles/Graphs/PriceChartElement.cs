@@ -29,7 +29,7 @@ using System.Collections.Generic;
 using FancyCandles.Indicators;
 using System.Globalization;
 
-namespace FancyCandles
+namespace FancyCandles.Graphs
 {
     class PriceChartElement : FrameworkElement
     {
@@ -305,7 +305,8 @@ namespace FancyCandles
                     // new Point(左邊過來多遠, 上面過來多遠);
             }
 
-            for (int i = 0; i < Indicators.Count; i++)
+            if (Indicators == null) return; // priceChart 先建立，Indicators 可能還沒建立好
+            for (int i = 0; i < Indicators.Count ; i++)
                 Indicators[i].OnRender(drawingContext, VisibleCandlesRange, VisibleCandlesExtremums, CandleWidthAndGap.Width, CandleWidthAndGap.Gap, RenderSize.Height);
         }
         //---------------------------------------------------------------------------------------------------------------------------------------

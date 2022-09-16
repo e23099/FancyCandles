@@ -78,6 +78,9 @@
     <Compile Include="DateTimeMilestones.cs" />
     <Compile Include="Graphs\AbsCandleSubgraphControl.cs" />
     <Compile Include="Graphs\GraphTicksElement.cs" />
+    <Compile Include="Graphs\Price.xaml.cs">
+      <DependentUpon>Price.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Graphs\Volume.xaml.cs">
       <DependentUpon>Volume.xaml</DependentUpon>
     </Compile>
@@ -113,6 +116,10 @@
       <DependentUpon>CandleChart.xaml</DependentUpon>
     </Compile>
     <Page Include="CandleChartPropertiesWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Graphs\Price.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -1088,7 +1088,7 @@ namespace FancyCandles
         {
             if (new_VisibleCandlesCount <= 0) return false;
 
-            double new_ActualWidth = priceChartContainer.ActualWidth;
+            double new_ActualWidth = _priceGraph.PriceChartWidth;
             if (new_ActualWidth == 0)
             {
                 CandleGap = 0.0;
@@ -1251,7 +1251,7 @@ namespace FancyCandles
             get
             {
                 FormattedText txt = new FormattedText(new string('9', MaxNumberOfCharsInPrice), Culture, FlowDirection.LeftToRight, new Typeface(AxisTickLabelFontFamily.ToString()), PriceAxisTickLabelFontSize, Brushes.Black, VisualTreeHelper.GetDpi(this).PixelsPerDip);
-                return txt.Width + PriceTicksElement.TICK_LINE_WIDTH + 2 * PriceTicksElement.TICK_HORIZ_MARGIN;
+                return txt.Width + Graphs.PriceTicksElement.TICK_LINE_WIDTH + 2 * Graphs.PriceTicksElement.TICK_HORIZ_MARGIN;
             }
         }
         //----------------------------------------------------------------------------------------------------------------------------------
@@ -2039,7 +2039,7 @@ namespace FancyCandles
                     Update_MaxNumberOfCharsInPrice_and_MaxNumberOfFractionalDigitsInPrice(newCandle);
                 }
 
-                int maxVisibleCandlesCount = (int)(priceChartContainer.ActualWidth / (CandleWidth + CandleGap));
+                int maxVisibleCandlesCount = (int)(_priceGraph.PriceChartWidth / (CandleWidth + CandleGap));
 
                 if (e.NewStartingIndex == (CandlesSource.Count - 1))
                     CurrentPrice = CandlesSource[CandlesSource.Count - 1].C;
@@ -2184,13 +2184,13 @@ namespace FancyCandles
         // и соответствовать текущим значениям CandleWidth и CandleGap.
         private void ReCalc_VisibleCandlesRange()
         {
-            if (priceChartContainer.ActualWidth == 0 || CandlesSource == null)
+            if (_priceGraph.PriceChartWidth == 0 || CandlesSource == null)
             {
                 VisibleCandlesRange = IntRange.Undefined;
                 return;
             }
 
-            int newCount = (int)(priceChartContainer.ActualWidth / (CandleWidth + CandleGap));
+            int newCount = (int)(_priceGraph.PriceChartWidth / (CandleWidth + CandleGap));
 
             if (newCount > CandlesSource.Count)
             {
@@ -2207,13 +2207,13 @@ namespace FancyCandles
         }
         //----------------------------------------------------------------------------------------------------------------------------------
         int MaxVisibleCandlesCount
-        { get { return (int)(priceChartContainer.ActualWidth / 2); } }
+        { get { return (int)(_priceGraph.PriceChartWidth / 2); } }
         //----------------------------------------------------------------------------------------------------------------------------------
         ///<summary>Shifts the range of visible candles to the position where the <c>t</c> property of the central visible candle is equal (or closest) to specified value.</summary>
         ///<param name="visibleCandlesRangeCenter">Central visible candle should have its <c>t</c> property equal to this parameter (or close to it as much as possible).</param>
         public void SetVisibleCandlesRangeCenter(DateTime visibleCandlesRangeCenter)
         {
-            int maxVisibleCandlesCount = (int)(priceChartContainer.ActualWidth / (CandleWidth + CandleGap));
+            int maxVisibleCandlesCount = (int)(_priceGraph.PriceChartWidth / (CandleWidth + CandleGap));
             if (CandlesSource.Count < maxVisibleCandlesCount)
             {
                 VisibleCandlesRange = new IntRange(0, CandlesSource.Count);
@@ -2409,7 +2409,7 @@ namespace FancyCandles
             }
         }
         //----------------------------------------------------------------------------------------------------------------------------------
-        private void OnPanelCandlesContainerSizeChanged(object sender, SizeChangedEventArgs e)
+        internal void OnPanelCandlesContainerSizeChanged(object sender, SizeChangedEventArgs e)
         {
             if (!IsLoaded || e.NewSize.Width == 0 || CandlesSource?.Count() == 0)
                 return;

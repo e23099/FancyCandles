@@ -221,15 +221,15 @@ namespace FancyCandles
             else return 0;
         }
         //----------------------------------------------------------------------------------------------------------------------------------
-        public static double TheMostRoundValueInsideRange(double x0, double x1)
+        public static double TheMostRoundValueInsideRange(double upper, double lower)
         {
-            double max10PowValue = HighestDecimalPlace(Math.Abs(x0), out int max10Pow);
-            double mostR = Math.Ceiling(x0 / max10PowValue) * max10PowValue;
-            while (mostR > x1)
+            double max10PowValue = HighestDecimalPlace(Math.Abs(upper), out int max10Pow);
+            double mostR = Math.Ceiling(upper / max10PowValue) * max10PowValue;
+            while (mostR > lower)
             {
                 max10Pow--;
                 max10PowValue = Math.Pow(10.0, max10Pow);
-                mostR = Math.Ceiling(x0 / max10PowValue) * max10PowValue;
+                mostR = Math.Ceiling(upper / max10PowValue) * max10PowValue;
             }
             return mostR;
         }
