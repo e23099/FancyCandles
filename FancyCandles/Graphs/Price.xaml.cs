@@ -20,9 +20,26 @@ namespace FancyCandles.Graphs
     /// </summary>
     public partial class Price : UserControl
     {
+        public static readonly string ExtremeUpper = "priceHigh";
+        public static readonly string ExtremeLower = "priceLow";
+
         public Price()
         {
             InitializeComponent();
+        }
+
+
+        public void UpdateVisibleCandlesExtremums(ICandlesSource candles, int start, int length, Dictionary<string,double> vcExetremums)
+        {
+            double upper = double.MinValue, lower = double.MaxValue;
+            for (int i = start; i < start + length; i++)
+            {
+                ICandle candle = candles[i];
+                upper = Math.Max(upper, candle.H);
+                lower = Math.Min(lower, candle.L);
+            }
+            vcExetremums[ExtremeUpper] = upper;
+            vcExetremums[ExtremeLower] = lower;
         }
 
         public double PriceChartWidth

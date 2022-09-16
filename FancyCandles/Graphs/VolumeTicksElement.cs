@@ -18,6 +18,7 @@
 
 using System;
 using System.Windows;
+using System.Collections.Generic;
 using System.Windows.Media;
 using System.Globalization;
 
@@ -168,14 +169,14 @@ namespace FancyCandles.Graphs
         public static readonly DependencyProperty PricePanelWidthProperty 
             = DependencyProperty.Register("PriceAxisWidth", typeof(double), typeof(VolumeTicksElement), new FrameworkPropertyMetadata(0.0) { AffectsRender = true });
         //---------------------------------------------------------------------------------------------------------------------------------------
-        public CandleExtremums VisibleCandlesExtremums
+        public Dictionary<string,double> VisibleCandlesExtremums
         {
-            get { return (CandleExtremums)GetValue(VisibleCandlesExtremumsProperty); }
+            get { return (Dictionary<string,double>)GetValue(VisibleCandlesExtremumsProperty); }
             set { SetValue(VisibleCandlesExtremumsProperty, value); }
         }
         public static readonly DependencyProperty VisibleCandlesExtremumsProperty
-            = DependencyProperty.Register("VisibleCandlesExtremums", typeof(CandleExtremums), typeof(VolumeTicksElement),
-                new FrameworkPropertyMetadata(new CandleExtremums()) { AffectsRender = true });
+            = DependencyProperty.Register("VisibleCandlesExtremums", typeof(Dictionary<string, double>),
+                typeof(VolumeTicksElement), new FrameworkPropertyMetadata(null) { AffectsRender = true });
         //---------------------------------------------------------------------------------------------------------------------------------------
         protected override void OnRender(DrawingContext drawingContext)
         {
@@ -190,12 +191,12 @@ namespace FancyCandles.Graphs
             if (chartHeight <= 0) return;
 
             // 子圖 Y 座標每一格相當於子圖數值的多少
-            double stepInVolumeUnits = VisibleCandlesExtremums.VolumeHigh * ((textHeight + GapBetweenTickLabels) / chartHeight);
+            double stepInVolumeUnits = VisibleCandlesExtremums[Volume.ExtremeUpper] * ((textHeight + GapBetweenTickLabels) / chartHeight);
             // stepInVolumeUnits 的最大位數 (ex: 34 = 10 位數; 123 = 100 位數)
             double stepInVolumeUnits_HPlace = MyWpfMath.HighestDecimalPlace(stepInVolumeUnits, out _);
             stepInVolumeUnits = Math.Ceiling(stepInVolumeUnits / stepInVolumeUnits_HPlace) * stepInVolumeUnits_HPlace;
             //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-            double chartHeight_candlesLHRange_Ratio = chartHeight / VisibleCandlesExtremums.VolumeHigh;
+            double chartHeight_candlesLHRange_Ratio = chartHeight / VisibleCandlesExtremums[Volume.ExtremeUpper];
 
             string decimalSeparator = Culture.NumberFormat.NumberDecimalSeparator;
             char[] decimalSeparatorArray = decimalSeparator.ToCharArray();
@@ -204,7 +205,7 @@ namespace FancyCandles.Graphs
             {
                 string s = MyNumberFormatting.VolumeToLimitedLengthString(volume, Culture, decimalSeparator, decimalSeparatorArray);
                 FormattedText priceTickFormattedText = new FormattedText(s, Culture, FlowDirection.LeftToRight, currentTypeFace, TickLabelFontSize, TickColor, VisualTreeHelper.GetDpi(this).PixelsPerDip);
-                double y = ChartTopMargin + (VisibleCandlesExtremums.VolumeHigh - volume) * chartHeight_candlesLHRange_Ratio;
+                double y = ChartTopMargin + (VisibleCandlesExtremums[Price.ExtremeUpper] - volume) * chartHeight_candlesLHRange_Ratio;
                 drawingContext.DrawText(priceTickFormattedText, new Point(tickLabelX, y - halfTextHeight));
                 drawingContext.DrawLine(tickPen, new Point(chartPanelWidth, y), new Point(tickLineEndX, y));
 
@@ -212,11 +213,11 @@ namespace FancyCandles.Graphs
                     drawingContext.DrawLine(GridlinesPen, new Point(0, y), new Point(chartPanelWidth, y));
             }
             //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-            double theMostRoundVolume = MyWpfMath.HighestDecimalPlace(VisibleCandlesExtremums.VolumeHigh, out _);
+            double theMostRoundVolume = MyWpfMath.HighestDecimalPlace(VisibleCandlesExtremums[Volume.ExtremeUpper], out _);
             DrawVolumeTick(theMostRoundVolume);
 
-            double maxVolumeThreshold = (VisibleCandlesExtremums.VolumeHigh + (ChartTopMargin - halfTextHeight) / chartHeight_candlesLHRange_Ratio);
-            double minVolumeThreshold = (VisibleCandlesExtremums.VolumeHigh + (ChartTopMargin - ActualHeight + halfTextHeight) / chartHeight_candlesLHRange_Ratio);
+            double maxVolumeThreshold = (VisibleCandlesExtremums[Volume.ExtremeUpper] + (ChartTopMargin - halfTextHeight) / chartHeight_candlesLHRange_Ratio);
+            double minVolumeThreshold = (VisibleCandlesExtremums[Volume.ExtremeUpper] + (ChartTopMargin - ActualHeight + halfTextHeight) / chartHeight_candlesLHRange_Ratio);
 
             int step_i = 1;
             double next_tick;

@@ -4,6 +4,7 @@ using System.Windows;
 using Newtonsoft.Json;
 using FancyCandles;
 using FancyCandles.Indicators;
+using FancyCandles.Graphs;
 
 namespace FancyCandles.Indicators
 {
@@ -133,24 +134,24 @@ namespace FancyCandles.Indicators
         ///This is an analog of the <see href="https://docs.microsoft.com/en-za/dotnet/api/system.windows.uielement.onrender?view=netframework-4.7.2">UIElement.OnRender()</see> method. 
         ///Participates in rendering operations that are directed by the layout system. The rendering instructions for this indicator are not used directly when this method is invoked, and are instead preserved for later asynchronous use by layout and drawing.
         ///</remarks>
-        public override void OnRender(DrawingContext drawingContext, IntRange visibleCandlesRange, CandleExtremums visibleCandlesExtremums,
+        public override void OnRender(DrawingContext drawingContext, IntRange visibleCandlesRange, Dictionary<string,double> visibleCandlesExtremums,
                                       double candleWidth, double gapBetweenCandles, double RenderHeight)
         {
             if (visibleCandlesRange.Count < 2 || visibleCandlesRange.Start_i < 0) return;
 
             double candleWidthPlusGap = candleWidth + gapBetweenCandles;
-            double range = visibleCandlesExtremums.PriceHigh - visibleCandlesExtremums.PriceLow;
+            double range = visibleCandlesExtremums[Price.ExtremeUpper] - visibleCandlesExtremums[Price.ExtremeLower];
             double prevCndlCenterX = 0;
             double prevLocalIndicatorValue = 0;
 
             prevCndlCenterX = 0.5 * candleWidth;
             double prevIndicatorValue = GetIndicatorValue(visibleCandlesRange.Start_i);
-            prevLocalIndicatorValue = (1.0 - (prevIndicatorValue - visibleCandlesExtremums.PriceLow) / range) * RenderHeight;
+            prevLocalIndicatorValue = (1.0 - (prevIndicatorValue - visibleCandlesExtremums[Price.ExtremeLower]) / range) * RenderHeight;
 
             for (int cndl_i = 1; cndl_i < visibleCandlesRange.Count; cndl_i++)
             {
                 double indicatorValue = GetIndicatorValue(visibleCandlesRange.Start_i + cndl_i);
-                double localIndicatorValue = (1.0 - (indicatorValue - visibleCandlesExtremums.PriceLow) / range) * RenderHeight;
+                double localIndicatorValue = (1.0 - (indicatorValue - visibleCandlesExtremums[Price.ExtremeLower]) / range) * RenderHeight;
                 double cndlCenterX = cndl_i * candleWidthPlusGap + 0.5 * candleWidth;
 
                 //ClipLineSegment(prevCndlCenterX, prevLocalIndicatorValue, cndlCenterX, localIndicatorValue, RenderHeight, out Point newPoint0, out Point newPoint1);

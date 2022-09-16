@@ -58,7 +58,7 @@ namespace FancyCandles.Indicators
         ///This is an analog of the <see href="https://docs.microsoft.com/en-za/dotnet/api/system.windows.uielement.onrender?view=netframework-4.7.2">UIElement.OnRender()</see> method. 
         ///Participates in rendering operations that are directed by the layout system. The rendering instructions for this indicator are not used directly when this method is invoked, and are instead preserved for later asynchronous use by layout and drawing.
         ///</remarks>
-        public abstract void OnRender(DrawingContext drawingContext, IntRange visibleCandlesRange, CandleExtremums visibleCandlesExtremums,
+        public abstract void OnRender(DrawingContext drawingContext, IntRange visibleCandlesRange, Dictionary<string,double> visibleCandlesExtremums,
                                       double candleWidth, double gapBetweenCandles, double RenderHeight);
 
 #pragma warning  disable CS1591

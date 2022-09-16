@@ -124,10 +124,11 @@ namespace FancyCandles.Graphs
         }
         //---------------------------------------------------------------------------------------------------------------------------------------
         public static readonly DependencyProperty VisibleCandlesExtremumsProperty
-            = DependencyProperty.Register("VisibleCandlesExtremums", typeof(CandleExtremums), typeof(VolumeChartElement), new FrameworkPropertyMetadata(new CandleExtremums(0.0, 0.0, 0L, 0L)) { AffectsRender = true });
-        public CandleExtremums VisibleCandlesExtremums
+            = DependencyProperty.Register("VisibleCandlesExtremums", typeof(Dictionary<string,double>),
+                typeof(VolumeChartElement), new FrameworkPropertyMetadata(null) { AffectsRender = true });
+        public Dictionary<string,double> VisibleCandlesExtremums
         {
-            get { return (CandleExtremums)GetValue(VisibleCandlesExtremumsProperty); }
+            get { return (Dictionary<string,double>)GetValue(VisibleCandlesExtremumsProperty); }
             set { SetValue(VisibleCandlesExtremumsProperty, value); }
         }
         //---------------------------------------------------------------------------------------------------------------------------------------
@@ -171,7 +172,7 @@ namespace FancyCandles.Graphs
                 ICandle cndl = CandlesSource[VisibleCandlesRange.Start_i + i];
                 Brush cndlBrush = (cndl.C > cndl.O) ? BullishBarFill : BearishBarFill;
 
-                double barHeight = Math.Max(1.0, cndl.V / VisibleCandlesExtremums.VolumeHigh * RenderSize.Height);
+                double barHeight = Math.Max(1.0, cndl.V / VisibleCandlesExtremums[Volume.ExtremeUpper] * RenderSize.Height);
                 double volumeBarLeftX = halfDWidth + i * (volumeBarWidth + volumeBarGap);
 
                 drawingContext.DrawRectangle(cndlBrush, null, new Rect(new Point(volumeBarLeftX, RenderSize.Height), new Vector(volumeBarWidthNotLessThan1, -barHeight)));

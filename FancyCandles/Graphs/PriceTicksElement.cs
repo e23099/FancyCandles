@@ -18,6 +18,7 @@
 
 using System;
 using System.Windows;
+using System.Collections.Generic;
 using System.Windows.Media;
 using System.Globalization;
 
@@ -167,13 +168,14 @@ namespace FancyCandles.Graphs
         public static readonly DependencyProperty PricePanelWidthProperty
             = DependencyProperty.Register("PriceAxisWidth", typeof(double), typeof(PriceTicksElement), new FrameworkPropertyMetadata(0.0) { AffectsRender = true });
         //---------------------------------------------------------------------------------------------------------------------------------------
-        public CandleExtremums VisibleCandlesExtremums
+        public Dictionary<string, double> VisibleCandlesExtremums
         {
-            get { return (CandleExtremums)GetValue(VisibleCandlesExtremumsProperty); }
+            get { return (Dictionary<string, double>)GetValue(VisibleCandlesExtremumsProperty); }
             set { SetValue(VisibleCandlesExtremumsProperty, value); }
         }
         public static readonly DependencyProperty VisibleCandlesExtremumsProperty
-            = DependencyProperty.Register("VisibleCandlesExtremums", typeof(CandleExtremums), typeof(PriceTicksElement), new FrameworkPropertyMetadata(new CandleExtremums(1.0, 1.0, 0L, 0L)) { AffectsRender = true });
+            = DependencyProperty.Register("VisibleCandlesExtremums", typeof(Dictionary<string, double>),
+                typeof(PriceTicksElement), new FrameworkPropertyMetadata(null) { AffectsRender = true }); 
         //---------------------------------------------------------------------------------------------------------------------------------------
 
         #region Current Price properties
@@ -266,14 +268,14 @@ namespace FancyCandles.Graphs
             double tickLineEndX = chartPanelWidth + TICK_LINE_WIDTH;
             double chartHeight = ActualHeight - ChartBottomMargin - ChartTopMargin;
 
-            double stepInRubles = (VisibleCandlesExtremums.PriceHigh - VisibleCandlesExtremums.PriceLow) / chartHeight * (textHeight + GapBetweenTickLabels);
+            double stepInRubles = (VisibleCandlesExtremums[Price.ExtremeUpper] - VisibleCandlesExtremums[Price.ExtremeLower]) / chartHeight * (textHeight + GapBetweenTickLabels);
             double stepInRubles_HPlace = MyWpfMath.HighestDecimalPlace(stepInRubles, out int stepInRubles_HPow);
             stepInRubles = Math.Ceiling(stepInRubles / stepInRubles_HPlace) * stepInRubles_HPlace;
             MyWpfMath.HighestDecimalPlace(stepInRubles, out int stepInRublesHighestDecimalPow);
             string priceTickLabelNumberFormat = (stepInRubles_HPow >= 0) ? "N0" : $"N{-stepInRubles_HPow}";
             string currentPriceLabelNumberFormat = $"N{MaxNumberOfFractionalDigitsInPrice}";
 
-            double chartHeight_candlesLHRange_Ratio = chartHeight / (VisibleCandlesExtremums.PriceHigh - VisibleCandlesExtremums.PriceLow);
+            double chartHeight_candlesLHRange_Ratio = chartHeight / (VisibleCandlesExtremums[Price.ExtremeUpper] - VisibleCandlesExtremums[Price.ExtremeLower]);
 
             //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
             string decimalSeparator = Culture.NumberFormat.NumberDecimalSeparator;
@@ -283,7 +285,7 @@ namespace FancyCandles.Graphs
             {
                 string s = MyNumberFormatting.PriceToString(price, priceTickLabelNumberFormat, Culture, decimalSeparator, decimalSeparatorArray);
                 FormattedText priceTickFormattedText = new FormattedText(s, Culture, FlowDirection.LeftToRight, currentTypeFace, TickLabelFontSize, TickColor, VisualTreeHelper.GetDpi(this).PixelsPerDip);
-                double y = ChartTopMargin + (VisibleCandlesExtremums.PriceHigh - price) * chartHeight_candlesLHRange_Ratio;
+                double y = ChartTopMargin + (VisibleCandlesExtremums[Price.ExtremeUpper] - price) * chartHeight_candlesLHRange_Ratio;
                 drawingContext.DrawText(priceTickFormattedText, new Point(tickLabelX, y - halfTextHeight));  // label 文字
                 drawingContext.DrawLine(tickPen, new Point(chartPanelWidth, y), new Point(tickLineEndX, y)); // label 前面的橫線刻度
 
@@ -296,18 +298,18 @@ namespace FancyCandles.Graphs
                 string currentPriceString = MyNumberFormatting.PriceToString(CurrentPrice, currentPriceLabelNumberFormat, Culture, decimalSeparator, decimalSeparatorArray);
                 FormattedText formattedText = new FormattedText(currentPriceString, Culture, FlowDirection.LeftToRight, currentTypeFace, TickLabelFontSize, CurrentPriceLabelForeground, VisualTreeHelper.GetDpi(this).PixelsPerDip);
                 double formattedTextWidth = formattedText.Width;
-                double y = ChartTopMargin + (VisibleCandlesExtremums.PriceHigh - CurrentPrice) * chartHeight_candlesLHRange_Ratio;
+                double y = ChartTopMargin + (VisibleCandlesExtremums[Price.ExtremeUpper] - CurrentPrice) * chartHeight_candlesLHRange_Ratio;
                 drawingContext.DrawRectangle(CurrentPriceLabelBackground, currentPriceLabelForegroundPen, 
                                              new Rect(chartPanelWidth, y - halfTextHeight, formattedTextWidth + TICK_LINE_WIDTH + 2 * TICK_HORIZ_MARGIN, textHeight + 1.0));
                 drawingContext.DrawLine(currentPriceLabelForegroundPen, new Point(chartPanelWidth, y), new Point(tickLineEndX, y));
                 drawingContext.DrawText(formattedText, new Point(tickLabelX, y - halfTextHeight));
             }
             //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-            double theMostRoundPrice = MyWpfMath.TheMostRoundValueInsideRange(VisibleCandlesExtremums.PriceLow, VisibleCandlesExtremums.PriceHigh);
+            double theMostRoundPrice = MyWpfMath.TheMostRoundValueInsideRange(VisibleCandlesExtremums[Price.ExtremeLower], VisibleCandlesExtremums[Price.ExtremeUpper]);
             DrawPriceTickLabel(theMostRoundPrice, stepInRublesHighestDecimalPow);
 
-            double maxPriceThreshold = VisibleCandlesExtremums.PriceHigh + (ChartTopMargin - halfTextHeight) / chartHeight_candlesLHRange_Ratio;
-            double minPriceThreshold = VisibleCandlesExtremums.PriceHigh + (ChartTopMargin - ActualHeight + halfTextHeight) / chartHeight_candlesLHRange_Ratio;
+            double maxPriceThreshold = VisibleCandlesExtremums[Price.ExtremeUpper] + (ChartTopMargin - halfTextHeight) / chartHeight_candlesLHRange_Ratio;
+            double minPriceThreshold = VisibleCandlesExtremums[Price.ExtremeUpper] + (ChartTopMargin - ActualHeight + halfTextHeight) / chartHeight_candlesLHRange_Ratio;
 
             int step_i = 1;
             double next_tick;
@@ -324,7 +326,7 @@ namespace FancyCandles.Graphs
                 step_i++;
             }
 
-            if (IsCurrentPriceLabelVisible && CurrentPrice >= VisibleCandlesExtremums.PriceLow && CurrentPrice <= VisibleCandlesExtremums.PriceHigh)
+            if (IsCurrentPriceLabelVisible && CurrentPrice >= VisibleCandlesExtremums[Price.ExtremeLower] && CurrentPrice <= VisibleCandlesExtremums[Price.ExtremeUpper])
                 DrawCurrentPriceLabel();
 
             // Горизонтальные линии на всю ширину разделяющая и окаймляющая панели времени и даты:
