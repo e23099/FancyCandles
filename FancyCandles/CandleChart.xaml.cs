@@ -2357,7 +2357,7 @@ namespace FancyCandles
             {
                 if (newCount > CandlesSource.Count) newCount = CandlesSource.Count;
                 if (newCount == VisibleCandlesRange.Count) return;
-                if (!ReCalc_CandleWidthAndGap(newCount)) return; // Если график уже нельзя больше сжимать.
+                if (!ReCalc_CandleWidthAndGap(newCount)) return; // If the graph can no longer be compressed.
 
                 int new_start_i = VisibleCandlesRange.Start_i + VisibleCandlesRange.Count - newCount;
                 if (new_start_i < 0) new_start_i = 0;
