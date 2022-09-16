@@ -2177,8 +2177,8 @@ namespace FancyCandles
             }
         }
 
-        // Пересчитывает VisibleCandlesRange.Count таким образом, чтобы по возможности сохранить индекс последней видимой свечи 
-        // и соответствовать текущим значениям CandleWidth и CandleGap.
+        // Recalculates VisibleCandlesRange.Count in such a way as to preserve the index of the last visible candle if possible 
+        // and match the current values ​​of CandleWidth and CandleGap.
         private void ReCalc_VisibleCandlesRange()
         {
             if (_priceGraph.PriceChartWidth == 0 || CandlesSource == null)
