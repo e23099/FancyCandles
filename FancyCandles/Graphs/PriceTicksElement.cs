@@ -261,6 +261,7 @@ namespace FancyCandles.Graphs
         //---------------------------------------------------------------------------------------------------------------------------------------
         protected override void OnRender(DrawingContext drawingContext)
         {
+            if (VisibleCandlesExtremums == null) return;
             double textHeight = (new FormattedText("123", Culture, FlowDirection.LeftToRight, currentTypeFace, TickLabelFontSize, Brushes.Black, VisualTreeHelper.GetDpi(this).PixelsPerDip)).Height;
             double halfTextHeight = textHeight / 2.0;
             double chartPanelWidth = ActualWidth - PriceAxisWidth;

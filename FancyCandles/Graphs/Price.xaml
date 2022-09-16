@@ -137,7 +137,7 @@
                     </MultiBinding>
                 </Border.Margin>
 
-                <TextBlock Foreground="{Binding CrossPriceLabelForeground, Mode=OneWay}" FontSize="{Binding PriceAxisTickLabelFontSize, Mode=OneWay}" Margin="5 0 2 0">
+                <TextBlock x:Name="fuck" Foreground="{Binding CrossPriceLabelForeground, Mode=OneWay}" FontSize="{Binding PriceAxisTickLabelFontSize, Mode=OneWay}" Margin="5 0 2 0">
                     <TextBlock.Text>
                         <MultiBinding Converter="{StaticResource crossPriceValueConverter}">
                             <Binding Path="CurrentMousePosition" Mode="OneWay"/>

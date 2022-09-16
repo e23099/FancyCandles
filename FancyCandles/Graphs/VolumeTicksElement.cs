@@ -181,7 +181,8 @@ namespace FancyCandles.Graphs
         protected override void OnRender(DrawingContext drawingContext)
         {
             //if (VisibleCandlesExtremums.VolumeHigh == long.MinValue) return;
-
+            if (VisibleCandlesExtremums == null) return;
+            
             double textHeight = (new FormattedText("1,23", Culture, FlowDirection.LeftToRight, currentTypeFace, TickLabelFontSize, Brushes.Black, VisualTreeHelper.GetDpi(this).PixelsPerDip)).Height;
             double halfTextHeight = textHeight / 2.0;
             double chartPanelWidth = ActualWidth - PriceAxisWidth;
@@ -205,7 +206,7 @@ namespace FancyCandles.Graphs
             {
                 string s = MyNumberFormatting.VolumeToLimitedLengthString(volume, Culture, decimalSeparator, decimalSeparatorArray);
                 FormattedText priceTickFormattedText = new FormattedText(s, Culture, FlowDirection.LeftToRight, currentTypeFace, TickLabelFontSize, TickColor, VisualTreeHelper.GetDpi(this).PixelsPerDip);
-                double y = ChartTopMargin + (VisibleCandlesExtremums[Price.ExtremeUpper] - volume) * chartHeight_candlesLHRange_Ratio;
+                double y = ChartTopMargin + (VisibleCandlesExtremums[Volume.ExtremeUpper] - volume) * chartHeight_candlesLHRange_Ratio;
                 drawingContext.DrawText(priceTickFormattedText, new Point(tickLabelX, y - halfTextHeight));
                 drawingContext.DrawLine(tickPen, new Point(chartPanelWidth, y), new Point(tickLineEndX, y));
 
