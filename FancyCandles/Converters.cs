@@ -25,6 +25,7 @@ using System.Windows.Media;
 using FancyPrimitives;
 using System.Linq;
 using System.Reflection;
+using FancyCandles.Graphs;
 
 namespace FancyCandles
 {
@@ -179,10 +180,10 @@ namespace FancyCandles
             double ChartAreaHeight = (double)values[1];
             Dictionary<string, double> visibleCandlesExtremums = (Dictionary<string, double>)values[2];
             double priceLow = 0, priceHigh = 0;
-            if (visibleCandlesExtremums.ContainsKey("priceLow") && visibleCandlesExtremums.ContainsKey("priceHigh"))
+            if (visibleCandlesExtremums.ContainsKey(Price.ExtremeLower) && visibleCandlesExtremums.ContainsKey(Price.ExtremeUpper))
             {
-                priceLow = ((Dictionary<string,double>)values[2])["priceLow"];
-                priceHigh = ((Dictionary<string,double>)values[2])["priceHigh"];
+                priceLow = ((Dictionary<string,double>)values[2])[Price.ExtremeLower];
+                priceHigh = ((Dictionary<string,double>)values[2])[Price.ExtremeUpper];
             }
             double chartTopMargin = (double)values[3];
             double chartBottomMargin = (double)values[4];
@@ -213,7 +214,7 @@ namespace FancyCandles
         {
             if (values == null || values.Length < 5 || (values[0]).GetType() != typeof(Point) || (values[1]).GetType() != typeof(double) || (values[2]).GetType() != typeof(Dictionary<string,double>)
                  || (values[3]).GetType() != typeof(double) || (values[4]).GetType() != typeof(double))
-                return 0.0;
+                return true;
 
             Point currentMousePosition = (Point)values[0];
             double volumeHistogramHeight = (double)values[1];
@@ -226,8 +227,8 @@ namespace FancyCandles
             char[] decimalSeparatorArray = decimalSeparator.ToCharArray();
 
             double volume = 0;
-            if (visibleCandlesExtremums.ContainsKey("volumeHigh"))
-                volume = (((visibleCandlesExtremums["volumeHigh"] - (currentMousePosition.Y - volumeHistogramTopMargin) / (volumeHistogramHeight - volumeHistogramTopMargin - volumeHistogramBottomMargin) * visibleCandlesExtremums["volumeHigh"])));
+            if (visibleCandlesExtremums.ContainsKey(Volume.ExtremeUpper))
+                volume = (((visibleCandlesExtremums[Volume.ExtremeUpper] - (currentMousePosition.Y - volumeHistogramTopMargin) / (volumeHistogramHeight - volumeHistogramTopMargin - volumeHistogramBottomMargin) * visibleCandlesExtremums[Volume.ExtremeUpper])));
             return MyNumberFormatting.VolumeToLimitedLengthString(volume, candleChartCulture, decimalSeparator, decimalSeparatorArray);
         }
 

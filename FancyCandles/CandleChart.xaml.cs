@@ -2106,10 +2106,9 @@ namespace FancyCandles
             if (IntRange.IsUndefined(VisibleCandlesRange)) 
                 return;
 
-            int end_i = VisibleCandlesRange.Start_i + VisibleCandlesRange.Count - 1;
             _priceGraph.UpdateVisibleCandlesExtremums(CandlesSource, VisibleCandlesRange.Start_i, VisibleCandlesRange.Count, VisibleCandlesExtremums);
             _defaultVolumeGraph.UpdateVisibleCandlesExtremums(CandlesSource, VisibleCandlesRange.Start_i, VisibleCandlesRange.Count, VisibleCandlesExtremums);
-            thisUserControl?.OnPropertyChanged("VisibleCandlesExtremums");
+            VisibleCandlesExtremums = VisibleCandlesExtremums.ToDictionary(entry => entry.Key, entry => entry.Value);
         }
 
         private void ReCalc_VisibleCandlesExtremums_AfterOneCandleChanged(int changedCandle_i)
