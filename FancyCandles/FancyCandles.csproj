@@ -76,8 +76,6 @@
     <Compile Include="CandleStructs.cs" />
     <Compile Include="Converters.cs" />
     <Compile Include="DateTimeMilestones.cs" />
-    <Compile Include="Graphs\AbsCandleSubgraphControl.cs" />
-    <Compile Include="Graphs\GraphTicksElement.cs" />
     <Compile Include="Graphs\Price.xaml.cs">
       <DependentUpon>Price.xaml</DependentUpon>
     </Compile>
