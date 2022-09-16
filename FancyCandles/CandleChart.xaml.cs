@@ -2109,6 +2109,7 @@ namespace FancyCandles
             int end_i = VisibleCandlesRange.Start_i + VisibleCandlesRange.Count - 1;
             _priceGraph.UpdateVisibleCandlesExtremums(CandlesSource, VisibleCandlesRange.Start_i, VisibleCandlesRange.Count, VisibleCandlesExtremums);
             _defaultVolumeGraph.UpdateVisibleCandlesExtremums(CandlesSource, VisibleCandlesRange.Start_i, VisibleCandlesRange.Count, VisibleCandlesExtremums);
+            thisUserControl?.OnPropertyChanged("VisibleCandlesExtremums");
         }
 
         private void ReCalc_VisibleCandlesExtremums_AfterOneCandleChanged(int changedCandle_i)
