@@ -50,15 +50,13 @@ namespace FancyCandles.Graphs
 
         private void OnMouseWheel(object sender, MouseWheelEventArgs e)
         {
-            CandleChart chart = this.DataContext as CandleChart;
-            if (chart == null) return;
+            if (!(this.DataContext is CandleChart chart)) return;
             chart.OnMouseWheel(sender, e);
         }
 
         private void OnMouseMoveInsideFrameworkElement(object sender, MouseEventArgs e)
         {
-            CandleChart chart = this.DataContext as CandleChart;
-            if (chart == null) return;
+            if (!(this.DataContext is CandleChart chart)) return;
             chart.OnMouseMoveInsideFrameworkElement(sender, e);
         }
     }

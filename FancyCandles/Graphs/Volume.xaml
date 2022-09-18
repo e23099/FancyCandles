@@ -57,7 +57,7 @@
                 </local:VolumeChartElement.Margin>
             </local:VolumeChartElement>
 
-            <Line Stroke="{Binding Path=CrossLinesBrush, Mode=OneWay}" StrokeThickness="1"
+            <Line Stroke="{Binding Path=CrossLinesBrush, Mode=OneWay}" StrokeThickness="1" StrokeDashArray="5 3"
                     IsHitTestVisible="False" RenderOptions.EdgeMode="Aliased"
                     X1="0" 
                     Y1="{Binding Path=CurrentMousePosition.Y, Mode=OneWay}" 
@@ -71,7 +71,7 @@
                 </Line.Visibility>
             </Line>
 
-            <Line Stroke="{Binding Path=CrossLinesBrush, Mode=OneWay}" StrokeThickness="1"
+            <Line Stroke="{Binding Path=CrossLinesBrush, Mode=OneWay}" StrokeThickness="1" StrokeDashArray="5 3"
                     IsHitTestVisible="False" RenderOptions.EdgeMode="Aliased"
                     X1="{Binding Path=CurrentMousePosition.X, Mode=OneWay}" 
                     Y1="0" 

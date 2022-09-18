@@ -37,8 +37,8 @@
               ClipToBounds="True"
               SizeChanged="OnPanelCandlesContainerSizeChanged" 
               MouseWheel="OnMouseWheel" MouseMove="OnMouseMoveInsideFrameworkElement" Panel.ZIndex="2">
-            <!-- You need to fill the entire container with transparent content, otherwise the crosshair does not work: -->
-            <Rectangle HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Fill="Transparent" Panel.ZIndex="1"/>
+            <!-- You need to fill the entire container with transparent content, otherwise the MouseEvents does not work: -->
+            <Rectangle HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Fill="Transparent"/>
 
             <local:PriceChartElement x:Name="priceChart" 
                 CandlesSource="{Binding Path=CandlesSource, Mode=OneWay}"
@@ -81,7 +81,7 @@
                        Foreground="{Binding LegendForeground, Mode=OneWay}" />
 
             <!-- Horizontal crosshair line: -->
-            <Line Stroke="{Binding Path=CrossLinesBrush, Mode=OneWay}" StrokeThickness="1"
+            <Line Stroke="{Binding Path=CrossLinesBrush, Mode=OneWay}" StrokeThickness="1" StrokeDashArray="5 3"
                     IsHitTestVisible="False" RenderOptions.EdgeMode="Aliased"
                     X1="0" 
                     Y1="{Binding Path=CurrentMousePosition.Y, Mode=OneWay}" 
@@ -96,7 +96,7 @@
             </Line>
 
             <!-- vertical crosshair line: -->
-            <Line Stroke="{Binding Path=CrossLinesBrush, Mode=OneWay}" StrokeThickness="1"
+            <Line Stroke="{Binding Path=CrossLinesBrush, Mode=OneWay}" StrokeThickness="1" StrokeDashArray="5 3"
                     IsHitTestVisible="False" RenderOptions.EdgeMode="Aliased"
                     X1="{Binding Path=CurrentMousePosition.X, Mode=OneWay}" 
                     Y1="0" 

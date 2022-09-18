@@ -2389,7 +2389,12 @@ namespace FancyCandles
         internal void OnMouseMoveInsideFrameworkElement(object sender, MouseEventArgs e)
         {
             FrameworkElement element = sender as FrameworkElement;
-            CurrentMousePosition = Mouse.GetPosition(element);
+            var pos = Mouse.GetPosition(element);
+
+            double bar = CandleWidth + CandleGap;
+            double halfBar = bar / 2.0;
+            pos.X = Math.Floor(pos.X / bar) * bar + halfBar - 1.0;
+            CurrentMousePosition = pos;
         }
 
         Point currentMousePosition;
