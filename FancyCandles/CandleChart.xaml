@@ -232,6 +232,5 @@
                    Visibility="{Binding Path=IsEnabled, Converter={StaticResource notBoolToVisibilityConverter}}"/>
         <!-- ============================================================================================================================================================== -->
 
-        
     </Grid>
 </UserControl>

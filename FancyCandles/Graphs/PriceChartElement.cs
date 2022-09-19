@@ -249,10 +249,13 @@ namespace FancyCandles.Graphs
         }
         //---------------------------------------------------------------------------------------------------------------------------------------
         public static readonly DependencyProperty VisibleCandlesExtremumsProperty
-            = DependencyProperty.Register("VisibleCandlesExtremums", typeof(CandleExtremums), typeof(PriceChartElement), new FrameworkPropertyMetadata(new CandleExtremums(0.0, 0.0, 0L, 0L)) { AffectsRender = true });
-        public CandleExtremums VisibleCandlesExtremums
+            = DependencyProperty.Register("VisibleCandlesExtremums", 
+                typeof(Dictionary<string,double>),
+                typeof(PriceChartElement), 
+                new FrameworkPropertyMetadata(null) { AffectsRender = true });
+        public Dictionary<string,double> VisibleCandlesExtremums
         {
-            get { return (CandleExtremums)GetValue(VisibleCandlesExtremumsProperty); }
+            get { return (Dictionary<string,double>)GetValue(VisibleCandlesExtremumsProperty); }
             set { SetValue(VisibleCandlesExtremumsProperty, value); }
         }
         //---------------------------------------------------------------------------------------------------------------------------------------
@@ -276,7 +279,10 @@ namespace FancyCandles.Graphs
         protected override void OnRender(DrawingContext drawingContext)
         {
             // drawingContext.DrawRectangle(Brushes.Transparent, null, new Rect(0, 0, RenderSize.Width, RenderSize.Height));
-            double range = VisibleCandlesExtremums.PriceHigh - VisibleCandlesExtremums.PriceLow;
+            if (VisibleCandlesExtremums == null) return;
+            double pHigh = VisibleCandlesExtremums.ContainsKey(Price.ExtremeUpper) ? VisibleCandlesExtremums[Price.ExtremeUpper] : 0;
+            double pLow  = VisibleCandlesExtremums.ContainsKey(Price.ExtremeLower) ? VisibleCandlesExtremums[Price.ExtremeLower] : 0;
+            double range = pHigh - pLow;
             double correctedCndlWidth = CandleWidthAndGap.Width - 1.0;
             double candleWidthPlusGap = CandleWidthAndGap.Width + CandleWidthAndGap.Gap;
 
@@ -286,10 +292,10 @@ namespace FancyCandles.Graphs
                 Brush cndlBrush = (cndl.C > cndl.O) ? BullishCandleFill : BearishCandleFill;
                 Pen cndlPen = (cndl.C > cndl.O) ? bullishCandleStrokePen : bearishCandleStrokePen;
 
-                double wnd_L = (1.0 - (cndl.L - VisibleCandlesExtremums.PriceLow) / range) * RenderSize.Height;
-                double wnd_H = (1.0 - (cndl.H - VisibleCandlesExtremums.PriceLow) / range) * RenderSize.Height;
-                double wnd_O = (1.0 - (cndl.O - VisibleCandlesExtremums.PriceLow) / range) * RenderSize.Height;
-                double wnd_C = (1.0 - (cndl.C - VisibleCandlesExtremums.PriceLow) / range) * RenderSize.Height;
+                double wnd_L = (1.0 - (cndl.L - pLow) / range) * RenderSize.Height;
+                double wnd_H = (1.0 - (cndl.H - pLow) / range) * RenderSize.Height;
+                double wnd_O = (1.0 - (cndl.O - pLow) / range) * RenderSize.Height;
+                double wnd_C = (1.0 - (cndl.C - pLow) / range) * RenderSize.Height;
 
                 double cndlLeftX = i * candleWidthPlusGap;
                 double cndlCenterX = cndlLeftX + 0.5 * CandleWidthAndGap.Width;

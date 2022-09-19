@@ -22,6 +22,8 @@ namespace FancyCandles.Graphs
     /// </summary>
     public partial class Volume : UserControl
     {
+        public static readonly string ExtremeUpper = "volumeUpper";
+        public static readonly string ExtremeLower = "volumeLower";
 
         /// <summary>
         /// compose of:
@@ -33,18 +35,28 @@ namespace FancyCandles.Graphs
         {
             InitializeComponent();
         }
+        public void UpdateVisibleCandlesExtremums(ICandlesSource candles, int start, int length, Dictionary<string,double> vcExetremums)
+        {
+            double upper = double.MinValue, lower = double.MaxValue;
+            for (int i = start; i < start + length; i++)
+            {
+                ICandle candle = candles[i];
+                upper = Math.Max(upper, candle.V);
+                lower = Math.Min(lower, candle.V);
+            }
+            vcExetremums[ExtremeUpper] = upper;
+            vcExetremums[ExtremeLower] = lower;
+        }
 
         private void OnMouseWheel(object sender, MouseWheelEventArgs e)
         {
-            CandleChart chart = this.DataContext as CandleChart;
-            if (chart == null) return;
+            if (!(this.DataContext is CandleChart chart)) return;
             chart.OnMouseWheel(sender, e);
         }
 
         private void OnMouseMoveInsideFrameworkElement(object sender, MouseEventArgs e)
         {
-            CandleChart chart = this.DataContext as CandleChart;
-            if (chart == null) return;
+            if (!(this.DataContext is CandleChart chart)) return;
             chart.OnMouseMoveInsideFrameworkElement(sender, e);
         }
     }

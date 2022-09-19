@@ -37,6 +37,8 @@ using Newtonsoft.Json.Linq;
 using Microsoft.Win32;
 using FancyCandles.Indicators;
 
+using FancyCandles.Graphs;
+
 namespace FancyCandles
 {
 #pragma warning  disable CS1591
@@ -67,7 +69,11 @@ namespace FancyCandles
             InitializeComponent();
 
             VisibleCandlesRange = IntRange.Undefined;
-            VisibleCandlesExtremums = new CandleExtremums(0.0, 0.0, 0L, 0L);
+            VisibleCandlesExtremums = new Dictionary<string, double>();
+            VisibleCandlesExtremums[Price.ExtremeLower] = 0;
+            VisibleCandlesExtremums[Price.ExtremeUpper] = 0;
+            VisibleCandlesExtremums[Volume.ExtremeLower] = 0;
+            VisibleCandlesExtremums[Volume.ExtremeUpper] = 0;
             Loaded += new RoutedEventHandler(OnUserControlLoaded);
             VolumeChart = _defaultVolumeGraph;
         }
@@ -1251,7 +1257,7 @@ namespace FancyCandles
             get
             {
                 FormattedText txt = new FormattedText(new string('9', MaxNumberOfCharsInPrice), Culture, FlowDirection.LeftToRight, new Typeface(AxisTickLabelFontFamily.ToString()), PriceAxisTickLabelFontSize, Brushes.Black, VisualTreeHelper.GetDpi(this).PixelsPerDip);
-                return txt.Width + Graphs.PriceTicksElement.TICK_LINE_WIDTH + 2 * Graphs.PriceTicksElement.TICK_HORIZ_MARGIN;
+                return txt.Width + Graphs.PriceTicksElement.TICK_LINE_WIDTH + 2 * Graphs.PriceTicksElement.TICK_LEFT_MARGIN;
             }
         }
         //----------------------------------------------------------------------------------------------------------------------------------
@@ -2078,14 +2084,14 @@ namespace FancyCandles
             else if (e.Action == NotifyCollectionChangedAction.Move) { /* your code */ }
         }
         //----------------------------------------------------------------------------------------------------------------------------------
-        CandleExtremums visibleCandlesExtremums;
+        Dictionary<string, double> visibleCandlesExtremums;
         ///<summary>Gets the Low and High of the visible candles in vector format (Low,High).</summary>
         ///<value>The Low and High of the visible candles in vector format (Low,High).</value>
         ///<remarks>
         ///<para>The visible candles are those that fall inside the visible candles range, which is determined by the <see cref="VisibleCandlesRange"/> property.</para>
         ///The Low of a set of candles is a minimum Low value of this candles. The High of a set of candles is a maximum High value of this candles.
         ///</remarks>
-        public CandleExtremums VisibleCandlesExtremums
+        public Dictionary<string,double> VisibleCandlesExtremums
         {
             get { return visibleCandlesExtremums; }
             private set
@@ -2100,19 +2106,9 @@ namespace FancyCandles
             if (IntRange.IsUndefined(VisibleCandlesRange)) 
                 return;
 
-            int end_i = VisibleCandlesRange.Start_i + VisibleCandlesRange.Count - 1;
-            double maxH = double.MinValue, maxV = double.MinValue, minL = double.MaxValue, minV = double.MaxValue;
-            for (int i = VisibleCandlesRange.Start_i; i <= end_i; i++)
-            {
-                ICandle cndl = CandlesSource[i];
-                if (cndl.H == 0.0 || cndl.L == 0) continue;
-                if (cndl.H > maxH) maxH = cndl.H;
-                if (cndl.L < minL) minL = cndl.L;
-                if (cndl.V < minV) minV = cndl.V;
-                if (cndl.V > maxV) maxV = cndl.V;
-            }
-
-            VisibleCandlesExtremums = new CandleExtremums(minL, maxH, minV, maxV);
+            _priceGraph.UpdateVisibleCandlesExtremums(CandlesSource, VisibleCandlesRange.Start_i, VisibleCandlesRange.Count, VisibleCandlesExtremums);
+            _defaultVolumeGraph.UpdateVisibleCandlesExtremums(CandlesSource, VisibleCandlesRange.Start_i, VisibleCandlesRange.Count, VisibleCandlesExtremums);
+            VisibleCandlesExtremums = VisibleCandlesExtremums.ToDictionary(entry => entry.Key, entry => entry.Value);
         }
 
         private void ReCalc_VisibleCandlesExtremums_AfterOneCandleChanged(int changedCandle_i)
@@ -2121,11 +2117,10 @@ namespace FancyCandles
 
             if (cndl.H == 0.0 || cndl.L == 0) return;
 
-            double newPriceL = Math.Min(cndl.L, VisibleCandlesExtremums.PriceLow);
-            double newPriceH = Math.Max(cndl.H, VisibleCandlesExtremums.PriceHigh);
-            double newVolL = Math.Min(cndl.V, VisibleCandlesExtremums.VolumeLow);
-            double newVolH = Math.Max(cndl.V, VisibleCandlesExtremums.VolumeHigh);
-            VisibleCandlesExtremums = new CandleExtremums(newPriceL, newPriceH, newVolL, newVolH);
+            VisibleCandlesExtremums[Price.ExtremeLower] = Math.Min(cndl.L, VisibleCandlesExtremums[Price.ExtremeLower]);
+            VisibleCandlesExtremums[Price.ExtremeUpper] = Math.Max(cndl.H, VisibleCandlesExtremums[Price.ExtremeUpper]);
+            VisibleCandlesExtremums[Volume.ExtremeLower] = Math.Min(cndl.V, VisibleCandlesExtremums[Volume.ExtremeLower]);
+            VisibleCandlesExtremums[Volume.ExtremeUpper] = Math.Max(cndl.V, VisibleCandlesExtremums[Volume.ExtremeUpper]);
         }
         //----------------------------------------------------------------------------------------------------------------------------------
         /// <summary>Gets the range of indexes of candles, currently visible in this chart window.</summary>
@@ -2151,7 +2146,10 @@ namespace FancyCandles
         {
             CandleChart thisCandleChart = (CandleChart)obj;
             if (thisCandleChart.IsLoaded)
+            {
                 thisCandleChart.ReCalc_VisibleCandlesExtremums();
+                thisCandleChart.Reset_CurrentPrice();
+            }
         }
 
         internal static object CoerceVisibleCandlesRange(DependencyObject objWithOldDP, object baseValue)
@@ -2181,8 +2179,8 @@ namespace FancyCandles
             }
         }
 
-        // Пересчитывает VisibleCandlesRange.Count таким образом, чтобы по возможности сохранить индекс последней видимой свечи 
-        // и соответствовать текущим значениям CandleWidth и CandleGap.
+        // Recalculates VisibleCandlesRange.Count in such a way as to preserve the index of the last visible candle if possible 
+        // and match the current values ​​of CandleWidth and CandleGap.
         private void ReCalc_VisibleCandlesRange()
         {
             if (_priceGraph.PriceChartWidth == 0 || CandlesSource == null)
@@ -2205,6 +2203,11 @@ namespace FancyCandles
                 new_start_i = CandlesSource.Count - newCount;
 
             VisibleCandlesRange = new IntRange(new_start_i, newCount);
+        }
+
+        private void Reset_CurrentPrice()
+        {
+            CurrentPrice = CandlesSource[VisibleCandlesRange.Start_i + VisibleCandlesRange.Count - 1].C;
         }
         //----------------------------------------------------------------------------------------------------------------------------------
         int MaxVisibleCandlesCount
@@ -2361,7 +2364,7 @@ namespace FancyCandles
             {
                 if (newCount > CandlesSource.Count) newCount = CandlesSource.Count;
                 if (newCount == VisibleCandlesRange.Count) return;
-                if (!ReCalc_CandleWidthAndGap(newCount)) return; // Если график уже нельзя больше сжимать.
+                if (!ReCalc_CandleWidthAndGap(newCount)) return; // If the graph can no longer be compressed.
 
                 int new_start_i = VisibleCandlesRange.Start_i + VisibleCandlesRange.Count - newCount;
                 if (new_start_i < 0) new_start_i = 0;
@@ -2394,7 +2397,13 @@ namespace FancyCandles
         internal void OnMouseMoveInsideFrameworkElement(object sender, MouseEventArgs e)
         {
             FrameworkElement element = sender as FrameworkElement;
-            CurrentMousePosition = Mouse.GetPosition(element);
+            var pos = Mouse.GetPosition(element);
+
+            double bar = CandleWidth + CandleGap;
+            double halfBar = bar / 2.0;
+            int n = (int)Math.Floor(pos.X / bar);
+            pos.X = n * bar + halfBar - 1.0;
+            CurrentMousePosition = pos;
         }
 
         Point currentMousePosition;
