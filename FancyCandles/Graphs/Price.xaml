@@ -137,7 +137,7 @@
                     </MultiBinding>
                 </Border.Margin>
 
-                <TextBlock x:Name="fuck" Foreground="{Binding CrossPriceLabelForeground, Mode=OneWay}" FontSize="{Binding PriceAxisTickLabelFontSize, Mode=OneWay}" Margin="5 0 2 0">
+                <TextBlock Foreground="{Binding CrossPriceLabelForeground, Mode=OneWay}" FontSize="{Binding PriceAxisTickLabelFontSize, Mode=OneWay}" Margin="5 0 2 0">
                     <TextBlock.Text>
                         <MultiBinding Converter="{StaticResource crossPriceValueConverter}">
                             <Binding Path="CurrentMousePosition" Mode="OneWay"/>
@@ -161,13 +161,13 @@
         <!-- horizontal scale with price label: -->
         <local:PriceTicksElement Grid.Column="0" Grid.ColumnSpan="2" VerticalAlignment="Stretch"
                                  Culture="{Binding Path=Culture, Mode=OneWay}"
-                                 CurrentPrice="{Binding Path=CurrentPrice, Mode=OneWay}"
+                                 CurrentValue="{Binding Path=CurrentPrice, Mode=OneWay}"
                                  TickLabelFontFamily="{Binding Path=AxisTickLabelFontFamily, Mode=OneWay}"
                                  TickLabelFontSize="{Binding Path=PriceAxisTickLabelFontSize, Mode=OneWay}"
                                  TickColor="{Binding Path=AxisTickColor, Mode=OneWay}"
-                                 IsCurrentPriceLabelVisible="{Binding Path=IsCurrentPriceLabelVisible, Mode=OneWay}"
-                                 CurrentPriceLabelBackground="{Binding Path=CurrentPriceLabelBackground, Mode=OneWay}"
-                                 CurrentPriceLabelForeground="{Binding Path=CurrentPriceLabelForeground, Mode=OneWay}"
+                                 IsCurrentValueLabelVisible="{Binding Path=IsCurrentPriceLabelVisible, Mode=OneWay}"
+                                 CurrentValueLabelBackground="{Binding Path=CurrentPriceLabelBackground, Mode=OneWay}"
+                                 CurrentValueLabelForeground="{Binding Path=CurrentPriceLabelForeground, Mode=OneWay}"
                                  GapBetweenTickLabels="{Binding Path=GapBetweenPriceTickLabels, Mode=OneWay}"
                                  ChartBottomMargin="{Binding Path=PriceChartBottomMargin, Mode=OneWay}"
                                  ChartTopMargin="{Binding Path=PriceChartTopMargin, Mode=OneWay}"

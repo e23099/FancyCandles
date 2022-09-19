@@ -1257,7 +1257,7 @@ namespace FancyCandles
             get
             {
                 FormattedText txt = new FormattedText(new string('9', MaxNumberOfCharsInPrice), Culture, FlowDirection.LeftToRight, new Typeface(AxisTickLabelFontFamily.ToString()), PriceAxisTickLabelFontSize, Brushes.Black, VisualTreeHelper.GetDpi(this).PixelsPerDip);
-                return txt.Width + Graphs.PriceTicksElement.TICK_LINE_WIDTH + 2 * Graphs.PriceTicksElement.TICK_HORIZ_MARGIN;
+                return txt.Width + Graphs.PriceTicksElement.TICK_LINE_WIDTH + 2 * Graphs.PriceTicksElement.TICK_LEFT_MARGIN;
             }
         }
         //----------------------------------------------------------------------------------------------------------------------------------
@@ -2146,7 +2146,10 @@ namespace FancyCandles
         {
             CandleChart thisCandleChart = (CandleChart)obj;
             if (thisCandleChart.IsLoaded)
+            {
                 thisCandleChart.ReCalc_VisibleCandlesExtremums();
+                thisCandleChart.Reset_CurrentPrice();
+            }
         }
 
         internal static object CoerceVisibleCandlesRange(DependencyObject objWithOldDP, object baseValue)
@@ -2200,6 +2203,11 @@ namespace FancyCandles
                 new_start_i = CandlesSource.Count - newCount;
 
             VisibleCandlesRange = new IntRange(new_start_i, newCount);
+        }
+
+        private void Reset_CurrentPrice()
+        {
+            CurrentPrice = CandlesSource[VisibleCandlesRange.Start_i + VisibleCandlesRange.Count - 1].C;
         }
         //----------------------------------------------------------------------------------------------------------------------------------
         int MaxVisibleCandlesCount
@@ -2393,7 +2401,8 @@ namespace FancyCandles
 
             double bar = CandleWidth + CandleGap;
             double halfBar = bar / 2.0;
-            pos.X = Math.Floor(pos.X / bar) * bar + halfBar - 1.0;
+            int n = (int)Math.Floor(pos.X / bar);
+            pos.X = n * bar + halfBar - 1.0;
             CurrentMousePosition = pos;
         }
 

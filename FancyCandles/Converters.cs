@@ -193,6 +193,7 @@ namespace FancyCandles
             string decimalSeparator = candleChartCulture.NumberFormat.NumberDecimalSeparator;
             char[] decimalSeparatorArray = decimalSeparator.ToCharArray();
 
+            // 用差值法算出游標位置的 price 是多少
             double price = Math.Round((priceHigh - (currentMousePosition.Y - chartTopMargin) / (ChartAreaHeight - chartTopMargin - chartBottomMargin) * (priceHigh - priceLow)), maxNumberOfFractionalDigitsInPrice);
             string priceNumberFormat = $"N{maxNumberOfFractionalDigitsInPrice}";
             return MyNumberFormatting.PriceToString(price, priceNumberFormat, candleChartCulture, decimalSeparator, decimalSeparatorArray);

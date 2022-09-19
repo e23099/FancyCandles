@@ -24,219 +24,35 @@ using System.Globalization;
 
 namespace FancyCandles.Graphs
 {
-    class VolumeTicksElement : FrameworkElement
+    class VolumeTicksElement : TickElementTemplate
     {
-        public static double TICK_LINE_WIDTH = 3.0;
-        public static double TICK_LEFT_MARGIN = 2.0;
-        //---------------------------------------------------------------------------------------------------------------------------------------
-        static VolumeTicksElement()
+        public override double GetUpperLowerRange(Dictionary<string, double> visibleCandlesExtremums)
         {
-            Pen defaultPen = new Pen(CandleChart.DefaultHorizontalGridlinesBrush, CandleChart.DefaultHorizontalGridlinesThickness);
-            defaultPen.Freeze();
-            GridlinesPenProperty = DependencyProperty.Register("GridlinesPen", typeof(Pen), typeof(VolumeTicksElement),
-                new FrameworkPropertyMetadata(defaultPen, null, CoerceGridlinesPen) { AffectsRender = true });
+            return visibleCandlesExtremums[Volume.ExtremeUpper];
         }
-        //---------------------------------------------------------------------------------------------------------------------------------------
-        public VolumeTicksElement()
-        {
-            if (tickPen == null)
-            {
-                tickPen = new Pen(CandleChart.DefaultAxisTickColor, 1.0);
-                if (!tickPen.IsFrozen)
-                    tickPen.Freeze();
-            }
-        }
-        //---------------------------------------------------------------------------------------------------------------------------------------
-        #region common properties
-        public CultureInfo Culture
-        {
-            get { return (CultureInfo)GetValue(CultureProperty); }
-            set { SetValue(CultureProperty, value); }
-        }
-        public static readonly DependencyProperty CultureProperty =
-            DependencyProperty.Register("Culture", typeof(CultureInfo), typeof(VolumeTicksElement), new FrameworkPropertyMetadata(CultureInfo.CurrentCulture) { AffectsRender = true });
-        //---------------------------------------------------------------------------------------------------------------------------------------
-        public Pen GridlinesPen
-        {
-            get { return (Pen)GetValue(GridlinesPenProperty); }
-            set { SetValue(GridlinesPenProperty, value); }
-        }
-        public static readonly DependencyProperty GridlinesPenProperty;
 
-        private static object CoerceGridlinesPen(DependencyObject objWithOldDP, object newDPValue)
-        {
-            Pen newPenValue = (Pen)newDPValue;
-            return newPenValue.IsFrozen ? newDPValue : newPenValue.GetCurrentValueAsFrozen();
-        }
-        //---------------------------------------------------------------------------------------------------------------------------------------
-        public bool IsGridlinesEnabled
-        {
-            get { return (bool)GetValue(IsGridlinesEnabledProperty); }
-            set { SetValue(IsGridlinesEnabledProperty, value); }
-        }
-        public static readonly DependencyProperty IsGridlinesEnabledProperty
-            = DependencyProperty.Register("IsGridlinesEnabled", typeof(bool), typeof(VolumeTicksElement), new FrameworkPropertyMetadata(true) { AffectsRender = true });
-        //---------------------------------------------------------------------------------------------------------------------------------------
-        private Typeface currentTypeFace = new Typeface(SystemFonts.MessageFontFamily.ToString());
 
-        public FontFamily TickLabelFontFamily
+        public override double GetUpper(Dictionary<string, double> visibleCandlesExtremums)
         {
-            get { return (FontFamily)GetValue(TickLabelFontFamilyProperty); }
-            set { SetValue(TickLabelFontFamilyProperty, value); }
+            return visibleCandlesExtremums[Volume.ExtremeUpper];
         }
-        public static readonly DependencyProperty TickLabelFontFamilyProperty =
-            DependencyProperty.Register("TickLabelFontFamily", typeof(FontFamily), typeof(VolumeTicksElement), new FrameworkPropertyMetadata(SystemFonts.MessageFontFamily, OnTickLabelFontFamilyChanged));
+        public override double GetLower(Dictionary<string, double> visibleCandlesExtremums)
+        {
+            return 0;
+        }
 
-        static void OnTickLabelFontFamilyChanged(DependencyObject obj, DependencyPropertyChangedEventArgs e)
-        {
-            VolumeTicksElement thisElement = obj as VolumeTicksElement;
-            if (thisElement == null) return;
-            thisElement.currentTypeFace = new Typeface(thisElement.TickLabelFontFamily.ToString());
-        }
-        //---------------------------------------------------------------------------------------------------------------------------------------
-        public double GapBetweenTickLabels
-        {
-            get { return (double)GetValue(GapBetweenTickLabelsProperty); }
-            set { SetValue(GapBetweenTickLabelsProperty, value); }
-        }
-        public static readonly DependencyProperty GapBetweenTickLabelsProperty
-            = DependencyProperty.Register("GapBetweenTickLabels", typeof(double), typeof(VolumeTicksElement), new FrameworkPropertyMetadata(0.0) { AffectsRender = true });
-        //---------------------------------------------------------------------------------------------------------------------------------------
-        public double ChartBottomMargin
-        {
-            get { return (double)GetValue(ChartBottomMarginProperty); }
-            set { SetValue(ChartBottomMarginProperty, value); }
-        }
-        public static readonly DependencyProperty ChartBottomMarginProperty
-             = DependencyProperty.Register("ChartBottomMargin", typeof(double), typeof(VolumeTicksElement), new FrameworkPropertyMetadata(15.0) { AffectsRender = true });
-        //---------------------------------------------------------------------------------------------------------------------------------------
-        public double ChartTopMargin
-        {
-            get { return (double)GetValue(ChartTopMarginProperty); }
-            set { SetValue(ChartTopMarginProperty, value); }
-        }
-        public static readonly DependencyProperty ChartTopMarginProperty
-            = DependencyProperty.Register("ChartTopMargin", typeof(double), typeof(VolumeTicksElement), new FrameworkPropertyMetadata(15.0) { AffectsRender = true });
-        //---------------------------------------------------------------------------------------------------------------------------------------
-        public double TickLabelFontSize
-        {
-            get { return (double)GetValue(TickLabelFontSizeProperty); }
-            set { SetValue(TickLabelFontSizeProperty, value); }
-        }
-        public static readonly DependencyProperty TickLabelFontSizeProperty
-            = DependencyProperty.Register("TickLabelFontSize", typeof(double), typeof(VolumeTicksElement), new FrameworkPropertyMetadata(9.0) { AffectsRender = true });
-        //---------------------------------------------------------------------------------------------------------------------------------------
-        private Pen tickPen;
 
-        public Brush TickColor
+        public override string ToLabelString(double value)
         {
-            get { return (Brush)GetValue(TickColorProperty); }
-            set { SetValue(TickColorProperty, value); }
-        }
-        public static readonly DependencyProperty TickColorProperty
-            = DependencyProperty.Register("TickColor", typeof(Brush), typeof(VolumeTicksElement),
-                new FrameworkPropertyMetadata(CandleChart.DefaultAxisTickColor, null, CoerceTickColor) { AffectsRender = true });
-
-        private static object CoerceTickColor(DependencyObject objWithOldDP, object newDPValue)
-        {
-            VolumeTicksElement thisElement = (VolumeTicksElement)objWithOldDP;
-            Brush newBrushValue = (Brush)newDPValue;
-
-            if (newBrushValue.IsFrozen)
-            {
-                Pen p = new Pen(newBrushValue, 1.0);
-                p.Freeze();
-                thisElement.tickPen = p;
-                return newDPValue;
-            }
-            else
-            {
-                Brush b = (Brush)newBrushValue.GetCurrentValueAsFrozen();
-                Pen p = new Pen(b, 1.0);
-                p.Freeze();
-                thisElement.tickPen = p;
-                return b;
-            }
-        }
-        #endregion
-
-        //---------------------------------------------------------------------------------------------------------------------------------------
-        public double PriceAxisWidth
-        {
-            get { return (double)GetValue(PricePanelWidthProperty); }
-            set { SetValue(PricePanelWidthProperty, value); }
-        }
-        public static readonly DependencyProperty PricePanelWidthProperty 
-            = DependencyProperty.Register("PriceAxisWidth", typeof(double), typeof(VolumeTicksElement), new FrameworkPropertyMetadata(0.0) { AffectsRender = true });
-        //---------------------------------------------------------------------------------------------------------------------------------------
-        public Dictionary<string,double> VisibleCandlesExtremums
-        {
-            get { return (Dictionary<string,double>)GetValue(VisibleCandlesExtremumsProperty); }
-            set { SetValue(VisibleCandlesExtremumsProperty, value); }
-        }
-        public static readonly DependencyProperty VisibleCandlesExtremumsProperty
-            = DependencyProperty.Register("VisibleCandlesExtremums", typeof(Dictionary<string, double>),
-                typeof(VolumeTicksElement), new FrameworkPropertyMetadata(null) { AffectsRender = true });
-        //---------------------------------------------------------------------------------------------------------------------------------------
-        protected override void OnRender(DrawingContext drawingContext)
-        {
-            //if (VisibleCandlesExtremums.VolumeHigh == long.MinValue) return;
-            if (VisibleCandlesExtremums == null) return;
-            
-            double textHeight = (new FormattedText("1,23", Culture, FlowDirection.LeftToRight, currentTypeFace, TickLabelFontSize, Brushes.Black, VisualTreeHelper.GetDpi(this).PixelsPerDip)).Height;
-            double halfTextHeight = textHeight / 2.0;
-            double chartPanelWidth = ActualWidth - PriceAxisWidth;
-            double tickLabelX = chartPanelWidth + TICK_LINE_WIDTH + TICK_LEFT_MARGIN; // Y 座標文字起始位置
-            double tickLineEndX = chartPanelWidth + TICK_LINE_WIDTH; // Y 座標格線終點位置
-            double chartHeight = ActualHeight - ChartBottomMargin - ChartTopMargin;
-            if (chartHeight <= 0) return;
-
-            // 子圖 Y 座標每一格相當於子圖數值的多少
-            double stepInVolumeUnits = VisibleCandlesExtremums[Volume.ExtremeUpper] * ((textHeight + GapBetweenTickLabels) / chartHeight);
-            // stepInVolumeUnits 的最大位數 (ex: 34 = 10 位數; 123 = 100 位數)
-            double stepInVolumeUnits_HPlace = MyWpfMath.HighestDecimalPlace(stepInVolumeUnits, out _);
-            stepInVolumeUnits = Math.Ceiling(stepInVolumeUnits / stepInVolumeUnits_HPlace) * stepInVolumeUnits_HPlace;
-            //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-            double chartHeight_candlesLHRange_Ratio = chartHeight / VisibleCandlesExtremums[Volume.ExtremeUpper];
-
             string decimalSeparator = Culture.NumberFormat.NumberDecimalSeparator;
             char[] decimalSeparatorArray = decimalSeparator.ToCharArray();
-
-            void DrawVolumeTick(double volume)
-            {
-                string s = MyNumberFormatting.VolumeToLimitedLengthString(volume, Culture, decimalSeparator, decimalSeparatorArray);
-                FormattedText priceTickFormattedText = new FormattedText(s, Culture, FlowDirection.LeftToRight, currentTypeFace, TickLabelFontSize, TickColor, VisualTreeHelper.GetDpi(this).PixelsPerDip);
-                double y = ChartTopMargin + (VisibleCandlesExtremums[Volume.ExtremeUpper] - volume) * chartHeight_candlesLHRange_Ratio;
-                drawingContext.DrawText(priceTickFormattedText, new Point(tickLabelX, y - halfTextHeight));
-                drawingContext.DrawLine(tickPen, new Point(chartPanelWidth, y), new Point(tickLineEndX, y));
-
-                if (IsGridlinesEnabled && GridlinesPen != null)
-                    drawingContext.DrawLine(GridlinesPen, new Point(0, y), new Point(chartPanelWidth, y));
-            }
-            //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-            double theMostRoundVolume = MyWpfMath.HighestDecimalPlace(VisibleCandlesExtremums[Volume.ExtremeUpper], out _);
-            DrawVolumeTick(theMostRoundVolume);
-
-            double maxVolumeThreshold = (VisibleCandlesExtremums[Volume.ExtremeUpper] + (ChartTopMargin - halfTextHeight) / chartHeight_candlesLHRange_Ratio);
-            double minVolumeThreshold = (VisibleCandlesExtremums[Volume.ExtremeUpper] + (ChartTopMargin - ActualHeight + halfTextHeight) / chartHeight_candlesLHRange_Ratio);
-
-            int step_i = 1;
-            double next_tick;
-            while ((next_tick = theMostRoundVolume + step_i * stepInVolumeUnits) < maxVolumeThreshold)
-            {
-                DrawVolumeTick(next_tick);
-                step_i++;
-            }
-
-            step_i = 1;
-            while ((next_tick = theMostRoundVolume - step_i * stepInVolumeUnits) > minVolumeThreshold)
-            {
-                DrawVolumeTick(next_tick);
-                step_i++;
-            }
+            return MyNumberFormatting.VolumeToLimitedLengthString(value, Culture, decimalSeparator, decimalSeparatorArray);
         }
-        //---------------------------------------------------------------------------------------------------------------------------------------
-        //---------------------------------------------------------------------------------------------------------------------------------------
-        //---------------------------------------------------------------------------------------------------------------------------------------
+
+
+        public override double GetMostRoundValue(Dictionary<string, double> visibleCandlesExtremums)
+        {
+            return MyWpfMath.HighestDecimalPlace(VisibleCandlesExtremums[Volume.ExtremeUpper], out _);
+        }
     }
 }
