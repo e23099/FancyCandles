@@ -2101,6 +2101,19 @@ namespace FancyCandles
             }
         }
 
+        public ICandle SelectedCandle
+        {
+            get { return selectedCandle; }
+            private set
+            {
+                selectedCandle = value;
+                OnPropertyChanged();
+            }
+        }
+        private ICandle selectedCandle;
+        private int selectedCandleIndex;
+
+
         private void ReCalc_VisibleCandlesExtremums()
         {
             if (IntRange.IsUndefined(VisibleCandlesRange)) 
@@ -2207,6 +2220,7 @@ namespace FancyCandles
 
         private void Reset_CurrentPrice()
         {
+            if (CandlesSource == null) return;
             CurrentPrice = CandlesSource[VisibleCandlesRange.Start_i + VisibleCandlesRange.Count - 1].C;
         }
         //----------------------------------------------------------------------------------------------------------------------------------
@@ -2404,6 +2418,10 @@ namespace FancyCandles
             int n = (int)Math.Floor(pos.X / bar);
             pos.X = n * bar + halfBar - 1.0;
             CurrentMousePosition = pos;
+            int id = n + VisibleCandlesRange.Start_i;
+            if (CandlesSource == null || id < 0 || id >= CandlesSource.Count || selectedCandleIndex == id) return;
+            SelectedCandle = CandlesSource[id];
+            selectedCandleIndex = id;
         }
 
         Point currentMousePosition;
@@ -2440,6 +2458,7 @@ namespace FancyCandles
         //----------------------------------------------------------------------------------------------------------------------------------
         //----------------------------------------------------------------------------------------------------------------------------------
 
+
         public void AddSubChart(UserControl control)
         {
             _splitPanel.Children.Add(control);
@@ -2469,6 +2488,7 @@ namespace FancyCandles
             get { return (bool)GetValue(IsVolumeChart2ExistsProperty); }
             set { SetValue(IsVolumeChart2ExistsProperty, value); }
         }
+
 
     }
 }

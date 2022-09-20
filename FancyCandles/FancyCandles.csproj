@@ -73,6 +73,9 @@
     <Reference Include="PresentationFramework" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CandleInfo.xaml.cs">
+      <DependentUpon>CandleInfo.xaml</DependentUpon>
+    </Compile>
     <Compile Include="CandleStructs.cs" />
     <Compile Include="Converters.cs" />
     <Compile Include="DateTimeMilestones.cs" />
@@ -115,6 +118,10 @@
       <DependentUpon>CandleChart.xaml</DependentUpon>
     </Compile>
     <Page Include="CandleChartPropertiesWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="CandleInfo.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
