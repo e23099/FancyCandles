@@ -417,6 +417,28 @@ namespace FancyCandles
         { throw new NotImplementedException(); }
     }
     //*******************************************************************************************************************************************************************
+    // overlay indicator get value
+    class OverlayIndicatorValueConverter : IMultiValueConverter
+    {
+        // values[0] - int              selectedCandleId
+        // values[1] - OverlayIndicator indicator
+        // values[2] - int              maxNumberOfFractionalDigitsInPrice
+        public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
+        {
+            if (values == null || values.Length < 3 || (values[0]).GetType() != typeof(int) ||
+                !(values[1]).GetType().IsSubclassOf(typeof(Indicators.OverlayIndicator)) ||
+                (values[2]).GetType() != typeof(int))
+                return "--";
+
+            int selectedCandleId = (int)values[0];
+            Indicators.OverlayIndicator indicator = (Indicators.OverlayIndicator)values[1];
+            int digits = (int)values[2];
+            double value = indicator.GetIndicatorValue(selectedCandleId);
+            return indicator.GetIndicatorValue(selectedCandleId).ToString($"N{digits}");
+        }
+        public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
+        { throw new NotImplementedException(); }
+    }
     //*******************************************************************************************************************************************************************
     //*******************************************************************************************************************************************************************
     //*******************************************************************************************************************************************************************

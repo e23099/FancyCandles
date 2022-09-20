@@ -6,33 +6,60 @@
              xmlns:local="clr-namespace:FancyCandles" 
              d:DataContext="{d:DesignInstance Type=local:CandleChart}"
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800">
-    <Grid>
-        <StackPanel>
-            <DockPanel>
-                <TextBlock Text="時間" />
-                <TextBlock TextAlignment="Right" Text="{Binding SelectedCandle.t, StringFormat=yyyy-MM-dd HH:mm:ss}"/>
-            </DockPanel>
-            <DockPanel>
-                <TextBlock Text="開盤" />
-                <TextBlock TextAlignment="Right" Text="{Binding SelectedCandle.O}"/>
-            </DockPanel>
-            <DockPanel>
-                <TextBlock Text="最高" />
-                <TextBlock TextAlignment="Right" Text="{Binding SelectedCandle.H}"/>
-            </DockPanel>
-            <DockPanel>
-                <TextBlock Text="最低" />
-                <TextBlock TextAlignment="Right" Text="{Binding SelectedCandle.L}"/>
-            </DockPanel>
-            <DockPanel>
-                <TextBlock Text="收盤" />
-                <TextBlock TextAlignment="Right" Text="{Binding SelectedCandle.C}"/>
-            </DockPanel>
-            <DockPanel>
-                <TextBlock Text="成交量" />
-                <TextBlock TextAlignment="Right" Text="{Binding SelectedCandle.V}"/>
-            </DockPanel>
-        </StackPanel>
-    </Grid>
+             d:DesignHeight="450" d:DesignWidth="200">
+    <UserControl.Resources>
+        <local:OverlayIndicatorValueConverter x:Key="overlayIndicatorValueConverter" />
+    </UserControl.Resources>
+    <Border Margin="5">
+        <Grid Background="White">
+            <StackPanel>
+                <StackPanel>
+                    <DockPanel>
+                        <TextBlock Text="時間" />
+                        <TextBlock TextAlignment="Right" Text="{Binding SelectedCandle.t, StringFormat=yyyy-MM-dd HH:mm:ss}"/>
+                    </DockPanel>
+                    <DockPanel>
+                        <TextBlock Text="開盤" />
+                        <TextBlock TextAlignment="Right" Text="{Binding SelectedCandle.O}"/>
+                    </DockPanel>
+                    <DockPanel>
+                        <TextBlock Text="最高" />
+                        <TextBlock TextAlignment="Right" Text="{Binding SelectedCandle.H}"/>
+                    </DockPanel>
+                    <DockPanel>
+                        <TextBlock Text="最低" />
+                        <TextBlock TextAlignment="Right" Text="{Binding SelectedCandle.L}"/>
+                    </DockPanel>
+                    <DockPanel>
+                        <TextBlock Text="收盤" />
+                        <TextBlock TextAlignment="Right" Text="{Binding SelectedCandle.C}"/>
+                    </DockPanel>
+                    <DockPanel>
+                        <TextBlock Text="成交量" />
+                        <TextBlock TextAlignment="Right" Text="{Binding SelectedCandle.V}"/>
+                    </DockPanel>
+                </StackPanel>
+                <StackPanel x:Name="indicatorInfo">
+                    <ItemsControl ItemsSource="{Binding OverlayIndicators}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <DockPanel>
+                                    <TextBlock Text="{Binding ShortName}" Foreground="{Binding Pen.Brush}"/>
+                                    <TextBlock TextAlignment="Right" Foreground="{Binding Pen.Brush}">
+                                        <TextBlock.Text>
+                                            <MultiBinding Converter="{StaticResource overlayIndicatorValueConverter}">
+                                                <Binding ElementName="indicatorInfo" Path="DataContext.SelectedCandleIndex" />
+                                                <Binding Path="."/>
+                                                <Binding ElementName="indicatorInfo" Path="DataContext.MaxNumberOfFractionalDigitsInPrice" />
+                                            </MultiBinding>
+                                        </TextBlock.Text>
+                                    </TextBlock>
+                                </DockPanel>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </StackPanel>
+            </StackPanel>
+        </Grid>
+    </Border>
 </UserControl>

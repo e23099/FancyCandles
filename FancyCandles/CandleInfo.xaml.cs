@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using FancyCandles.Indicators;
 
 namespace FancyCandles
 {
@@ -20,10 +21,11 @@ namespace FancyCandles
     /// </summary>
     public partial class CandleInfo : UserControl
     {
+        public int CurrentSelectedCandleId;
+
         public CandleInfo()
         {
             InitializeComponent();
         }
-
     }
 }

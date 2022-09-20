@@ -2111,6 +2111,16 @@ namespace FancyCandles
             }
         }
         private ICandle selectedCandle;
+
+        public int SelectedCandleIndex
+        {
+            get { return selectedCandleIndex; }
+            private set
+            {
+                selectedCandleIndex = value;
+                OnPropertyChanged();
+            }
+        }
         private int selectedCandleIndex;
 
 
@@ -2421,7 +2431,7 @@ namespace FancyCandles
             int id = n + VisibleCandlesRange.Start_i;
             if (CandlesSource == null || id < 0 || id >= CandlesSource.Count || selectedCandleIndex == id) return;
             SelectedCandle = CandlesSource[id];
-            selectedCandleIndex = id;
+            SelectedCandleIndex = id;
         }
 
         Point currentMousePosition;
