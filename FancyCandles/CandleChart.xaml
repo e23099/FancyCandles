@@ -34,6 +34,7 @@
         <local:TopBottomMarginConverter x:Key="topBottomMarginConverter"/>
         <local:CrossPriceMarginConverter x:Key="crossPriceMarginConverter"/>
         <local:CrossPriceValueConverter x:Key="crossPriceValueConverter"/>
+        <local:CrossTimeMarginConverter x:Key="crossTimeMarginConverter"/>
         <local:CrossVolumeConverter x:Key="crossVolumeConverter"/>
         <local:IntRange_Start_i_Converter x:Key="intRange_Start_i_Converter"/>
         <local:IntRangeCountToNoNegativeConverter x:Key="intRangeCountToNoNegativeConverter"/>
@@ -208,6 +209,36 @@
                 </MultiBinding>
             </local:TimeTicksElement.CandleWidthAndGap>
         </local:TimeTicksElement>
+        <Grid Grid.Row="1" Grid.ColumnSpan="2" Panel.ZIndex="2">
+            <Grid.Visibility>
+                <MultiBinding Converter="{StaticResource squareBoolToVisibilityConverter}">
+                    <Binding Path="IsCrossLinesVisible" Mode="OneWay" />
+                    <Binding Path="IsMouseOver" Mode="OneWay" />
+                </MultiBinding>
+            </Grid.Visibility>
+            <Border BorderThickness="1" VerticalAlignment="Top" HorizontalAlignment="Left"
+                    Background="{Binding CrossPriceLabelBackground, Mode=OneWay}" 
+                    BorderBrush="{Binding CrossPriceLabelForeground, Mode=OneWay}"
+                    RenderOptions.EdgeMode="Aliased">
+                <Border.Margin>
+                    <MultiBinding Converter="{StaticResource crossTimeMarginConverter}">
+                        <Binding Path="CurrentMousePosition" Mode="OneWay"/>
+                        <Binding Path="TimeAxisHeight" Mode="OneWay"/>
+                    </MultiBinding>
+                </Border.Margin>
+
+                <TextBlock Foreground="{Binding CrossPriceLabelForeground, Mode=OneWay}" 
+                           FontSize="{Binding TimeAxisTickLabelFontSize, Mode=OneWay}"
+                           Margin="5 0 2 0"
+                           Text="{Binding SelectedCandle.t, StringFormat=yyyy-MM-dd HH:mm}">
+                </TextBlock>
+            </Border>
+
+            <Line X1="0" Y1="{Binding Path=CurrentMousePosition.Y, Mode=OneWay}" 
+                  X2="3" Y2="{Binding Path=CurrentMousePosition.Y, Mode=OneWay}" 
+                  Stroke="{Binding CrossPriceLabelForeground, Mode=OneWay}"
+                  RenderOptions.EdgeMode="Aliased"/>
+        </Grid>
 
 
         <!-- Coincides with the location of the timestamp scale. It is necessary for the correct operation of the mouse wheel in this area. + Cursor stops responding to text timestamps. -->

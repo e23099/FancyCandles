@@ -161,6 +161,24 @@ namespace FancyCandles
         { throw new NotImplementedException(); }
     }
     //*******************************************************************************************************************************************************************
+    class CrossTimeMarginConverter : IMultiValueConverter
+    {
+        // values[0] - Point CurrentMousePosition
+        // values[1] - double PriceAxisTickLabelHeight
+        public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
+        {
+            if (values == null || values.Length < 2 || (values[0]).GetType() != typeof(Point) || (values[1]).GetType() != typeof(double))
+                return new Thickness(0, 0, 0, 0);
+
+            Point currentMousePosition = (Point)values[0];
+            double timeAxisHeight = (double)values[1];
+            return new Thickness(currentMousePosition.X, 0, 0, 0);
+        }
+
+        public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
+        { throw new NotImplementedException(); }
+    }
+    //*******************************************************************************************************************************************************************
     class CrossPriceValueConverter : IMultiValueConverter
     {
         // values[0] - Point CurrentMousePosition
