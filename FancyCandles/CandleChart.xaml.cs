@@ -2181,6 +2181,7 @@ namespace FancyCandles
         {
             CandleChart thisCandleChart = (CandleChart)objWithOldDP; // Contains the old value for the property being changed.
             IntRange newValue = (IntRange)baseValue;
+            IntRange oldValue = thisCandleChart.VisibleCandlesRange;
 
             if (IntRange.IsUndefined(newValue))
                 return newValue;
@@ -2420,20 +2421,49 @@ namespace FancyCandles
             }
         }
         //----------------------------------------------------------------------------------------------------------------------------------
-        internal void OnMouseMoveInsideFrameworkElement(object sender, MouseEventArgs e)
+        Point? ClickPosition = null;
+        internal void _splitPanel_MouseMove(object sender, MouseEventArgs e)
         {
             FrameworkElement element = sender as FrameworkElement;
             var pos = Mouse.GetPosition(element);
-
             double bar = CandleWidth + CandleGap;
             double halfBar = bar / 2.0;
-            int n = (int)Math.Floor(pos.X / bar);
-            pos.X = n * bar + halfBar - 1.0;
-            CurrentMousePosition = pos;
-            int id = n + VisibleCandlesRange.Start_i;
-            if (CandlesSource == null || id < 0 || id >= CandlesSource.Count || selectedCandleIndex == id) return;
-            SelectedCandle = CandlesSource[id];
-            SelectedCandleIndex = id;
+            if (ClickPosition == null)
+            {
+                int n = (int)Math.Floor(pos.X / bar);
+                pos.X = n * bar + halfBar - 1.0;
+                int id = n + VisibleCandlesRange.Start_i;
+                if (CandlesSource == null || id < 0 || id >= CandlesSource.Count || selectedCandleIndex == id) return;
+                SelectedCandle = CandlesSource[id];
+                SelectedCandleIndex = id;
+            }
+            else
+            {
+                var o = ClickPosition ?? default;
+                if (Math.Abs(o.X - pos.X) >= bar)
+                {
+                    int new_start_i = (int)((o.X - pos.X) / bar) + VisibleCandlesRange.Start_i;
+                    if (new_start_i + VisibleCandlesRange.Count < CandlesSource.Count)
+                    {
+                        VisibleCandlesRange = IntRange.CreateContainingOnlyStart_i(new_start_i);
+                        ClickPosition = pos;
+                    }
+                }
+            }
+        }
+        private void _splitPanel_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            FrameworkElement element = sender as FrameworkElement;
+            ClickPosition = Mouse.GetPosition(element);
+        }
+
+        private void _splitPanel_MouseUp(object sender, MouseButtonEventArgs e)
+        {
+            ClickPosition = null;
+        }
+        private void _splitPanel_MouseLeave(object sender, MouseEventArgs e)
+        {
+            ClickPosition = null;
         }
 
         Point currentMousePosition;
@@ -2441,13 +2471,14 @@ namespace FancyCandles
         public Point CurrentMousePosition
         {
             get { return currentMousePosition; }
-            private set
+            internal set
             {
                 if (currentMousePosition == value) return;
                 currentMousePosition = value;
                 OnPropertyChanged();
             }
         }
+
         //----------------------------------------------------------------------------------------------------------------------------------
         internal void OnPanelCandlesContainerSizeChanged(object sender, SizeChangedEventArgs e)
         {
@@ -2500,6 +2531,5 @@ namespace FancyCandles
             get { return (bool)GetValue(IsVolumeChart2ExistsProperty); }
             set { SetValue(IsVolumeChart2ExistsProperty, value); }
         }
-
     }
 }

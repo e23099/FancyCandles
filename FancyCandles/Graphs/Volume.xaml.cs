@@ -47,5 +47,14 @@ namespace FancyCandles.Graphs
             vcExetremums[ExtremeUpper] = upper;
             vcExetremums[ExtremeLower] = lower;
         }
+
+        private void volumeHistogramContainer_MouseMove(object sender, MouseEventArgs e)
+        {
+            FrameworkElement element = sender as FrameworkElement;
+            var pos = Mouse.GetPosition(element);
+            CandleChart chart = this.DataContext as CandleChart;
+            if (chart != null)
+                chart.CurrentMousePosition = pos;
+        }
     }
 }

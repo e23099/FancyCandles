@@ -29,6 +29,7 @@
                 RenderOptions.EdgeMode="Aliased" />
 
         <Grid x:Name="volumeHistogramContainer" Grid.Column="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" 
+              MouseMove="volumeHistogramContainer_MouseMove"
               Panel.ZIndex="2">
             <Rectangle HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Fill="Transparent" />
 
@@ -57,6 +58,7 @@
                 </local:VolumeChartElement.Margin>
             </local:VolumeChartElement>
 
+            <!-- Horizontal cross hair -->
             <Line Stroke="{Binding Path=CrossLinesBrush, Mode=OneWay}" StrokeThickness="1" StrokeDashArray="5 3"
                     IsHitTestVisible="False" RenderOptions.EdgeMode="Aliased"
                     X1="0" 
@@ -71,6 +73,7 @@
                 </Line.Visibility>
             </Line>
 
+            <!-- Vertical cross hair -->
             <Line Stroke="{Binding Path=CrossLinesBrush, Mode=OneWay}" StrokeThickness="1" StrokeDashArray="5 3"
                     IsHitTestVisible="False" RenderOptions.EdgeMode="Aliased"
                     X1="{Binding Path=CurrentMousePosition.X, Mode=OneWay}" 

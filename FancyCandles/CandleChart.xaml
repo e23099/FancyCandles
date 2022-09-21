@@ -163,7 +163,12 @@
             <RowDefinition Height="30"/>
         </Grid.RowDefinitions>
 
-        <control:SplitPanel Grid.Row="0" Orientation="Vertical" x:Name="_splitPanel" MouseWheel="OnMouseWheel" MouseMove="OnMouseMoveInsideFrameworkElement">
+        <control:SplitPanel Grid.Row="0" Orientation="Vertical" x:Name="_splitPanel" 
+                            MouseWheel="OnMouseWheel" 
+                            MouseDown="_splitPanel_MouseDown"
+                            MouseUp="_splitPanel_MouseUp"
+                            MouseLeave="_splitPanel_MouseLeave"
+                            MouseMove="_splitPanel_MouseMove">
             <control:SplitPanel.ContextMenu>
                 <ContextMenu x:Name="priceChartContextMenu">
                     <MenuItem Header="Settings" Click="OpenCandleChartPropertiesWindow"/>
