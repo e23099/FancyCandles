@@ -2401,9 +2401,9 @@ namespace FancyCandles
             if (Keyboard.Modifiers == MouseWheelModifierKeyForCandleWidthChanging)
             {
                 if (e.Delta > 0)
-                    SetVisibleCandlesRangeCount(VisibleCandlesRange.Count - 3);
+                    SetVisibleCandlesRangeCount(VisibleCandlesRange.Count - (int)Math.Max(VisibleCandlesRange.Count * 0.05, 3));
                 else if (e.Delta < 0)
-                    SetVisibleCandlesRangeCount(VisibleCandlesRange.Count + 3);
+                    SetVisibleCandlesRangeCount(VisibleCandlesRange.Count + (int)Math.Max(VisibleCandlesRange.Count * 0.05, 3));
             }
             else if (Keyboard.Modifiers == MouseWheelModifierKeyForScrollingThroughCandles)
             {

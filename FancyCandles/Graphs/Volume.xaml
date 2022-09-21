@@ -29,7 +29,7 @@
                 RenderOptions.EdgeMode="Aliased" />
 
         <Grid x:Name="volumeHistogramContainer" Grid.Column="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" 
-              MouseWheel="OnMouseWheel" MouseMove="OnMouseMoveInsideFrameworkElement" Panel.ZIndex="2">
+              Panel.ZIndex="2">
             <Rectangle HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Fill="Transparent" />
 
             <local:VolumeChartElement 

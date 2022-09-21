@@ -46,19 +46,6 @@ namespace FancyCandles.Graphs
         {
             get { return priceChartContainer.ActualWidth; }
         }
-        private void OnMouseWheel(object sender, MouseWheelEventArgs e)
-        {
-            CandleChart chart = this.DataContext as CandleChart;
-            if (chart == null) return;
-            chart.OnMouseWheel(sender, e);
-        }
-
-        private void OnMouseMoveInsideFrameworkElement(object sender, MouseEventArgs e)
-        {
-            CandleChart chart = this.DataContext as CandleChart;
-            if (chart == null) return;
-            chart.OnMouseMoveInsideFrameworkElement(sender, e);
-        }
         private void OnPanelCandlesContainerSizeChanged(object sender, SizeChangedEventArgs e)
         {
             CandleChart chart = this.DataContext as CandleChart;

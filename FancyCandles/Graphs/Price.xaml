@@ -36,7 +36,7 @@
         <Grid x:Name="priceChartContainer" Grid.Column="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" 
               ClipToBounds="True"
               SizeChanged="OnPanelCandlesContainerSizeChanged" 
-              MouseWheel="OnMouseWheel" MouseMove="OnMouseMoveInsideFrameworkElement" Panel.ZIndex="2">
+              Panel.ZIndex="2">
             <!-- You need to fill the entire container with transparent content, otherwise the MouseEvents does not work: -->
             <Rectangle HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Fill="Transparent"/>
 

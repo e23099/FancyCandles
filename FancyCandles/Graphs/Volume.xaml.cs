@@ -47,17 +47,5 @@ namespace FancyCandles.Graphs
             vcExetremums[ExtremeUpper] = upper;
             vcExetremums[ExtremeLower] = lower;
         }
-
-        private void OnMouseWheel(object sender, MouseWheelEventArgs e)
-        {
-            if (!(this.DataContext is CandleChart chart)) return;
-            chart.OnMouseWheel(sender, e);
-        }
-
-        private void OnMouseMoveInsideFrameworkElement(object sender, MouseEventArgs e)
-        {
-            if (!(this.DataContext is CandleChart chart)) return;
-            chart.OnMouseMoveInsideFrameworkElement(sender, e);
-        }
     }
 }
