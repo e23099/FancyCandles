@@ -1820,8 +1820,10 @@ namespace FancyCandles
         public static Brush DefaultBearishVolumeBarFill { get { return (Brush)(new SolidColorBrush(Colors.Red)).GetCurrentValueAsFrozen(); } }
         private void ChangeCurrentTimeFrame(TimeFrame newTimeFrame)
         {
+            if (CandlesSource == null) return;
             string secID = (CandlesSource as ICandlesSourceFromProvider).SecID;
             ICandlesSource newCandleSource = CandlesSourceProvider.GetCandlesSource(secID, newTimeFrame);
+            if (newCandleSource == null) return;
             CandlesSource = newCandleSource;
 
             ISecurityInfo secInfo = CandlesSourceProvider.GetSecFromCatalog(secID);
@@ -2498,7 +2500,6 @@ namespace FancyCandles
             get { return (bool)GetValue(IsVolumeChart2ExistsProperty); }
             set { SetValue(IsVolumeChart2ExistsProperty, value); }
         }
-
 
     }
 }

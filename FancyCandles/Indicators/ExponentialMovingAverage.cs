@@ -85,7 +85,7 @@ namespace FancyCandles.Indicators
         ///<param name="candle_i">Specifies the time period at which the OverlayIndicator value is calculated.</param>
         public override double GetIndicatorValue(int candle_i)
         {
-            if (indicatorValues == null) return 0;
+            if (indicatorValues == null || candle_i < 0 || candle_i >= indicatorValues.Count) return 0;
 
             return indicatorValues[candle_i];
         }
