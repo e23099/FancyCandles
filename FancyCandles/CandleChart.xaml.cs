@@ -2428,16 +2428,7 @@ namespace FancyCandles
             var pos = Mouse.GetPosition(element);
             double bar = CandleWidth + CandleGap;
             double halfBar = bar / 2.0;
-            if (ClickPosition == null)
-            {
-                int n = (int)Math.Floor(pos.X / bar);
-                pos.X = n * bar + halfBar - 1.0;
-                int id = n + VisibleCandlesRange.Start_i;
-                if (CandlesSource == null || id < 0 || id >= CandlesSource.Count || selectedCandleIndex == id) return;
-                SelectedCandle = CandlesSource[id];
-                SelectedCandleIndex = id;
-            }
-            else
+            if (ClickPosition != null)
             {
                 var o = ClickPosition ?? default;
                 if (Math.Abs(o.X - pos.X) >= bar)
@@ -2461,10 +2452,6 @@ namespace FancyCandles
         {
             ClickPosition = null;
         }
-        private void _splitPanel_MouseLeave(object sender, MouseEventArgs e)
-        {
-            ClickPosition = null;
-        }
 
         Point currentMousePosition;
         /// <summary>This is a property for internal use only. You should not use it.</summary>
@@ -2474,6 +2461,14 @@ namespace FancyCandles
             internal set
             {
                 if (currentMousePosition == value) return;
+                double bar = CandleWidth + CandleGap;
+                double halfBar = bar / 2.0;
+                int n = (int)Math.Floor(value.X / bar);
+                value.X = n * bar + halfBar - 1.0;
+                int id = n + VisibleCandlesRange.Start_i;
+                if (CandlesSource == null || id < 0 || id >= CandlesSource.Count || selectedCandleIndex == id) return;
+                SelectedCandle = CandlesSource[id];
+                SelectedCandleIndex = id;
                 currentMousePosition = value;
                 OnPropertyChanged();
             }

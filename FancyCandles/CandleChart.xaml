@@ -167,7 +167,6 @@
                             MouseWheel="OnMouseWheel" 
                             MouseDown="_splitPanel_MouseDown"
                             MouseUp="_splitPanel_MouseUp"
-                            MouseLeave="_splitPanel_MouseLeave"
                             MouseMove="_splitPanel_MouseMove">
             <control:SplitPanel.ContextMenu>
                 <ContextMenu x:Name="priceChartContextMenu">
