@@ -1,22 +1,23 @@
-﻿<UserControl x:Class="FancyCandles.Graphs.Price"
-             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:FancyCandles.Graphs"
-             xmlns:fp="clr-namespace:FancyPrimitives;assembly=FancyPrimitives"
-             xmlns:fc="clr-namespace:FancyCandles" 
-             mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800">
+﻿<local:Subgraph x:Class="FancyCandles.Graphs.Price"
+                xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+                xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+                xmlns:local="clr-namespace:FancyCandles.Graphs"
+                xmlns:fp="clr-namespace:FancyPrimitives;assembly=FancyPrimitives"
+                xmlns:fc="clr-namespace:FancyCandles" 
+                d:DataContext="{d:DesignInstance Type=fc:CandleChart}"
+                mc:Ignorable="d" 
+                d:DesignHeight="450" d:DesignWidth="800">
 
-    <UserControl.Resources>
+    <local:Subgraph.Resources>
         <fc:CandleDrawingParametersConverter x:Key="candleDrawingParametersConverter"/>
         <fc:TopBottomMarginConverter x:Key="topBottomMarginConverter"/>
         <fc:SquareBoolToVisibilityConverter x:Key="squareBoolToVisibilityConverter"/>
         <fc:IsCandlesLoadingConverter x:Key="isCandlesLoadingConverter" />
         <fc:CrossPriceMarginConverter x:Key="crossPriceMarginConverter" />
         <fc:CrossPriceValueConverter x:Key="crossPriceValueConverter" />
-    </UserControl.Resources>
+    </local:Subgraph.Resources>
     <!-- Price chart all in one Grid -->
     <Grid>
         <Grid.ColumnDefinitions>
@@ -35,7 +36,7 @@
         <!-- 真正的 Candle 部分，用 Panel.ZIndex="2" 來疊在背景之上-->
         <Grid x:Name="priceChartContainer" Grid.Column="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" 
               ClipToBounds="True"
-              MouseMove="priceChartContainer_MouseMove"
+              MouseMove="OnMouseMoveInsideChartContainer"
               SizeChanged="OnPanelCandlesContainerSizeChanged" 
               Panel.ZIndex="2">
             <!-- You need to fill the entire container with transparent content, otherwise the MouseEvents does not work: -->
@@ -181,4 +182,4 @@
         <!-- ============================================================================================================================================================== -->
     </Grid>
             
-</UserControl>
+</local:Subgraph>

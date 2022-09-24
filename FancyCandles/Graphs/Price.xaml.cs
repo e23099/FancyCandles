@@ -18,7 +18,7 @@ namespace FancyCandles.Graphs
     /// <summary>
     /// Interaction logic for Price.xaml
     /// </summary>
-    public partial class Price : UserControl
+    public partial class Price : Subgraph
     {
         public static readonly string ExtremeUpper = "priceHigh";
         public static readonly string ExtremeLower = "priceLow";
@@ -29,7 +29,7 @@ namespace FancyCandles.Graphs
         }
 
 
-        public void UpdateVisibleCandlesExtremums(ICandlesSource candles, int start, int length, Dictionary<string,double> vcExetremums)
+        public override void UpdateVisibleCandlesExtremums(ICandlesSource candles, int start, int length, Dictionary<string,double> vcExetremums)
         {
             double upper = double.MinValue, lower = double.MaxValue;
             for (int i = start; i < start + length; i++)
@@ -51,15 +51,6 @@ namespace FancyCandles.Graphs
             CandleChart chart = this.DataContext as CandleChart;
             if (chart == null) return;
             chart.OnPanelCandlesContainerSizeChanged(sender, e);
-        }
-
-        private void priceChartContainer_MouseMove(object sender, MouseEventArgs e)
-        {
-            FrameworkElement element = sender as FrameworkElement;
-            var pos = Mouse.GetPosition(element);
-            CandleChart chart = this.DataContext as CandleChart;
-            if (chart != null)
-                chart.CurrentMousePosition = pos;
         }
     }
 }

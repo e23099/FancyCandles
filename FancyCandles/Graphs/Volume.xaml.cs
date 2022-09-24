@@ -20,7 +20,7 @@ namespace FancyCandles.Graphs
     /// <summary>
     /// Interaction logic for Volume.xaml
     /// </summary>
-    public partial class Volume : UserControl
+    public partial class Volume : Subgraph
     {
         public static readonly string ExtremeUpper = "volumeUpper";
         public static readonly string ExtremeLower = "volumeLower";
@@ -35,7 +35,7 @@ namespace FancyCandles.Graphs
         {
             InitializeComponent();
         }
-        public void UpdateVisibleCandlesExtremums(ICandlesSource candles, int start, int length, Dictionary<string,double> vcExetremums)
+        public override void UpdateVisibleCandlesExtremums(ICandlesSource candles, int start, int length, Dictionary<string,double> vcExetremums)
         {
             double upper = double.MinValue, lower = double.MaxValue;
             for (int i = start; i < start + length; i++)
@@ -46,15 +46,6 @@ namespace FancyCandles.Graphs
             }
             vcExetremums[ExtremeUpper] = upper;
             vcExetremums[ExtremeLower] = lower;
-        }
-
-        private void volumeHistogramContainer_MouseMove(object sender, MouseEventArgs e)
-        {
-            FrameworkElement element = sender as FrameworkElement;
-            var pos = Mouse.GetPosition(element);
-            CandleChart chart = this.DataContext as CandleChart;
-            if (chart != null)
-                chart.CurrentMousePosition = pos;
         }
     }
 }

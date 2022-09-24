@@ -79,6 +79,7 @@
     <Compile Include="CandleStructs.cs" />
     <Compile Include="Converters.cs" />
     <Compile Include="DateTimeMilestones.cs" />
+    <Compile Include="Graphs\Subgraph.cs" />
     <Compile Include="Graphs\TickElementTemplate.cs" />
     <Compile Include="Graphs\Price.xaml.cs">
       <DependentUpon>Price.xaml</DependentUpon>
