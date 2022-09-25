@@ -190,7 +190,7 @@
             <graph:Price x:Name="_priceGraph"/>
 
             <!-- Volume chart all in one grid -->
-            <graph:Volume x:Name="_defaultVolumeGraph"/>
+            <!-- graph:Volume x:Name="_defaultVolumeGraph"/-->
         </control:SplitPanel>
 
         <!-- ============================================================================================================================================================== -->
@@ -205,6 +205,7 @@
                                 IsGridlinesEnabled="{Binding Path=IsVerticalGridlinesEnabled, Mode=OneWay}"
                                 GridlinesPen="{Binding Path=VerticalGridlinesPen, Mode=OneWay}"
                                 HideMinorGridlines="{Binding Path=HideMinorVerticalGridlines, Mode=OneWay}"
+                                MouseWheel="OnMouseWheel"
                                 RenderOptions.EdgeMode="Aliased">
             <local:TimeTicksElement.CandleWidthAndGap>
                 <MultiBinding Converter="{StaticResource candleDrawingParametersConverter}">
