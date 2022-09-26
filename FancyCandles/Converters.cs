@@ -233,7 +233,12 @@ namespace FancyCandles
         {
             if (values == null || values.Length < 5 || (values[0]).GetType() != typeof(Point) || (values[1]).GetType() != typeof(double) || (values[2]).GetType() != typeof(Dictionary<string,double>)
                  || (values[3]).GetType() != typeof(double) || (values[4]).GetType() != typeof(double))
-                return true;
+            {
+#if DEBUG
+                Console.WriteLine("something is wrong in CrossVolumeConverter");
+#endif
+                return "";
+            }
 
             Point currentMousePosition = (Point)values[0];
             double volumeHistogramHeight = (double)values[1];
@@ -297,7 +302,10 @@ namespace FancyCandles
         public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
         {
             if (values == null || values.Length < 2 || (values[0]).GetType() != typeof(bool) || (values[1]).GetType() != typeof(bool))
-                return true;
+            {
+                Console.WriteLine("something is wrong in squareBoolToVisibilityConverter");
+                return Visibility.Collapsed;
+            }
 
             bool bool0 = (bool)values[0];
             bool bool1 = (bool)values[1];

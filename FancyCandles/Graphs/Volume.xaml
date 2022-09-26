@@ -84,7 +84,7 @@
                 <Line.Visibility>
                     <MultiBinding Converter="{StaticResource squareBoolToVisibilityConverter}">
                         <Binding Path="TargetChart.IsCrossLinesVisible" Mode="OneWay"/>
-                        <Binding Path="IsMouseOver" Mode="OneWay"/>
+                        <Binding Path="TargetChart.IsMouseOver" Mode="OneWay"/>
                     </MultiBinding>
                 </Line.Visibility>
             </Line>

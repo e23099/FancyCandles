@@ -213,16 +213,19 @@ namespace FancyCandles
         //----------------------------------------------------------------------------------------------------------------------------------
         private void AddSubgraph_Click(object sender, RoutedEventArgs e)
         {
-            SubgraphAddWindow popup = new SubgraphAddWindow() { DataContext = parentCandleChart };
+            SubgraphAddWindow popup = new SubgraphAddWindow();
             if (popup.ShowDialog() == true)
             {
-                var graph = popup.GetAddedSubgraph();
+                Subgraph graph = popup.GetAddedSubgraph();
                 if (graph != null)
                 {
                     graph.TargetChart = parentCandleChart;
                     parentCandleChart.Subgraphs.Add(graph);
                 }
             }
+            //Subgraph graph = new Volume();
+            //graph.TargetChart = parentCandleChart;
+            //parentCandleChart.Subgraphs.Add(graph);
         }
 
         private void DelSubgraph_Click(object sender, RoutedEventArgs e)

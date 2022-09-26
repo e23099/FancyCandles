@@ -61,7 +61,6 @@ namespace FancyCandles
         }
         //----------------------------------------------------------------------------------------------------------------------------------
         /// <summary>Default constructor.</summary>
-        Volume _defaultVolumeGraph = new Volume();
         public CandleChart()
         {
             InitialCandleWidth = DefaultInitialCandleWidth;
@@ -76,11 +75,11 @@ namespace FancyCandles
             VisibleCandlesExtremums[Volume.ExtremeLower] = 0;
             VisibleCandlesExtremums[Volume.ExtremeUpper] = 0;
             Loaded += new RoutedEventHandler(OnUserControlLoaded);
-            _defaultVolumeGraph.TargetChart = this;
             _subgraphs.CollectionChanged += OnSubgraphsChanged;
 
 
-            _defaultVolumeGraph.DataContext = this;
+            var _defaultVolumeGraph = new Volume();
+            _defaultVolumeGraph.TargetChart = this;
             Subgraphs.Add(_defaultVolumeGraph);
 
         }
@@ -1773,18 +1772,6 @@ namespace FancyCandles
         }
         private ObservableCollection<Subgraph> _subgraphs = new ObservableCollection<Subgraph>();
 
-        /// <summary>
-        /// collection of avaliable subgraphs that can be added to CandleChart
-        /// </summary>
-        public ObservableCollection<Subgraph> AvaliableSubgraphs 
-        { 
-            get { return avaliableSubgraphs; } 
-        }
-        private ObservableCollection<Subgraph> avaliableSubgraphs = new ObservableCollection<Subgraph>
-        {
-            new Volume()
-        };
-
         private void OnSubgraphsChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
             if (e.Action == NotifyCollectionChangedAction.Add)
@@ -1792,6 +1779,8 @@ namespace FancyCandles
                 Subgraph subgraph = (Subgraph)(e.NewItems[0]);
                 _splitPanel.Children.Add(subgraph);
                 subgraph.DataContext = subgraph;
+                if (CandlesSource != null)
+                    subgraph.UpdateVisibleCandlesExtremums(CandlesSource, VisibleCandlesRange.Start_i, VisibleCandlesRange.Count, VisibleCandlesExtremums);
             }
             else if (e.Action == NotifyCollectionChangedAction.Remove)
             {
@@ -2149,7 +2138,10 @@ namespace FancyCandles
                 return;
 
             _priceGraph.UpdateVisibleCandlesExtremums(CandlesSource, VisibleCandlesRange.Start_i, VisibleCandlesRange.Count, VisibleCandlesExtremums);
-            _defaultVolumeGraph.UpdateVisibleCandlesExtremums(CandlesSource, VisibleCandlesRange.Start_i, VisibleCandlesRange.Count, VisibleCandlesExtremums);
+            foreach (var subgraph in Subgraphs)
+            {
+                subgraph.UpdateVisibleCandlesExtremums(CandlesSource, VisibleCandlesRange.Start_i, VisibleCandlesRange.Count, VisibleCandlesExtremums);
+            }
             VisibleCandlesExtremums = VisibleCandlesExtremums.ToDictionary(entry => entry.Key, entry => entry.Value);
         }
 
@@ -2402,6 +2394,7 @@ namespace FancyCandles
         //--------
         internal void OnMouseWheel(object sender, MouseWheelEventArgs e)
         {
+            if (CandlesSource == null) return;
             // Пересчитывает VisibleCandlesRange.Start_i, CandleWidth и CandleGap таким образом, 
             // чтобы установить заданное значение для VisibleCandlesRange.Count и по возможности сохраняет индекс последней видимой свечи. 
             void SetVisibleCandlesRangeCount(int newCount)
@@ -2441,11 +2434,21 @@ namespace FancyCandles
         Point? ClickPosition = null;
         internal void _splitPanel_MouseMove(object sender, MouseEventArgs e)
         {
+            if (CandlesSource == null) return;
             FrameworkElement element = sender as FrameworkElement;
             var pos = Mouse.GetPosition(element);
             double bar = CandleWidth + CandleGap;
             double halfBar = bar / 2.0;
-            if (ClickPosition != null)
+            if (ClickPosition == null)
+            {
+                int n = (int)Math.Floor(pos.X / bar);
+                pos.X = n * bar + halfBar - 1.0;
+                int id = n + VisibleCandlesRange.Start_i;
+                if (CandlesSource == null || id < 0 || id >= CandlesSource.Count || selectedCandleIndex == id) return;
+                SelectedCandle = CandlesSource[id];
+                SelectedCandleIndex = id;
+            }
+            else
             {
                 var o = ClickPosition ?? default;
                 if (Math.Abs(o.X - pos.X) >= bar)
@@ -2478,14 +2481,6 @@ namespace FancyCandles
             internal set
             {
                 if (currentMousePosition == value) return;
-                double bar = CandleWidth + CandleGap;
-                double halfBar = bar / 2.0;
-                int n = (int)Math.Floor(value.X / bar);
-                value.X = n * bar + halfBar - 1.0;
-                int id = n + VisibleCandlesRange.Start_i;
-                if (CandlesSource == null || id < 0 || id >= CandlesSource.Count || selectedCandleIndex == id) return;
-                SelectedCandle = CandlesSource[id];
-                SelectedCandleIndex = id;
                 currentMousePosition = value;
                 OnPropertyChanged();
             }

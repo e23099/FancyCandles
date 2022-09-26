@@ -24,13 +24,30 @@ namespace FancyCandles.Graphs
         public SubgraphAddWindow()
         {
             InitializeComponent();
+            DataContext = this;
         }
+
+        public List<Subgraph> AvaliableSubgraphs
+        {
+            get { return avaliableSubgraphs; }
+        }
+        private List<Subgraph> avaliableSubgraphs = new List<Subgraph>
+        {
+            new Volume()
+        };
+
 
         private Subgraph selectedSubgraph;
 
         public Subgraph GetAddedSubgraph()
         {
-            return (Subgraph)selectedSubgraph.Clone();
+            string typeName = selectedSubgraph.GetType().Name;
+            Subgraph result = selectedSubgraph;
+            if (typeName == "Volume")
+                selectedSubgraph = new Volume();
+            else
+                result = null; 
+            return result;
         }
 
         private void listAvaliableSubgraphs_SelectionChanged(object sender, SelectionChangedEventArgs e)

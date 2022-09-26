@@ -47,7 +47,8 @@ namespace FancyCandles.Graphs
 
         public object Clone()
         {
-            return this.MemberwiseClone();
+            var clone = (Subgraph)MemberwiseClone();
+            return clone;
         }
     }
 }
