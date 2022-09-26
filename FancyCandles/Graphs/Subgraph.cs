@@ -12,7 +12,7 @@ namespace FancyCandles.Graphs
     /// <summary>
     /// a Subgraph abstract class that targets the CandleChart instance as its DataContext to display what it needs to display.
     /// </summary>
-    public class Subgraph : UserControl
+    public abstract class Subgraph : UserControl
     {
         /// <summary>
         /// return Name of this subgraph
@@ -23,11 +23,9 @@ namespace FancyCandles.Graphs
         }
         public CandleChart TargetChart { get; set; }
 
-        public virtual void UpdateVisibleCandlesExtremums(ICandlesSource candles, int start, int length, Dictionary<string, double> vcExetremums) 
-        {
-        }
+        public abstract void UpdateVisibleCandlesExtremums(ICandlesSource candles, int start, int length, Dictionary<string, double> vcExetremums);
 
-        public virtual string PropertiesEdtiorXAML { get { return ""; } }
+        public abstract string PropertiesEdtiorXAML { get; }
 
         public void OnMouseMoveInsideChartContainer(object sender, MouseEventArgs e)
         {

@@ -226,20 +226,9 @@ namespace FancyCandles
         private void listSubgraphs_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             ListBox listElement = (ListBox)sender;
-            Collection<Subgraph> subgraphs = listElement.ItemsSource as Collection<Subgraph>;
-
-            if (subgraphs == null) return;
-
-            if (e.RemovedItems.Count > 0)
+            Subgraph selectedSubgraph = listElement.SelectedItem as Subgraph;
+            if (selectedSubgraph != null)
             {
-                subgraphEditor.Children.Clear();
-                subgraphEditor.DataContext = null;
-            }
-
-            if (e.AddedItems.Count > 0)
-            {
-                Subgraph selectedSubgraph = (Subgraph)e.AddedItems[0];
-
                 string indicatorXaml = selectedSubgraph.PropertiesEdtiorXAML;
                 ASCIIEncoding encoding = new ASCIIEncoding();
                 byte[] b = encoding.GetBytes(indicatorXaml);
@@ -255,7 +244,6 @@ namespace FancyCandles
                 subgraphEditor.DataContext = selectedSubgraph;
                 subgraphEditor.Children.Add(indicatorEditorElement);
             }
-             
         }
         //----------------------------------------------------------------------------------------------------------------------------------
         //----------------------------------------------------------------------------------------------------------------------------------

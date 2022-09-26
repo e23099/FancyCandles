@@ -1762,17 +1762,6 @@ namespace FancyCandles
 
         #endregion **********************************************************************************************************************************************
         //----------------------------------------------------------------------------------------------------------------------------------
-        private void ChangeCurrentTimeFrame(TimeFrame newTimeFrame)
-        {
-            if (CandlesSource == null) return;
-            string secID = (CandlesSource as ICandlesSourceFromProvider).SecID;
-            ICandlesSource newCandleSource = CandlesSourceProvider.GetCandlesSource(secID, newTimeFrame);
-            if (newCandleSource == null) return;
-            CandlesSource = newCandleSource;
-
-            ISecurityInfo secInfo = CandlesSourceProvider.GetSecFromCatalog(secID);
-            SetCurrentValue(LegendTextProperty, $"{secInfo.Ticker}, {newTimeFrame}");
-        }
 
 
         #region SUBGRAPHS
@@ -1828,6 +1817,17 @@ namespace FancyCandles
 
         #endregion
 
+        private void ChangeCurrentTimeFrame(TimeFrame newTimeFrame)
+        {
+            if (CandlesSource == null) return;
+            string secID = (CandlesSource as ICandlesSourceFromProvider).SecID;
+            ICandlesSource newCandleSource = CandlesSourceProvider.GetCandlesSource(secID, newTimeFrame);
+            if (newCandleSource == null) return;
+            CandlesSource = newCandleSource;
+
+            ISecurityInfo secInfo = CandlesSourceProvider.GetSecFromCatalog(secID);
+            SetCurrentValue(LegendTextProperty, $"{secInfo.Ticker}, {newTimeFrame}");
+        }
 
         private void ChangeCurrentTimeFrame(object sender, RoutedEventArgs e)
         {

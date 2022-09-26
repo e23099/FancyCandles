@@ -40,8 +40,8 @@
                 VisibleCandlesRange="{Binding TargetChart.VisibleCandlesRange, Mode=OneWay}"
                 VisibleCandlesExtremums="{Binding TargetChart.VisibleCandlesExtremums, Mode=OneWay}"
                 VolumeBarWidthToCandleWidthRatio="{Binding VolumeBarWidthToCandleWidthRatio, Mode=OneWay}"
-                BullishBarFill="{Binding BullishVolumeBarFill, Mode=OneWay}"
-                BearishBarFill="{Binding BearishVolumeBarFill, Mode=OneWay}" 
+                BullishBarFill="{Binding BullishVolumeBarFill, Mode=TwoWay}"
+                BearishBarFill="{Binding BearishVolumeBarFill, Mode=TwoWay}" 
                 ToolTipService.PlacementTarget="{Binding ElementName=volumeHistogramContainer, Path=., Mode=OneWay}"
                 ToolTipService.Placement="Relative"
                 RenderOptions.EdgeMode="Aliased">

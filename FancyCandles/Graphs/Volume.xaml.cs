@@ -37,7 +37,7 @@ namespace FancyCandles.Graphs
         }
 
         public static readonly DependencyProperty VolumeBarWidthToCandleWidthRatioProperty =
-            DependencyProperty.Register("VolumeBarWidthToCandleWidthRatio", typeof(double), typeof(CandleChart), new PropertyMetadata(DefaultVolumeBarWidthToCandleWidthRatio, null, CoerceVolumeBarWidthToCandleWidthRatio));
+            DependencyProperty.Register("VolumeBarWidthToCandleWidthRatio", typeof(double), typeof(Volume), new PropertyMetadata(DefaultVolumeBarWidthToCandleWidthRatio, null, CoerceVolumeBarWidthToCandleWidthRatio));
 
         private static object CoerceVolumeBarWidthToCandleWidthRatio(DependencyObject objWithOldDP, object newDPValue)
         {
@@ -56,7 +56,7 @@ namespace FancyCandles.Graphs
             set { SetValue(VolumeHistogramTopMarginProperty, value); }
         }
         public static readonly DependencyProperty VolumeHistogramTopMarginProperty =
-            DependencyProperty.Register("VolumeHistogramTopMargin", typeof(double), typeof(CandleChart), new PropertyMetadata(DefaultVolumeHistogramTopMargin));
+            DependencyProperty.Register("VolumeHistogramTopMargin", typeof(double), typeof(Volume), new PropertyMetadata(DefaultVolumeHistogramTopMargin));
         public static double DefaultVolumeHistogramTopMargin { get { return 10.0; } }
 
         [UndoableProperty]
@@ -67,7 +67,7 @@ namespace FancyCandles.Graphs
             set { SetValue(VolumeHistogramBottomMarginProperty, value); }
         }
         public static readonly DependencyProperty VolumeHistogramBottomMarginProperty =
-            DependencyProperty.Register("VolumeHistogramBottomMargin", typeof(double), typeof(CandleChart), new PropertyMetadata(DefaultVolumeHistogramBottomMargin));
+            DependencyProperty.Register("VolumeHistogramBottomMargin", typeof(double), typeof(Volume), new PropertyMetadata(DefaultVolumeHistogramBottomMargin));
         public static double DefaultVolumeHistogramBottomMargin { get { return 5.0; } }
         [UndoableProperty]
         [JsonProperty]
@@ -77,7 +77,7 @@ namespace FancyCandles.Graphs
             set { SetValue(BullishVolumeBarFillProperty, value); }
         }
         public static readonly DependencyProperty BullishVolumeBarFillProperty =
-            DependencyProperty.Register("BullishVolumeBarFill", typeof(Brush), typeof(CandleChart), new PropertyMetadata(DefaultBullishVolumeBarFill));
+            DependencyProperty.Register("BullishVolumeBarFill", typeof(Brush), typeof(Volume), new PropertyMetadata(DefaultBullishVolumeBarFill));
 
         public static Brush DefaultBullishVolumeBarFill { get { return (Brush)(new SolidColorBrush(Colors.Green)).GetCurrentValueAsFrozen(); } }
         [UndoableProperty]
@@ -88,7 +88,7 @@ namespace FancyCandles.Graphs
             set { SetValue(BearishVolumeBarFillProperty, value); }
         }
         public static readonly DependencyProperty BearishVolumeBarFillProperty =
-            DependencyProperty.Register("BearishVolumeBarFill", typeof(Brush), typeof(CandleChart), new PropertyMetadata(DefaultBearishVolumeBarFill));
+            DependencyProperty.Register("BearishVolumeBarFill", typeof(Brush), typeof(Volume), new PropertyMetadata(DefaultBearishVolumeBarFill));
 
         public static Brush DefaultBearishVolumeBarFill { get { return (Brush)(new SolidColorBrush(Colors.Red)).GetCurrentValueAsFrozen(); } }
         #endregion
