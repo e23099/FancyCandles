@@ -80,6 +80,9 @@
     <Compile Include="Converters.cs" />
     <Compile Include="DateTimeMilestones.cs" />
     <Compile Include="Graphs\Subgraph.cs" />
+    <Compile Include="Graphs\SubgraphAddWindow.xaml.cs">
+      <DependentUpon>SubgraphAddWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Graphs\TickElementTemplate.cs" />
     <Compile Include="Graphs\Price.xaml.cs">
       <DependentUpon>Price.xaml</DependentUpon>
@@ -127,6 +130,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Graphs\Price.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Graphs\SubgraphAddWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

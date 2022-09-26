@@ -12,7 +12,7 @@ namespace FancyCandles.Graphs
     /// <summary>
     /// a Subgraph abstract class that targets the CandleChart instance as its DataContext to display what it needs to display.
     /// </summary>
-    public abstract class Subgraph : UserControl
+    public abstract class Subgraph : UserControl, ICloneable
     {
         /// <summary>
         /// return Name of this subgraph
@@ -43,6 +43,11 @@ namespace FancyCandles.Graphs
             Subgraph chart = this.DataContext as Subgraph;
             if (chart != null)
                 chart.TargetChart.CurrentMousePosition = pos;
+        }
+
+        public object Clone()
+        {
+            return this.MemberwiseClone();
         }
     }
 }

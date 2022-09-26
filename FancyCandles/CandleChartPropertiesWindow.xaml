@@ -499,9 +499,13 @@
                             <RowDefinition Height="*" />
                         </Grid.RowDefinitions>
                         <StackPanel Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Right">
-                            <Button Content="Add" />
-                            <fp:UpDownButtonBlock Height="20"/>
-                            <Button Content="Del" />
+                            <Button Content="Add" Click="AddSubgraph_Click"/>
+                            <fp:UpDownButtonBlock Height="20"
+                                              UpButtonPressedCommand="{Binding MoveSubgraphUpCommand}" 
+                                              UpButtonPressedCommandParameter="{Binding ElementName=listSubgraphs, Path=SelectedIndex}"
+                                              DownButtonPressedCommand="{Binding MoveSubgraphDownCommand}" 
+                                              DownButtonPressedCommandParameter="{Binding ElementName=listSubgraphs, Path=SelectedIndex}"/>
+                            <Button Content="Del" Click="DelSubgraph_Click"/>
                         </StackPanel>
                         <ListBox x:Name="listSubgraphs" Grid.Row="1" ItemsSource="{Binding Subgraphs}"
                                  SelectionChanged="listSubgraphs_SelectionChanged">

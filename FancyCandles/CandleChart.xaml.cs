@@ -87,7 +87,7 @@ namespace FancyCandles
         //----------------------------------------------------------------------------------------------------------------------------------
         internal void OpenCandleChartPropertiesWindow(object sender, RoutedEventArgs e)
         {
-            string overlayIndicatorArrayJson = SerializeToJson(OverlayIndicators); // 先把現在的狀況存成 Json
+            string overlayIndicatorArrayJson = SerializeToJson(OverlayIndicators); // overlayIndicators 狀況存成 Json
             RecordAllUndoableProperties(); // 把所有 "可回復的 property" 儲存起來
 
             CandleChartPropertiesWindow popup = new CandleChartPropertiesWindow(this);
@@ -1762,38 +1762,28 @@ namespace FancyCandles
         #endregion **********************************************************************************************************************************************
         //----------------------------------------------------------------------------------------------------------------------------------
 
-
         #region SUBGRAPHS
         /// <summary>
         /// collection of subgraph to display the CandlesSource
         /// </summary>
-        /*[JsonProperty]
-        public ObservableCollection<Subgraph> Subgraphs
-        {
-            get { return (ObservableCollection<Subgraph>)GetValue(SubgraphsProperty); }
-            set { SetValue(SubgraphsProperty, value); }
-        }
-        /// <summary>Identifies the <see cref="OverlayIndicators"/> dependency property.</summary>
-        /// <value><see cref="DependencyProperty"/></value>
-        public static readonly DependencyProperty SubgraphsProperty =
-            DependencyProperty.Register("Subgraphs", typeof(ObservableCollection<Subgraph>), typeof(CandleChart),
-                new UIPropertyMetadata(new ObservableCollection<Subgraph>(), OnSubgraphsChanged));
-
-        private static void OnSubgraphsChanged(DependencyObject obj, DependencyPropertyChangedEventArgs e)
-        {
-            CandleChart thisCandleChart = obj as CandleChart;
-            if (thisCandleChart == null) return;
-
-            
-
-            // pass
-        }*/
         [JsonProperty]
         public ObservableCollection<Subgraph> Subgraphs
         {
             get { return _subgraphs; }
         }
         private ObservableCollection<Subgraph> _subgraphs = new ObservableCollection<Subgraph>();
+
+        /// <summary>
+        /// collection of avaliable subgraphs that can be added to CandleChart
+        /// </summary>
+        public ObservableCollection<Subgraph> AvaliableSubgraphs 
+        { 
+            get { return avaliableSubgraphs; } 
+        }
+        private ObservableCollection<Subgraph> avaliableSubgraphs = new ObservableCollection<Subgraph>
+        {
+            new Volume()
+        };
 
         private void OnSubgraphsChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
@@ -1811,9 +1801,39 @@ namespace FancyCandles
             {
                 // index + 1 because PriceChart is the first element in _splitPanel
                 _splitPanel.Children.Move(e.OldStartingIndex + 1, e.NewStartingIndex + 1);
+                // force _splitPanel to redraw
+                _splitPanel.InvalidateVisual();
             }
         }
+        public FancyPrimitives.RelayCommand MoveSubgraphUpCommand
+        {
+            get
+            {
+                return moveSubgraphUpCommand ??
+                  (moveSubgraphUpCommand = new FancyPrimitives.RelayCommand(subgraph_i =>
+                  {
+                      int old_i = (int)subgraph_i;
+                      if (old_i < 1) return;
+                      Subgraphs.Move(old_i, old_i - 1);
+                  }));
+            }
+        }
+        private FancyPrimitives.RelayCommand moveSubgraphUpCommand;
 
+        public FancyPrimitives.RelayCommand MoveSubgraphDownCommand
+        {
+            get
+            {
+                return moveSubgraphDownCommand ??
+                  (moveSubgraphDownCommand = new FancyPrimitives.RelayCommand(subgraph_i =>
+                  {
+                      int old_i = (int)subgraph_i;
+                      if (old_i == (Subgraphs.Count - 1)) return;
+                      Subgraphs.Move(old_i, old_i + 1);
+                  }));
+            }
+        }
+        private FancyPrimitives.RelayCommand moveSubgraphDownCommand;
         #endregion
 
         private void ChangeCurrentTimeFrame(TimeFrame newTimeFrame)
