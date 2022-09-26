@@ -82,7 +82,6 @@ namespace FancyCandles
 
             _defaultVolumeGraph.DataContext = this;
             Subgraphs.Add(_defaultVolumeGraph);
-            VolumeChart = _defaultVolumeGraph;
 
         }
         //----------------------------------------------------------------------------------------------------------------------------------
@@ -2494,35 +2493,5 @@ namespace FancyCandles
         //----------------------------------------------------------------------------------------------------------------------------------
         //----------------------------------------------------------------------------------------------------------------------------------
 
-
-        public void AddSubChart(UserControl control)
-        {
-            _splitPanel.Children.Add(control);
-        }
-
-        public void DelSubChart(UserControl control)
-        {
-            _splitPanel.Children.Remove(control);
-        }
-
-        public UserControl VolumeChart { get; set; } 
-        public UserControl VolumeChart2 { get; set; }
-
-        public static readonly DependencyProperty IsVolumeChartExistsProperty = DependencyProperty.Register(
-            "IsVolumeChartExistsProperty", typeof(bool), typeof(CandleChartPropertiesWindow), new PropertyMetadata(true));
-        public static readonly DependencyProperty IsVolumeChart2ExistsProperty = DependencyProperty.Register(
-            "IsVolumeChart2ExistsProperty", typeof(bool), typeof(CandleChartPropertiesWindow));
-
-        public bool IsVolumeChartExists
-        {
-            get { return (bool)GetValue(IsVolumeChartExistsProperty); }
-            set { SetValue(IsVolumeChartExistsProperty, value); }
-        }
-
-        public bool IsVolumeChart2Exists
-        {
-            get { return (bool)GetValue(IsVolumeChart2ExistsProperty); }
-            set { SetValue(IsVolumeChart2ExistsProperty, value); }
-        }
     }
 }
