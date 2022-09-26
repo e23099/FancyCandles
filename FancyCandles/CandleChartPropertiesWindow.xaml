@@ -27,7 +27,8 @@
         xmlns:localIndicators="clr-namespace:FancyCandles.Indicators"
         xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
         xmlns:fp="clr-namespace:FancyPrimitives;assembly=FancyPrimitives"
-        xmlns:control="clr-namespace:Common.WPF.Controls;assembly=clib"
+        xmlns:control="clr-namespace:Common.WPF.Controls;assembly=clib" 
+        d:DataContext="{d:DesignInstance Type=local:CandleChart}"
         mc:Ignorable="d"
         ResizeMode="NoResize"
         Title="Chart Properties" Height="490" Width="590"
@@ -489,27 +490,39 @@
                 </StackPanel>
             </TabItem>
             
-            <!-- Volume Histogram Tab -->
+            <!-- Sub Charts Tab -->
             <TabItem Header="Sub Charts" VerticalContentAlignment="Top">
                 <control:SplitPanel>
-                    <ListBox control:SplitPanel.Size="0.3">
-                        <ListBoxItem>
-                            <CheckBox Click="CheckBox_Click" IsChecked="{Binding IsVolumeChartExists}">
-                                <CheckBox.Content>
-                                    <TextBlock Text="Vol1" />
-                                </CheckBox.Content>
-                            </CheckBox>
-                        </ListBoxItem>
-                        <ListBoxItem>
-                            <CheckBox Click="CheckBox2_Click" IsChecked="{Binding IsVolumeChart2Exists}">
-                                <CheckBox.Content>
-                                    <TextBlock Text="Vol2" />
-                                </CheckBox.Content>
-                            </CheckBox>
-                        </ListBoxItem>
-                    </ListBox>
-                    <Grid x:Name="_SubchartSettingContainer">
-                        <StackPanel VerticalAlignment="Top" Margin="5 10 0 0">
+                    <Grid control:SplitPanel.Size="0.3">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="20" />
+                            <RowDefinition Height="*" />
+                        </Grid.RowDefinitions>
+                        <StackPanel Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Right">
+                            <Button Content="Add" />
+                            <fp:UpDownButtonBlock Height="20"/>
+                            <Button Content="Del" />
+                        </StackPanel>
+                        <ListBox x:Name="listSubgraphs" Grid.Row="1" ItemsSource="{Binding Subgraphs}"
+                                 SelectionChanged="listSubgraphs_SelectionChanged">
+                            <ListBox.ItemTemplate>
+                                <DataTemplate>
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock Text="{Binding GraphName}" />
+                                    </StackPanel>
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
+                        </ListBox>
+                    </Grid>
+                    <GroupBox Header="{Binding ElementName=listSubgraphs, Path=SelectedItem.GraphName}"
+                              HorizontalAlignment="Stretch">
+                        <Grid x:Name="subgraphEditor" Margin="0 0 0 3">
+                            <!-- This is a fix for using namespace i -->
+                            <i:Interaction.Triggers >
+                                <i:EventTrigger>
+                                </i:EventTrigger>
+                            </i:Interaction.Triggers>
+                        <!--StackPanel VerticalAlignment="Top" Margin="5 10 0 0">
                             <StackPanel Style="{StaticResource settingsItem}" ToolTip="The gap between the highest point of the visible bars and the top border of the volume histogram panel.">
                                 <TextBlock Style="{StaticResource horizontalCaption}">Indent from top:</TextBlock>
                                 <fp:IntegerTextBox x:Name="txtBoxVolumeHistogramTopMargin" 
@@ -545,8 +558,9 @@
                                 <Slider Value="{Binding VolumeBarWidthToCandleWidthRatio, Mode=TwoWay}" 
                                         VerticalAlignment="Bottom" Width="70" Minimum="0" Maximum="1.0"/>
                             </StackPanel>
-                        </StackPanel>
-                    </Grid>
+                        </StackPanel-->
+                        </Grid>
+                    </GroupBox>
                 </control:SplitPanel>
             </TabItem>
 

@@ -52,5 +52,10 @@ namespace FancyCandles.Graphs
             if (chart == null) return;
             chart.OnPanelCandlesContainerSizeChanged(sender, e);
         }
+
+        public override string PropertiesEdtiorXAML
+        {
+            get { return ""; }
+        }
     }
 }

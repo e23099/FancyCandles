@@ -61,6 +61,7 @@ namespace FancyCandles
         }
         //----------------------------------------------------------------------------------------------------------------------------------
         /// <summary>Default constructor.</summary>
+        Volume _defaultVolumeGraph = new Volume();
         public CandleChart()
         {
             InitialCandleWidth = DefaultInitialCandleWidth;
@@ -75,7 +76,14 @@ namespace FancyCandles
             VisibleCandlesExtremums[Volume.ExtremeLower] = 0;
             VisibleCandlesExtremums[Volume.ExtremeUpper] = 0;
             Loaded += new RoutedEventHandler(OnUserControlLoaded);
+            _defaultVolumeGraph.TargetChart = this;
+            _subgraphs.CollectionChanged += OnSubgraphsChanged;
+
+
+            _defaultVolumeGraph.DataContext = this;
+            Subgraphs.Add(_defaultVolumeGraph);
             VolumeChart = _defaultVolumeGraph;
+
         }
         //----------------------------------------------------------------------------------------------------------------------------------
         internal void OpenCandleChartPropertiesWindow(object sender, RoutedEventArgs e)
@@ -1754,70 +1762,6 @@ namespace FancyCandles
 
         #endregion **********************************************************************************************************************************************
         //----------------------------------------------------------------------------------------------------------------------------------
-        #region VOLUME PROPERTIES
-        [UndoableProperty]
-        [JsonProperty]
-        public double VolumeBarWidthToCandleWidthRatio
-        {
-            get { return (double)GetValue(VolumeBarWidthToCandleWidthRatioProperty); }
-            set { SetValue(VolumeBarWidthToCandleWidthRatioProperty, value); }
-        }
-
-        public static readonly DependencyProperty VolumeBarWidthToCandleWidthRatioProperty =
-            DependencyProperty.Register("VolumeBarWidthToCandleWidthRatio", typeof(double), typeof(CandleChart), new PropertyMetadata(DefaultVolumeBarWidthToCandleWidthRatio, null, CoerceVolumeBarWidthToCandleWidthRatio));
-
-        private static object CoerceVolumeBarWidthToCandleWidthRatio(DependencyObject objWithOldDP, object newDPValue)
-        {
-            //CandleChart thisCandleChart = (CandleChart)objWithOldDP; // Содержит старое значение для изменяемого свойства.
-            double newValue = (double)newDPValue;
-            return Math.Min(1.0, Math.Max(0.0, newValue));
-        }
-
-        public static double DefaultVolumeBarWidthToCandleWidthRatio { get { return 0.8; } }
-
-        [UndoableProperty]
-        [JsonProperty]
-        public double VolumeHistogramTopMargin
-        {
-            get { return (double)GetValue(VolumeHistogramTopMarginProperty); }
-            set { SetValue(VolumeHistogramTopMarginProperty, value); }
-        }
-        public static readonly DependencyProperty VolumeHistogramTopMarginProperty =
-            DependencyProperty.Register("VolumeHistogramTopMargin", typeof(double), typeof(CandleChart), new PropertyMetadata(DefaultVolumeHistogramTopMargin));
-        public static double DefaultVolumeHistogramTopMargin { get { return 10.0; } }
-
-        [UndoableProperty]
-        [JsonProperty]
-        public double VolumeHistogramBottomMargin
-        {
-            get { return (double)GetValue(VolumeHistogramBottomMarginProperty); }
-            set { SetValue(VolumeHistogramBottomMarginProperty, value); }
-        }
-        public static readonly DependencyProperty VolumeHistogramBottomMarginProperty =
-            DependencyProperty.Register("VolumeHistogramBottomMargin", typeof(double), typeof(CandleChart), new PropertyMetadata(DefaultVolumeHistogramBottomMargin));
-        public static double DefaultVolumeHistogramBottomMargin { get { return 5.0; } }
-        [UndoableProperty]
-        [JsonProperty]
-        public Brush BullishVolumeBarFill
-        {
-            get { return (Brush)GetValue(BullishVolumeBarFillProperty); }
-            set { SetValue(BullishVolumeBarFillProperty, value); }
-        }
-        public static readonly DependencyProperty BullishVolumeBarFillProperty =
-            DependencyProperty.Register("BullishVolumeBarFill", typeof(Brush), typeof(CandleChart), new PropertyMetadata(DefaultBullishVolumeBarFill));
-
-        public static Brush DefaultBullishVolumeBarFill { get { return (Brush)(new SolidColorBrush(Colors.Green)).GetCurrentValueAsFrozen(); } }
-        [UndoableProperty]
-        [JsonProperty]
-        public Brush BearishVolumeBarFill
-        {
-            get { return (Brush)GetValue(BearishVolumeBarFillProperty); }
-            set { SetValue(BearishVolumeBarFillProperty, value); }
-        }
-        public static readonly DependencyProperty BearishVolumeBarFillProperty =
-            DependencyProperty.Register("BearishVolumeBarFill", typeof(Brush), typeof(CandleChart), new PropertyMetadata(DefaultBearishVolumeBarFill));
-
-        public static Brush DefaultBearishVolumeBarFill { get { return (Brush)(new SolidColorBrush(Colors.Red)).GetCurrentValueAsFrozen(); } }
         private void ChangeCurrentTimeFrame(TimeFrame newTimeFrame)
         {
             if (CandlesSource == null) return;
@@ -1829,7 +1773,61 @@ namespace FancyCandles
             ISecurityInfo secInfo = CandlesSourceProvider.GetSecFromCatalog(secID);
             SetCurrentValue(LegendTextProperty, $"{secInfo.Ticker}, {newTimeFrame}");
         }
+
+
+        #region SUBGRAPHS
+        /// <summary>
+        /// collection of subgraph to display the CandlesSource
+        /// </summary>
+        /*[JsonProperty]
+        public ObservableCollection<Subgraph> Subgraphs
+        {
+            get { return (ObservableCollection<Subgraph>)GetValue(SubgraphsProperty); }
+            set { SetValue(SubgraphsProperty, value); }
+        }
+        /// <summary>Identifies the <see cref="OverlayIndicators"/> dependency property.</summary>
+        /// <value><see cref="DependencyProperty"/></value>
+        public static readonly DependencyProperty SubgraphsProperty =
+            DependencyProperty.Register("Subgraphs", typeof(ObservableCollection<Subgraph>), typeof(CandleChart),
+                new UIPropertyMetadata(new ObservableCollection<Subgraph>(), OnSubgraphsChanged));
+
+        private static void OnSubgraphsChanged(DependencyObject obj, DependencyPropertyChangedEventArgs e)
+        {
+            CandleChart thisCandleChart = obj as CandleChart;
+            if (thisCandleChart == null) return;
+
+            
+
+            // pass
+        }*/
+        [JsonProperty]
+        public ObservableCollection<Subgraph> Subgraphs
+        {
+            get { return _subgraphs; }
+        }
+        private ObservableCollection<Subgraph> _subgraphs = new ObservableCollection<Subgraph>();
+
+        private void OnSubgraphsChanged(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            if (e.Action == NotifyCollectionChangedAction.Add)
+            {
+                Subgraph subgraph = (Subgraph)(e.NewItems[0]);
+                _splitPanel.Children.Add(subgraph);
+                subgraph.DataContext = subgraph;
+            }
+            else if (e.Action == NotifyCollectionChangedAction.Remove)
+            {
+                _splitPanel.Children.Remove(e.OldItems[0]);
+            }
+            else if (e.Action == NotifyCollectionChangedAction.Move)
+            {
+                // index + 1 because PriceChart is the first element in _splitPanel
+                _splitPanel.Children.Move(e.OldStartingIndex + 1, e.NewStartingIndex + 1);
+            }
+        }
+
         #endregion
+
 
         private void ChangeCurrentTimeFrame(object sender, RoutedEventArgs e)
         {

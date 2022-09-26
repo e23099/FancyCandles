@@ -36,6 +36,7 @@ using System.Xml;
 using System.Collections.ObjectModel;
 using System.Globalization;
 using FancyCandles.Indicators;
+using FancyCandles.Graphs;
 using System.Reflection;
 
 namespace FancyCandles
@@ -220,6 +221,41 @@ namespace FancyCandles
                 parentCandleChart.IsVolumeChart2Exists = false;
                 parentCandleChart.VolumeChart2 = null;
             }
+        }
+
+        private void listSubgraphs_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            ListBox listElement = (ListBox)sender;
+            Collection<Subgraph> subgraphs = listElement.ItemsSource as Collection<Subgraph>;
+
+            if (subgraphs == null) return;
+
+            if (e.RemovedItems.Count > 0)
+            {
+                subgraphEditor.Children.Clear();
+                subgraphEditor.DataContext = null;
+            }
+
+            if (e.AddedItems.Count > 0)
+            {
+                Subgraph selectedSubgraph = (Subgraph)e.AddedItems[0];
+
+                string indicatorXaml = selectedSubgraph.PropertiesEdtiorXAML;
+                ASCIIEncoding encoding = new ASCIIEncoding();
+                byte[] b = encoding.GetBytes(indicatorXaml);
+                ParserContext context = new ParserContext();
+                context.XmlnsDictionary.Add("", "http://schemas.microsoft.com/winfx/2006/xaml/presentation");
+                context.XmlnsDictionary.Add("x", "http://schemas.microsoft.com/winfx/2006/xaml");
+                context.XmlnsDictionary.Add("i", "clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity");
+                context.XmlnsDictionary.Add("local", "clr-namespace:FancyCandles;assembly=FancyCandles");
+                context.XmlnsDictionary.Add("fp", "clr-namespace:FancyPrimitives;assembly=FancyPrimitives");
+                UIElement indicatorEditorElement = (UIElement)XamlReader.Load(new MemoryStream(b), context);
+
+                subgraphEditor.Children.Clear();
+                subgraphEditor.DataContext = selectedSubgraph;
+                subgraphEditor.Children.Add(indicatorEditorElement);
+            }
+             
         }
         //----------------------------------------------------------------------------------------------------------------------------------
         //----------------------------------------------------------------------------------------------------------------------------------

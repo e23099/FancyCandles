@@ -46,7 +46,7 @@ namespace FancyCandles.Graphs
 
             if (bearishBarPen == null)
             {
-                bearishBarPen = new Pen(CandleChart.DefaultBearishVolumeBarFill, 1);
+                bearishBarPen = new Pen(Volume.DefaultBearishVolumeBarFill, 1);
                 if (!bearishBarPen.IsFrozen)
                     bearishBarPen.Freeze();
             }
@@ -70,7 +70,7 @@ namespace FancyCandles.Graphs
         //---------------------------------------------------------------------------------------------------------------------------------------
         public static readonly DependencyProperty BullishBarFillProperty
             = DependencyProperty.Register("BullishBarFill", typeof(Brush), typeof(VolumeChartElement), 
-                new FrameworkPropertyMetadata(CandleChart.DefaultBullishVolumeBarFill, null, CoerceBullishCandleFill) { AffectsRender = true });
+                new FrameworkPropertyMetadata(Volume.DefaultBullishVolumeBarFill, null, CoerceBullishCandleFill) { AffectsRender = true });
         public Brush BullishBarFill
         {
             get { return (Brush)GetValue(BullishBarFillProperty); }
@@ -94,7 +94,7 @@ namespace FancyCandles.Graphs
 
         public static readonly DependencyProperty BearishBarFillProperty
             = DependencyProperty.Register("BearishBarFill", typeof(Brush), typeof(VolumeChartElement), 
-                new FrameworkPropertyMetadata(CandleChart.DefaultBearishVolumeBarFill, null, CoerceBearishCandleFill) { AffectsRender = true });
+                new FrameworkPropertyMetadata(Volume.DefaultBearishVolumeBarFill, null, CoerceBearishCandleFill) { AffectsRender = true });
         public Brush BearishBarFill
         {
             get { return (Brush)GetValue(BearishBarFillProperty); }
