@@ -441,8 +441,29 @@ namespace FancyCandles
             int selectedCandleId = (int)values[0];
             Indicators.OverlayIndicator indicator = (Indicators.OverlayIndicator)values[1];
             int digits = (int)values[2];
-            double value = indicator.GetIndicatorValue(selectedCandleId);
+            //double value = indicator.GetIndicatorValue(selectedCandleId);
             return indicator.GetIndicatorValue(selectedCandleId).ToString($"N{digits}");
+        }
+        public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
+        { throw new NotImplementedException(); }
+    }
+    //*******************************************************************************************************************************************************************
+    // subgraph info get value
+    class SubgraphInfoValueConverter : IMultiValueConverter
+    {
+        // values[0] - int          selectedCandleId
+        // values[1] - SubgraphInfo info
+        public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
+        {
+            if (values == null || values.Length < 2 || (values[0]).GetType() != typeof(int) ||
+                (values[1]).GetType() !=typeof(Graphs.SubgraphInfo))
+            {
+                return "--";
+            }
+
+            int selectedCandleId = (int)values[0];
+            Graphs.SubgraphInfo info = (Graphs.SubgraphInfo)values[1];
+            return info.GetValue(selectedCandleId);
         }
         public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
         { throw new NotImplementedException(); }

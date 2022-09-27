@@ -75,13 +75,13 @@ namespace FancyCandles
             VisibleCandlesExtremums[Volume.ExtremeLower] = 0;
             VisibleCandlesExtremums[Volume.ExtremeUpper] = 0;
             Loaded += new RoutedEventHandler(OnUserControlLoaded);
-            _subgraphs.CollectionChanged += OnSubgraphsChanged;
+            Subgraphs.CollectionChanged += OnSubgraphsChanged;
 
 
+            // set up default volume graph
             var _defaultVolumeGraph = new Volume();
             _defaultVolumeGraph.TargetChart = this;
             Subgraphs.Add(_defaultVolumeGraph);
-
         }
         //----------------------------------------------------------------------------------------------------------------------------------
         internal void OpenCandleChartPropertiesWindow(object sender, RoutedEventArgs e)
@@ -1762,15 +1762,21 @@ namespace FancyCandles
         //----------------------------------------------------------------------------------------------------------------------------------
 
         #region SUBGRAPHS
+        public static readonly DependencyProperty SubgraphsProperty =
+            DependencyProperty.Register("SubgraphsProperty", typeof(ObservableCollection<Subgraph>), typeof(CandleChart),
+                new UIPropertyMetadata(new ObservableCollection<Subgraph>(), OnSubgraphsChanged));
+        private static void OnSubgraphsChanged(DependencyObject obj, DependencyPropertyChangedEventArgs e)
+        {
+        }
         /// <summary>
         /// collection of subgraph to display the CandlesSource
         /// </summary>
         [JsonProperty]
         public ObservableCollection<Subgraph> Subgraphs
         {
-            get { return _subgraphs; }
+            get { return (ObservableCollection<Subgraph>)GetValue(SubgraphsProperty); }
+            set { SetValue(SubgraphsProperty, value); }
         }
-        private ObservableCollection<Subgraph> _subgraphs = new ObservableCollection<Subgraph>();
 
         private void OnSubgraphsChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
@@ -1825,6 +1831,7 @@ namespace FancyCandles
         private FancyPrimitives.RelayCommand moveSubgraphDownCommand;
         #endregion
 
+        #region TIME FRAME AND CANDLES SOURCE
         private void ChangeCurrentTimeFrame(TimeFrame newTimeFrame)
         {
             if (CandlesSource == null) return;
@@ -2120,6 +2127,9 @@ namespace FancyCandles
         }
         private ICandle selectedCandle;
 
+        /// <summary>
+        /// The index of the selected candle from the CandlesSource
+        /// </summary>
         public int SelectedCandleIndex
         {
             get { return selectedCandleIndex; }
@@ -2351,7 +2361,8 @@ namespace FancyCandles
                     i1 = i;
             }
         }
-        //----------------------------------------------------------------------------------------------------------------------------------
+        #endregion
+
         /// <summary>Gets or sets the modifier key that in conjunction with mouse wheel rolling will cause a change of the visible candles range width.</summary>
         ///<value>The the modifier key that in conjunction with mouse wheel rolling will cause a change of the visible candles range width. The default value is <see cref="ModifierKeys.None"/>.</value>
         ///<remarks>

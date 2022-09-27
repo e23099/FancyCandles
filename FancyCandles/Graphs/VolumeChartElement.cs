@@ -29,6 +29,7 @@ using System.Globalization;
 using System.ComponentModel;
 using System.Runtime.CompilerServices; // [CallerMemberName]
 using System.Diagnostics;
+using FancyCandles.Indicators;
 
 namespace FancyCandles.Graphs
 {
@@ -50,7 +51,15 @@ namespace FancyCandles.Graphs
                 if (!bearishBarPen.IsFrozen)
                     bearishBarPen.Freeze();
             }
+
         }
+
+        public ObservableCollection<OverlayIndicator> Indicators
+        {
+            get { return indicators; }
+        }
+        private ObservableCollection<OverlayIndicator> indicators;
+
         //---------------------------------------------------------------------------------------------------------------------------------------
         public CultureInfo Culture
         {
@@ -59,6 +68,7 @@ namespace FancyCandles.Graphs
         }
         public static readonly DependencyProperty CultureProperty =
             DependencyProperty.Register("Culture", typeof(CultureInfo), typeof(VolumeChartElement), new FrameworkPropertyMetadata(CultureInfo.CurrentCulture) { AffectsRender = true });
+
         //---------------------------------------------------------------------------------------------------------------------------------------
         public static readonly DependencyProperty CandlesSourceProperty
              = DependencyProperty.Register("CandlesSource", typeof(ICandlesSource), typeof(VolumeChartElement), new FrameworkPropertyMetadata(null));
@@ -177,6 +187,9 @@ namespace FancyCandles.Graphs
 
                 drawingContext.DrawRectangle(cndlBrush, null, new Rect(new Point(volumeBarLeftX, RenderSize.Height), new Vector(volumeBarWidthNotLessThan1, -barHeight)));
             }
+            if (Indicators == null) return; 
+            for (int i = 0; i < Indicators.Count ; i++)
+                Indicators[i].OnRender(drawingContext, VisibleCandlesRange, VisibleCandlesExtremums, CandleWidthAndGap.Width, CandleWidthAndGap.Gap, RenderSize.Height);
         }
         //---------------------------------------------------------------------------------------------------------------------------------------
         protected override void OnMouseMove(MouseEventArgs e)
@@ -191,6 +204,15 @@ namespace FancyCandles.Graphs
             string strT = cndl.t.ToString((CandlesSource.TimeFrame < 0) ? "G" : "g", Culture);
             string tooltipText = $"{strT}\nV= {MyNumberFormatting.VolumeToString(cndl.V, Culture, decimalSeparator, decimalSeparatorArray)}";
             ((ToolTip)ToolTip).Content = tooltipText;
+        }
+        //---------------------------------------------------------------------------------------------------------------------------------------
+        public string GetVolumeValue(int candle_id)
+        {
+            if (CandlesSource == null) return "--";
+            string decimalSeparator = Culture.NumberFormat.NumberDecimalSeparator;
+            char[] decimalSeparatorArray = decimalSeparator.ToCharArray();
+            ICandle cndl = CandlesSource[candle_id];
+            return MyNumberFormatting.VolumeToString(cndl.V, Culture, decimalSeparator, decimalSeparatorArray);
         }
         //---------------------------------------------------------------------------------------------------------------------------------------
         //---------------------------------------------------------------------------------------------------------------------------------------

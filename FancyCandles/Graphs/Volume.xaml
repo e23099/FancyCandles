@@ -34,7 +34,7 @@
               Panel.ZIndex="2">
             <Rectangle HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Fill="Transparent" />
 
-            <local:VolumeChartElement 
+            <local:VolumeChartElement x:Name="volumeChartElement"
                 CandlesSource="{Binding TargetChart.CandlesSource, Mode=OneWay}"
                 Culture="{Binding TargetChart.Culture, Mode=OneWay}"
                 VisibleCandlesRange="{Binding TargetChart.VisibleCandlesRange, Mode=OneWay}"

@@ -223,9 +223,6 @@ namespace FancyCandles
                     parentCandleChart.Subgraphs.Add(graph);
                 }
             }
-            //Subgraph graph = new Volume();
-            //graph.TargetChart = parentCandleChart;
-            //parentCandleChart.Subgraphs.Add(graph);
         }
 
         private void DelSubgraph_Click(object sender, RoutedEventArgs e)

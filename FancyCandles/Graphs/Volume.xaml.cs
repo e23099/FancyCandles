@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -15,6 +16,7 @@ using System.Windows.Shapes;
 using System.ComponentModel;
 using System.Runtime.CompilerServices; // [CallerMemberName]
 using Newtonsoft.Json;
+using FancyCandles.Indicators;
 
 namespace FancyCandles.Graphs
 {
@@ -103,6 +105,14 @@ namespace FancyCandles.Graphs
         public Volume()
         {
             InitializeComponent();
+            info = new ObservableCollection<SubgraphInfo>
+            {
+                new SubgraphInfo
+                {
+                    Name = "成交量",
+                    GetValue = (candle_id) => volumeChartElement.GetVolumeValue(candle_id)
+                }
+            };
         }
         public override void UpdateVisibleCandlesExtremums(ICandlesSource candles, int start, int length, Dictionary<string,double> vcExetremums)
         {
@@ -116,6 +126,12 @@ namespace FancyCandles.Graphs
             vcExetremums[ExtremeUpper] = upper;
             vcExetremums[ExtremeLower] = lower;
         }
+
+        public ObservableCollection<SubgraphInfo> Infos
+        {
+            get { return info; }
+        }
+        private ObservableCollection<SubgraphInfo> info;
 
         public override string PropertiesEdtiorXAML
         {

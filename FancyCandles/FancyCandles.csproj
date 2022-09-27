@@ -83,6 +83,7 @@
     <Compile Include="Graphs\SubgraphAddWindow.xaml.cs">
       <DependentUpon>SubgraphAddWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Graphs\SubgraphInfo.cs" />
     <Compile Include="Graphs\TickElementTemplate.cs" />
     <Compile Include="Graphs\Price.xaml.cs">
       <DependentUpon>Price.xaml</DependentUpon>
@@ -95,6 +96,7 @@
     <Compile Include="Indicators\ExponentialMovingAverage.cs" />
     <Compile Include="Indicators\SimpleMovingAverage.cs" />
     <Compile Include="ISecurityInfo.cs" />
+    <Compile Include="ItemsControlForUiElements.cs" />
     <Compile Include="MyAttributes.cs" />
     <Compile Include="MyDateAndTime.cs" />
     <Compile Include="MyNumberFormatting.cs" />

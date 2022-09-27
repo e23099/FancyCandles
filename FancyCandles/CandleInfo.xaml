@@ -9,11 +9,14 @@
              d:DesignHeight="450" d:DesignWidth="200">
     <UserControl.Resources>
         <local:OverlayIndicatorValueConverter x:Key="overlayIndicatorValueConverter" />
+        <local:SubgraphInfoValueConverter x:Key="subgraphInfoValueConverter" />
     </UserControl.Resources>
     <Border Margin="5">
         <Grid Background="White">
             <StackPanel>
-                <StackPanel>
+                <!-- Display Kline info -->
+                <StackPanel x:Name="candleInfo">
+                    <TextBlock Text="K棒" FontWeight="Bold" Margin="0 5 0 0"/>
                     <DockPanel>
                         <TextBlock Text="時間" />
                         <TextBlock TextAlignment="Right" Text="{Binding SelectedCandle.t, StringFormat=yyyy-MM-dd HH:mm:ss}"/>
@@ -34,12 +37,9 @@
                         <TextBlock Text="收盤" />
                         <TextBlock TextAlignment="Right" Text="{Binding SelectedCandle.C}"/>
                     </DockPanel>
-                    <DockPanel>
-                        <TextBlock Text="成交量" />
-                        <TextBlock TextAlignment="Right" Text="{Binding SelectedCandle.V}"/>
-                    </DockPanel>
                 </StackPanel>
-                <StackPanel x:Name="indicatorInfo">
+                <!-- Display overlayIndicator info of the main price chart -->
+                <StackPanel>
                     <ItemsControl ItemsSource="{Binding OverlayIndicators}">
                         <ItemsControl.ItemTemplate>
                             <DataTemplate>
@@ -48,9 +48,9 @@
                                     <TextBlock TextAlignment="Right" Foreground="{Binding Pen.Brush}">
                                         <TextBlock.Text>
                                             <MultiBinding Converter="{StaticResource overlayIndicatorValueConverter}">
-                                                <Binding ElementName="indicatorInfo" Path="DataContext.SelectedCandleIndex" />
+                                                <Binding ElementName="candleInfo" Path="DataContext.SelectedCandleIndex" />
                                                 <Binding Path="."/>
-                                                <Binding ElementName="indicatorInfo" Path="DataContext.MaxNumberOfFractionalDigitsInPrice" />
+                                                <Binding ElementName="candleInfo" Path="DataContext.MaxNumberOfFractionalDigitsInPrice" />
                                             </MultiBinding>
                                         </TextBlock.Text>
                                     </TextBlock>
@@ -59,6 +59,53 @@
                         </ItemsControl.ItemTemplate>
                     </ItemsControl>
                 </StackPanel>
+
+                <!-- Display Subgraphs info -->
+                <local:ItemsControlForUiElements ItemsSource="{Binding Subgraphs}">
+                    <local:ItemsControlForUiElements.ItemTemplate>
+                        <DataTemplate>
+                            <StackPanel>
+                                <TextBlock Text="{Binding GraphName}" FontWeight="Bold" Margin="0 5 0 0"/>
+                                <ItemsControl ItemsSource="{Binding Infos}">
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <DockPanel>
+                                                <TextBlock Text="{Binding Name}" />
+                                                <TextBlock TextAlignment="Right">
+                                                    <TextBlock.Text>
+                                                        <MultiBinding Converter="{StaticResource subgraphInfoValueConverter}">
+                                                            <Binding ElementName="candleInfo" Path="DataContext.SelectedCandleIndex" />
+                                                            <Binding Path="."/>
+                                                        </MultiBinding>
+                                                    </TextBlock.Text>
+                                                </TextBlock>
+                                            </DockPanel>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>    
+                                </ItemsControl>
+                                <ItemsControl ItemsSource="{Binding Indicators}">
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <DockPanel>
+                                                <TextBlock Text="{Binding ShortName}" Foreground="{Binding Pen.Brush}"/>
+                                                <TextBlock TextAlignment="Right" Foreground="{Binding Pen.Brush}">
+                                                    <TextBlock.Text>
+                                                        <MultiBinding Converter="{StaticResource overlayIndicatorValueConverter}">
+                                                            <Binding ElementName="candleInfo" Path="DataContext.SelectedCandleIndex" />
+                                                            <Binding Path="."/>
+                                                            <Binding ElementName="candleInfo" Path="DataContext.MaxNumberOfFractionalDigitsInPrice" />
+                                                        </MultiBinding>
+                                                    </TextBlock.Text>
+                                                </TextBlock>
+                                            </DockPanel>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>    
+                                </ItemsControl>
+                            </StackPanel>
+                        </DataTemplate>
+                    </local:ItemsControlForUiElements.ItemTemplate>
+                </local:ItemsControlForUiElements>
+                
             </StackPanel>
         </Grid>
     </Border>
