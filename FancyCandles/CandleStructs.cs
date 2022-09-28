@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace FancyCandles
 {
-    internal struct CandleDrawingParameters
+    public struct CandleDrawingParameters
     {
         public double Width;
         public double Gap;

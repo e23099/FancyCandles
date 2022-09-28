@@ -49,6 +49,22 @@ namespace FancyCandles.Graphs
         public static readonly DependencyProperty PricePanelWidthProperty 
             = DependencyProperty.Register("PriceAxisWidth", typeof(double), typeof(TickElementTemplate), new FrameworkPropertyMetadata(0.0) { AffectsRender = true });
         //---------------------------------------------------------------------------------------------------------------------------------------
+        public string UpperTag
+        {
+            get { return ((string)GetValue(UpperTagProperty)).ToString(); }
+            set { SetValue(UpperTagProperty, value); }
+        }
+        public static readonly DependencyProperty UpperTagProperty
+            = DependencyProperty.Register("UpperTag", typeof(string), typeof(TickElementTemplate), new FrameworkPropertyMetadata(null));
+        //---------------------------------------------------------------------------------------------------------------------------------------
+        public string LowerTag
+        {
+            get { return ((string)GetValue(LowerTagProperty)).ToString(); }
+            set { SetValue(LowerTagProperty, value); }
+        }
+        public static readonly DependencyProperty LowerTagProperty
+            = DependencyProperty.Register("LowerTag", typeof(string), typeof(TickElementTemplate), new FrameworkPropertyMetadata(null));
+        //---------------------------------------------------------------------------------------------------------------------------------------
         public Dictionary<string,double> VisibleCandlesExtremums
         {
             get { return (Dictionary<string,double>)GetValue(VisibleCandlesExtremumsProperty); }

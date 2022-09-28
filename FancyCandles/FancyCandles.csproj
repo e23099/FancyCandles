@@ -88,6 +88,11 @@
     <Compile Include="Graphs\Price.xaml.cs">
       <DependentUpon>Price.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Graphs\TrueRange.xaml.cs">
+      <DependentUpon>TrueRange.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Graphs\TrueRangeChartElement.cs" />
+    <Compile Include="Graphs\TrueRangeTicksElement.cs" />
     <Compile Include="Graphs\Volume.xaml.cs">
       <DependentUpon>Volume.xaml</DependentUpon>
     </Compile>
@@ -136,6 +141,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Graphs\SubgraphAddWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Graphs\TrueRange.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

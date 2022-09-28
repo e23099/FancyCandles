@@ -231,8 +231,10 @@ namespace FancyCandles
         // values[5] - CultureInfo candleChartCulture
         public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
         {
-            if (values == null || values.Length < 5 || (values[0]).GetType() != typeof(Point) || (values[1]).GetType() != typeof(double) || (values[2]).GetType() != typeof(Dictionary<string,double>)
-                 || (values[3]).GetType() != typeof(double) || (values[4]).GetType() != typeof(double))
+            if (values == null || values.Length < 5 || (values[0]).GetType() != typeof(Point) 
+                 || (values[1]).GetType() != typeof(double) || (values[2]).GetType() != typeof(Dictionary<string,double>)
+                 || (values[3]).GetType() != typeof(double) || (values[4]).GetType() != typeof(double)
+                 )
             {
 #if DEBUG
                 Console.WriteLine("something is wrong in CrossVolumeConverter");
@@ -254,6 +256,59 @@ namespace FancyCandles
             if (visibleCandlesExtremums.ContainsKey(Volume.ExtremeUpper))
                 volume = (((visibleCandlesExtremums[Volume.ExtremeUpper] - (currentMousePosition.Y - volumeHistogramTopMargin) / (volumeHistogramHeight - volumeHistogramTopMargin - volumeHistogramBottomMargin) * visibleCandlesExtremums[Volume.ExtremeUpper])));
             return MyNumberFormatting.VolumeToLimitedLengthString(volume, candleChartCulture, decimalSeparator, decimalSeparatorArray);
+        }
+
+        public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
+        { throw new NotImplementedException(); }
+    }
+    //*******************************************************************************************************************************************************************
+    class CrossSubgraphValueConverter : IMultiValueConverter
+    {
+        // values[0] - Point CurrentMousePosition
+        // values[1] - double VolumeHistogramHeight
+        // values[2] - CandleExtremums visibleCandlesExtremums
+        // values[3] - double VolumeHistogramTopMargin
+        // values[4] - double VolumeHistogramBottomMargin
+        // values[5] - CultureInfo candleChartCulture
+        // values[6] - string UpperTag
+        // values[7] - string LowerTag
+        // values[8] - int MaxFractionalDigits
+        public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
+        {
+            if (values == null || values.Length < 5 || (values[0]).GetType() != typeof(Point) 
+                 || (values[1]).GetType() != typeof(double) || (values[2]).GetType() != typeof(Dictionary<string,double>)
+                 || (values[3]).GetType() != typeof(double) || (values[4]).GetType() != typeof(double)
+                 || (values[6]).GetType() != typeof(string) || (values[7]).GetType() != typeof(string)
+                 || (values[8]).GetType() != typeof(int)
+                 )
+            {
+#if DEBUG
+                Console.WriteLine("something is wrong in CrossSubgraphValueConverter");
+#endif
+                return "";
+            }
+
+            Point currentMousePosition = (Point)values[0];
+            double renderHeight = (double)values[1];
+            Dictionary<string,double> visibleCandlesExtremums = (Dictionary<string,double>)values[2];
+            double topMargin = (double)values[3];
+            double btmMargin = (double)values[4];
+            string upperTag = (string)values[6];
+            string lowerTag = (string)values[7];
+            int maxDigits = (int)values[8];
+
+            CultureInfo candleChartCulture = (CultureInfo)values[5];
+            string decimalSeparator = candleChartCulture.NumberFormat.NumberDecimalSeparator;
+            char[] decimalSeparatorArray = decimalSeparator.ToCharArray();
+
+            double value = 0;
+            if (visibleCandlesExtremums.ContainsKey(upperTag))
+            {
+                value = (((visibleCandlesExtremums[upperTag] - (currentMousePosition.Y - topMargin) / (renderHeight - topMargin - btmMargin) * visibleCandlesExtremums[upperTag])));
+                string priceNumberFormat = $"N{maxDigits}";
+                return MyNumberFormatting.PriceToString(value, priceNumberFormat, candleChartCulture, decimalSeparator, decimalSeparatorArray);
+            }
+            return "";
         }
 
         public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)

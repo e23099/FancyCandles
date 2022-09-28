@@ -33,7 +33,8 @@ namespace FancyCandles.Graphs
         }
         private List<Subgraph> avaliableSubgraphs = new List<Subgraph>
         {
-            new Volume()
+            new Volume(),
+            new TrueRange(),
         };
 
 
@@ -45,6 +46,8 @@ namespace FancyCandles.Graphs
             Subgraph result = selectedSubgraph;
             if (typeName == "Volume")
                 selectedSubgraph = new Volume();
+            else if (typeName == "TrueRange")
+                selectedSubgraph = new TrueRange();
             else
                 result = null; 
             return result;
