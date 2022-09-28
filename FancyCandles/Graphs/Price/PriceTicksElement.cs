@@ -35,24 +35,9 @@ namespace FancyCandles.Graphs
         public static readonly DependencyProperty MaxNumberOfFractionalDigitsInPriceProperty =
             DependencyProperty.Register("MaxNumberOfFractionalDigitsInPrice", typeof(int), typeof(PriceTicksElement), new FrameworkPropertyMetadata(0));
 
-        public override double GetUpperLowerRange(Dictionary<string, double> visibleCandlesExtremums)
-        {
-            return visibleCandlesExtremums[Price.ExtremeUpper] - visibleCandlesExtremums[Price.ExtremeLower];
-        }
-
-        public override double GetUpper(Dictionary<string, double> visibleCandlesExtremums)
-        {
-            return visibleCandlesExtremums[Price.ExtremeUpper];
-        }
-
-        public override double GetLower(Dictionary<string, double> visibleCandlesExtremums)
-        {
-            return visibleCandlesExtremums[Price.ExtremeLower];
-        }
-
         public override double GetMostRoundValue(Dictionary<string, double> visibleCandlesExtremums)
         {
-            return MyWpfMath.TheMostRoundValueInsideRange(VisibleCandlesExtremums[Price.ExtremeLower], VisibleCandlesExtremums[Price.ExtremeUpper]);
+            return MyWpfMath.TheMostRoundValueInsideRange(VisibleCandlesExtremums[LowerTag], VisibleCandlesExtremums[UpperTag]);
         }
 
         public override string ToLabelString(double value)

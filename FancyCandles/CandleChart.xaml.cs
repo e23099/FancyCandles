@@ -70,19 +70,18 @@ namespace FancyCandles
 
             VisibleCandlesRange = IntRange.Undefined;
             VisibleCandlesExtremums = new Dictionary<string, double>();
-            VisibleCandlesExtremums[Price.ExtremeLower] = 0;
-            VisibleCandlesExtremums[Price.ExtremeUpper] = 0;
-            VisibleCandlesExtremums[Volume.ExtremeLower] = 0;
-            VisibleCandlesExtremums[Volume.ExtremeUpper] = 0;
+            MainChartLowerTag = _priceGraph.LowerTag;
+            MainChartUpperTag = _priceGraph.UpperTag;
             Loaded += new RoutedEventHandler(OnUserControlLoaded);
             Subgraphs.CollectionChanged += OnSubgraphsChanged;
-
 
             // set up default volume graph
             var _defaultVolumeGraph = new Volume();
             _defaultVolumeGraph.TargetChart = this;
             Subgraphs.Add(_defaultVolumeGraph);
         }
+        public string MainChartUpperTag { get; private set; }
+        public string MainChartLowerTag { get; private set; }
         //----------------------------------------------------------------------------------------------------------------------------------
         internal void OpenCandleChartPropertiesWindow(object sender, RoutedEventArgs e)
         {
@@ -530,6 +529,7 @@ namespace FancyCandles
                   {
                       Type overlayIndicatorType = (Type)parameter_overlayIndicatorType;
                       OverlayIndicator overlayIndicator = (OverlayIndicator)Activator.CreateInstance(overlayIndicatorType);
+                      overlayIndicator.TargetElement = _priceGraph;
                       OverlayIndicators.Add(overlayIndicator);
                       OverlayIndicator addedOverlayIndicator = OverlayIndicators[OverlayIndicators.Count - 1];
                       addedOverlayIndicator.CandlesSource = CandlesSource;
@@ -2161,10 +2161,9 @@ namespace FancyCandles
 
             if (cndl.H == 0.0 || cndl.L == 0) return;
 
-            VisibleCandlesExtremums[Price.ExtremeLower] = Math.Min(cndl.L, VisibleCandlesExtremums[Price.ExtremeLower]);
-            VisibleCandlesExtremums[Price.ExtremeUpper] = Math.Max(cndl.H, VisibleCandlesExtremums[Price.ExtremeUpper]);
-            VisibleCandlesExtremums[Volume.ExtremeLower] = Math.Min(cndl.V, VisibleCandlesExtremums[Volume.ExtremeLower]);
-            VisibleCandlesExtremums[Volume.ExtremeUpper] = Math.Max(cndl.V, VisibleCandlesExtremums[Volume.ExtremeUpper]);
+            VisibleCandlesExtremums[_priceGraph.LowerTag] = Math.Min(cndl.L, VisibleCandlesExtremums[_priceGraph.LowerTag]);
+            VisibleCandlesExtremums[_priceGraph.UpperTag] = Math.Max(cndl.H, VisibleCandlesExtremums[_priceGraph.UpperTag]);
+            // TODO: make subgraphs update vcExtremums for one candle changed
         }
         //----------------------------------------------------------------------------------------------------------------------------------
         /// <summary>Gets the range of indexes of candles, currently visible in this chart window.</summary>

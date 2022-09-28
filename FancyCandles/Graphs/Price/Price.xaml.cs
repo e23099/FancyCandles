@@ -20,12 +20,14 @@ namespace FancyCandles.Graphs
     /// </summary>
     public partial class Price : Subgraph
     {
-        public static readonly string ExtremeUpper = "priceHigh";
-        public static readonly string ExtremeLower = "priceLow";
+        private static int instance_count = 0;
 
         public Price()
         {
             InitializeComponent();
+            instance_count++;
+            UpperTag = $"Price{instance_count}H";
+            LowerTag = $"Price{instance_count}L";
         }
 
 
@@ -38,8 +40,8 @@ namespace FancyCandles.Graphs
                 upper = Math.Max(upper, candle.H);
                 lower = Math.Min(lower, candle.L);
             }
-            vcExetremums[ExtremeUpper] = upper;
-            vcExetremums[ExtremeLower] = lower;
+            vcExetremums[UpperTag] = upper;
+            vcExetremums[LowerTag] = lower;
         }
 
         public double PriceChartWidth

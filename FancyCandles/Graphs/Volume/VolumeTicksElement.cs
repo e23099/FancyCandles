@@ -26,20 +26,6 @@ namespace FancyCandles.Graphs
 {
     class VolumeTicksElement : TickElementTemplate
     {
-        public override double GetUpperLowerRange(Dictionary<string, double> visibleCandlesExtremums)
-        {
-            return visibleCandlesExtremums[Volume.ExtremeUpper];
-        }
-
-
-        public override double GetUpper(Dictionary<string, double> visibleCandlesExtremums)
-        {
-            return visibleCandlesExtremums[Volume.ExtremeUpper];
-        }
-        public override double GetLower(Dictionary<string, double> visibleCandlesExtremums)
-        {
-            return 0;
-        }
 
 
         public override string ToLabelString(double value)
@@ -52,7 +38,7 @@ namespace FancyCandles.Graphs
 
         public override double GetMostRoundValue(Dictionary<string, double> visibleCandlesExtremums)
         {
-            return MyWpfMath.HighestDecimalPlace(VisibleCandlesExtremums[Volume.ExtremeUpper], out _);
+            return MyWpfMath.HighestDecimalPlace(VisibleCandlesExtremums[UpperTag], out _);
         }
     }
 }

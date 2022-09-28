@@ -104,16 +104,15 @@ namespace FancyCandles.Graphs
 
         private void ReCalc_VisibleCandlesExtremums()
         {
-            double high = double.MinValue, low = double.MaxValue;
+            double high = double.MinValue;
             if (CandlesTrueRange.Count == 0) return;
             for (int i = VisibleCandlesRange.Start_i; i < VisibleCandlesRange.Start_i + VisibleCandlesRange.Count; i++)
             {
                 double tr = CandlesTrueRange[i];
                 high = Math.Max(high, tr);
-                low = Math.Min(low, tr);
             }
             VisibleCandlesExtremums[UpperTag] = high;
-            VisibleCandlesExtremums[LowerTag] = low;
+            VisibleCandlesExtremums[LowerTag] = 0;
         }
         //---------------------------------------------------------------------------------------------------------------------------------------
         public string UpperTag

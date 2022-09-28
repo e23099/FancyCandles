@@ -15,30 +15,6 @@ namespace FancyCandles.Graphs
             DependencyProperty.Register("MaxFractionalDigits", typeof(int), typeof(TrueRangeTicksElement), new FrameworkPropertyMetadata(0));
 
 
-        public override double GetUpper(Dictionary<string, double> visibleCandlesExtremums)
-        {
-            if (!visibleCandlesExtremums.ContainsKey(UpperTag))
-            {
-                visibleCandlesExtremums[UpperTag] = 0;
-                return 0;
-            }
-            return visibleCandlesExtremums[UpperTag];
-        }
-
-        public override double GetLower(Dictionary<string, double> visibleCandlesExtremums)
-        {
-            return 0;
-        }
-        public override double GetUpperLowerRange(Dictionary<string, double> visibleCandlesExtremums)
-        {
-            if (!visibleCandlesExtremums.ContainsKey(UpperTag))
-            {
-                visibleCandlesExtremums[UpperTag] = 0;
-                return 0;
-            }
-            return visibleCandlesExtremums[UpperTag];
-        }
-
         public override double GetMostRoundValue(Dictionary<string, double> visibleCandlesExtremums)
         {
             return MyWpfMath.HighestDecimalPlace(visibleCandlesExtremums[UpperTag], out _);

@@ -42,6 +42,8 @@
                 VolumeBarWidthToCandleWidthRatio="{Binding VolumeBarWidthToCandleWidthRatio, Mode=OneWay}"
                 BullishBarFill="{Binding BullishVolumeBarFill, Mode=TwoWay}"
                 BearishBarFill="{Binding BearishVolumeBarFill, Mode=TwoWay}" 
+                UpperTag="{Binding UpperTag, Mode=OneWay}"
+                LowerTag="{Binding LowerTag, Mode=OneWay}"
                 ToolTipService.PlacementTarget="{Binding ElementName=volumeHistogramContainer, Path=., Mode=OneWay}"
                 ToolTipService.Placement="Relative"
                 RenderOptions.EdgeMode="Aliased">
@@ -118,6 +120,7 @@
                             <Binding Path="VolumeHistogramTopMargin" Mode="OneWay"/>
                             <Binding Path="VolumeHistogramBottomMargin" Mode="OneWay"/>
                             <Binding Path="TargetChart.Culture" Mode="OneWay"/>
+                            <Binding Path="UpperTag" Mode="OneWay"/>
                         </MultiBinding>
                     </TextBlock.Text>
                 </TextBlock>
@@ -140,6 +143,7 @@
                                   VisibleCandlesExtremums="{Binding Path=TargetChart.VisibleCandlesExtremums, Mode=OneWay}"
                                   IsGridlinesEnabled="{Binding Path=TargetChart.IsHorizontalGridlinesEnabled, Mode=OneWay}"
                                   GridlinesPen="{Binding Path=TargetChart.HorizontalGridlinesPen, Mode=OneWay}"
+                                  UpperTag="{Binding Path=UpperTag, Mode=OneWay}"
                                   RenderOptions.EdgeMode="Aliased"/>
     </Grid>
 </local:Subgraph>

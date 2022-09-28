@@ -25,9 +25,7 @@ namespace FancyCandles.Graphs
     /// </summary>
     public partial class Volume : Subgraph
     {
-        public static readonly string ExtremeUpper = "volumeUpper";
-        public static readonly string ExtremeLower = "volumeLower";
-
+        private static int instance_count = 0;
         
         #region VOLUME PROPERTIES
         [UndoableProperty]
@@ -113,18 +111,20 @@ namespace FancyCandles.Graphs
                     GetValue = (candle_id) => volumeChartElement.GetVolumeValue(candle_id)
                 }
             };
+            instance_count++; 
+            UpperTag = $"Volume{instance_count}H";
+            LowerTag = $"Volume{instance_count}L";
         }
         public override void UpdateVisibleCandlesExtremums(ICandlesSource candles, int start, int length, Dictionary<string,double> vcExetremums)
         {
-            double upper = double.MinValue, lower = double.MaxValue;
+            double upper = double.MinValue;
             for (int i = start; i < start + length; i++)
             {
                 ICandle candle = candles[i];
                 upper = Math.Max(upper, candle.V);
-                lower = Math.Min(lower, candle.V);
             }
-            vcExetremums[ExtremeUpper] = upper;
-            vcExetremums[ExtremeLower] = lower;
+            vcExetremums[UpperTag] = upper;
+            vcExetremums[LowerTag] = 0;
         }
 
         public ObservableCollection<SubgraphInfo> Infos

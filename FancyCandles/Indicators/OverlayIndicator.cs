@@ -109,6 +109,8 @@ namespace FancyCandles.Indicators
             else if (e.Action == NotifyCollectionChangedAction.Remove) // Element has been removed: (e.OldItems[0] as ICandle)
             { }
         }
+
+        public FrameworkElement TargetElement { get; internal set; }
         //---------------- INotifyPropertyChanged ----------------------------------------------------------
 #pragma warning  disable CS1591
         public event PropertyChangedEventHandler PropertyChanged;

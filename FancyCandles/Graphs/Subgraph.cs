@@ -29,6 +29,14 @@ namespace FancyCandles.Graphs
         public CandleChart TargetChart { get; set; }
 
         /// <summary>
+        /// tag for getting the upper extrema from VisibleCandlesExtremums
+        /// </summary>
+        public string UpperTag { get; protected set; }
+        /// <summary>
+        /// tag for getting the lower extrema from VisibleCandlesExtremums
+        /// </summary>
+        public string LowerTag { get; protected set; }
+        /// <summary>
         /// calculate it's own upper and lower extremums.
         /// </summary>
         /// <param name="candles"></param>

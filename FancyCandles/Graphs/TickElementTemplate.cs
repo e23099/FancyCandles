@@ -55,7 +55,21 @@ namespace FancyCandles.Graphs
             set { SetValue(UpperTagProperty, value); }
         }
         public static readonly DependencyProperty UpperTagProperty
-            = DependencyProperty.Register("UpperTag", typeof(string), typeof(TickElementTemplate), new FrameworkPropertyMetadata(null));
+            = DependencyProperty.Register("UpperTag", typeof(string), typeof(TickElementTemplate), new FrameworkPropertyMetadata(""));
+
+        protected double Upper
+        {
+            get
+            {
+                if (string.IsNullOrEmpty(UpperTag)) return 0;
+                if (!VisibleCandlesExtremums.ContainsKey(UpperTag))
+                {
+                    VisibleCandlesExtremums[UpperTag] = 0;
+                    return 0;
+                }
+                return VisibleCandlesExtremums[UpperTag];
+            }
+        }
         //---------------------------------------------------------------------------------------------------------------------------------------
         public string LowerTag
         {
@@ -63,7 +77,20 @@ namespace FancyCandles.Graphs
             set { SetValue(LowerTagProperty, value); }
         }
         public static readonly DependencyProperty LowerTagProperty
-            = DependencyProperty.Register("LowerTag", typeof(string), typeof(TickElementTemplate), new FrameworkPropertyMetadata(null));
+            = DependencyProperty.Register("LowerTag", typeof(string), typeof(TickElementTemplate), new FrameworkPropertyMetadata(""));
+        protected double Lower
+        {
+            get
+            {
+                if (string.IsNullOrEmpty(LowerTag)) return 0;
+                if (!VisibleCandlesExtremums.ContainsKey(LowerTag))
+                {
+                    VisibleCandlesExtremums[LowerTag] = 0;
+                    return 0;
+                }
+                return VisibleCandlesExtremums[LowerTag];
+            }
+        }
         //---------------------------------------------------------------------------------------------------------------------------------------
         public Dictionary<string,double> VisibleCandlesExtremums
         {
@@ -270,21 +297,21 @@ namespace FancyCandles.Graphs
             if (chartHeight <= 0) return;
 
             // 子圖 Y 座標每一格相當於子圖數值的多少
-            double stepInVolumeUnits = GetUpperLowerRange(VisibleCandlesExtremums) * ((textHeight + GapBetweenTickLabels) / chartHeight);
+            double stepInVolumeUnits = (Upper - Lower) * ((textHeight + GapBetweenTickLabels) / chartHeight);
             // stepInVolumeUnits 的最大位數 (ex: 34 = 10 位數; 123 = 100 位數)
             double stepInVolumeUnits_HPlace = MyWpfMath.HighestDecimalPlace(stepInVolumeUnits, out _);
             // 把每一格化整成「整數」格，比如 HPlace 是 10，一格 34，那就把一格改成 40
             stepInVolumeUnits = Math.Ceiling(stepInVolumeUnits / stepInVolumeUnits_HPlace) * stepInVolumeUnits_HPlace;
             //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
             // 一單位子圖數值，實際代表 Y 座標多長的距離
-            double chartHeight_candlesLHRange_Ratio = chartHeight / GetUpperLowerRange(VisibleCandlesExtremums);
+            double chartHeight_candlesLHRange_Ratio = chartHeight / (Upper - Lower);
 
 
             void DrawTickLabel(double volume)
             {
                 string s = ToLabelString(volume);
                 FormattedText priceTickFormattedText = new FormattedText(s, Culture, FlowDirection.LeftToRight, currentTypeFace, TickLabelFontSize, TickColor, VisualTreeHelper.GetDpi(this).PixelsPerDip);
-                double y = ChartTopMargin + (GetUpper(VisibleCandlesExtremums) - volume) * chartHeight_candlesLHRange_Ratio;
+                double y = ChartTopMargin + (Upper - volume) * chartHeight_candlesLHRange_Ratio;
                 drawingContext.DrawText(priceTickFormattedText, new Point(tickLabelX, y - halfTextHeight)); // label 文字
                 drawingContext.DrawLine(tickPen, new Point(chartPanelWidth, y), new Point(tickLineEndX, y)); // label 前面的橫線刻度
 
@@ -297,7 +324,7 @@ namespace FancyCandles.Graphs
                 string s = ToLabelString(CurrentValue);
                 FormattedText formattedText = new FormattedText(s, Culture, FlowDirection.LeftToRight, currentTypeFace, TickLabelFontSize, CurrentValueLabelForeground, VisualTreeHelper.GetDpi(this).PixelsPerDip);
                 double formattedTextWidth = formattedText.Width;
-                double y = ChartTopMargin + (VisibleCandlesExtremums[Price.ExtremeUpper] - CurrentValue) * chartHeight_candlesLHRange_Ratio;
+                double y = ChartTopMargin + (VisibleCandlesExtremums[UpperTag] - CurrentValue) * chartHeight_candlesLHRange_Ratio;
                 drawingContext.DrawRectangle(CurrentValueLabelBackground, currentValueLabelForegroundPen, 
                                              new Rect(chartPanelWidth, y - halfTextHeight, formattedTextWidth + TICK_LINE_WIDTH + 2 * TICK_LEFT_MARGIN, textHeight + 1.0));
                 drawingContext.DrawLine(currentValueLabelForegroundPen, new Point(chartPanelWidth, y), new Point(tickLineEndX, y));
@@ -307,8 +334,8 @@ namespace FancyCandles.Graphs
             double theMostRoundVolume = GetMostRoundValue(VisibleCandlesExtremums);
             DrawTickLabel(theMostRoundVolume);
 
-            double maxVolumeThreshold = (GetUpper(VisibleCandlesExtremums) + (ChartTopMargin - halfTextHeight) / chartHeight_candlesLHRange_Ratio);
-            double minVolumeThreshold = (GetUpper(VisibleCandlesExtremums) + (ChartTopMargin - ActualHeight + halfTextHeight) / chartHeight_candlesLHRange_Ratio);
+            double maxVolumeThreshold = (Upper + (ChartTopMargin - halfTextHeight) / chartHeight_candlesLHRange_Ratio);
+            double minVolumeThreshold = (Upper + (ChartTopMargin - ActualHeight + halfTextHeight) / chartHeight_candlesLHRange_Ratio);
 
             int step_i = 1;
             double next_tick;
@@ -331,28 +358,6 @@ namespace FancyCandles.Graphs
         //---------------------------------------------------------------------------------------------------------------------------------------
         //---------------------------------------------------------------------------------------------------------------------------------------
         //---------------------------------------------------------------------------------------------------------------------------------------
-
-        /// <summary>
-        /// Get the range of the chart value from VisibleCandlesExtremums dictionary.
-        /// </summary>
-        /// <param name="visibleCandlesExtremums"></param>
-        /// <returns></returns>
-        public abstract double GetUpperLowerRange(Dictionary<string, double> visibleCandlesExtremums);
-
-
-        /// <summary>
-        /// Get the maximum of the chart value from VisibleCandlesExtremums dictionary.
-        /// </summary>
-        /// <param name="visibleCandlesExtremums"></param>
-        /// <returns></returns>
-        public abstract double GetUpper(Dictionary<string, double> visibleCandlesExtremums);
-
-        /// <summary>
-        /// Get the minumum of the chart value from VisibleCandlesExtremums dictionary.
-        /// </summary>
-        /// <param name="visibleCandlesExtremums"></param>
-        /// <returns></returns>
-        public abstract double GetLower(Dictionary<string, double> visibleCandlesExtremums);
 
         /// <summary>
         /// Turn 'value' into a string label shown in the Y axis.

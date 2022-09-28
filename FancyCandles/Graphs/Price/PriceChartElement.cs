@@ -69,6 +69,22 @@ namespace FancyCandles.Graphs
         public static readonly DependencyProperty MaxNumberOfFractionalDigitsInPriceProperty =
             DependencyProperty.Register("MaxNumberOfFractionalDigitsInPrice", typeof(int), typeof(PriceChartElement), new FrameworkPropertyMetadata(0));
         //---------------------------------------------------------------------------------------------------------------------------------------
+        public string UpperTag
+        {
+            get { return ((string)GetValue(UpperTagProperty)).ToString(); }
+            set { SetValue(UpperTagProperty, value); }
+        }
+        public static readonly DependencyProperty UpperTagProperty
+            = DependencyProperty.Register("UpperTag", typeof(string), typeof(PriceChartElement), new FrameworkPropertyMetadata(""));
+        //---------------------------------------------------------------------------------------------------------------------------------------
+        public string LowerTag
+        {
+            get { return ((string)GetValue(LowerTagProperty)).ToString(); }
+            set { SetValue(LowerTagProperty, value); }
+        }
+        public static readonly DependencyProperty LowerTagProperty
+            = DependencyProperty.Register("LowerTag", typeof(string), typeof(PriceChartElement), new FrameworkPropertyMetadata(""));
+        //---------------------------------------------------------------------------------------------------------------------------------------
         public CultureInfo Culture
         {
             get { return (CultureInfo)GetValue(CultureProperty); }
@@ -280,8 +296,8 @@ namespace FancyCandles.Graphs
         {
             // drawingContext.DrawRectangle(Brushes.Transparent, null, new Rect(0, 0, RenderSize.Width, RenderSize.Height));
             if (VisibleCandlesExtremums == null) return;
-            double pHigh = VisibleCandlesExtremums.ContainsKey(Price.ExtremeUpper) ? VisibleCandlesExtremums[Price.ExtremeUpper] : 0;
-            double pLow  = VisibleCandlesExtremums.ContainsKey(Price.ExtremeLower) ? VisibleCandlesExtremums[Price.ExtremeLower] : 0;
+            double pHigh = VisibleCandlesExtremums.ContainsKey(UpperTag) ? VisibleCandlesExtremums[UpperTag] : 0;
+            double pLow  = VisibleCandlesExtremums.ContainsKey(LowerTag) ? VisibleCandlesExtremums[LowerTag] : 0;
             double range = pHigh - pLow;
             double correctedCndlWidth = CandleWidthAndGap.Width - 1.0;
             double candleWidthPlusGap = CandleWidthAndGap.Width + CandleWidthAndGap.Gap;

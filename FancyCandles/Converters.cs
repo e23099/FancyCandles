@@ -188,20 +188,28 @@ namespace FancyCandles
         // values[4] - double PriceChartBottomMargin
         // values[5] - int MaxNumberOfFractionalDigitsInPrice
         // values[6] - CultureInfo candleChartCulture
+        // values[7] - string UpperTag
+        // values[8] - string LowerTag
         public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
         {
-            if (values == null || values.Length < 6 || (values[0]).GetType() != typeof(Point) || (values[1]).GetType() != typeof(double) || (values[2]).GetType() != typeof(Dictionary<string,double>)
-                 || (values[3]).GetType() != typeof(double) || (values[4]).GetType() != typeof(double) || (values[5]).GetType() != typeof(int))
+            if (values == null || values.Length < 6 || (values[0]).GetType() != typeof(Point)
+                || (values[1]).GetType() != typeof(double) || (values[2]).GetType() != typeof(Dictionary<string,double>)
+                || (values[3]).GetType() != typeof(double) || (values[4]).GetType() != typeof(double)
+                || (values[5]).GetType() != typeof(int) || (values[6]).GetType() != typeof(CultureInfo)
+                || (values[7]).GetType() != typeof(string) || (values[8]).GetType() != typeof(string)
+                )
                 return true;
 
             Point currentMousePosition = (Point)values[0];
             double ChartAreaHeight = (double)values[1];
             Dictionary<string, double> visibleCandlesExtremums = (Dictionary<string, double>)values[2];
             double priceLow = 0, priceHigh = 0;
-            if (visibleCandlesExtremums.ContainsKey(Price.ExtremeLower) && visibleCandlesExtremums.ContainsKey(Price.ExtremeUpper))
+            string upperTag = (string)values[7];
+            string lowerTag = (string)values[8];
+            if (visibleCandlesExtremums.ContainsKey(upperTag) && visibleCandlesExtremums.ContainsKey(lowerTag))
             {
-                priceLow = ((Dictionary<string,double>)values[2])[Price.ExtremeLower];
-                priceHigh = ((Dictionary<string,double>)values[2])[Price.ExtremeUpper];
+                priceLow = ((Dictionary<string,double>)values[2])[lowerTag];
+                priceHigh = ((Dictionary<string,double>)values[2])[upperTag];
             }
             double chartTopMargin = (double)values[3];
             double chartBottomMargin = (double)values[4];
@@ -229,11 +237,13 @@ namespace FancyCandles
         // values[3] - double VolumeHistogramTopMargin
         // values[4] - double VolumeHistogramBottomMargin
         // values[5] - CultureInfo candleChartCulture
+        // values[6] - string UpperTag
         public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
         {
             if (values == null || values.Length < 5 || (values[0]).GetType() != typeof(Point) 
                  || (values[1]).GetType() != typeof(double) || (values[2]).GetType() != typeof(Dictionary<string,double>)
                  || (values[3]).GetType() != typeof(double) || (values[4]).GetType() != typeof(double)
+                 || (values[6]).GetType() != typeof(string)
                  )
             {
 #if DEBUG
@@ -247,14 +257,15 @@ namespace FancyCandles
             Dictionary<string,double> visibleCandlesExtremums = (Dictionary<string,double>)values[2];
             double volumeHistogramTopMargin = (double)values[3];
             double volumeHistogramBottomMargin = (double)values[4];
+            string upperTag = (string)values[6];
 
             CultureInfo candleChartCulture = (CultureInfo)values[5];
             string decimalSeparator = candleChartCulture.NumberFormat.NumberDecimalSeparator;
             char[] decimalSeparatorArray = decimalSeparator.ToCharArray();
 
             double volume = 0;
-            if (visibleCandlesExtremums.ContainsKey(Volume.ExtremeUpper))
-                volume = (((visibleCandlesExtremums[Volume.ExtremeUpper] - (currentMousePosition.Y - volumeHistogramTopMargin) / (volumeHistogramHeight - volumeHistogramTopMargin - volumeHistogramBottomMargin) * visibleCandlesExtremums[Volume.ExtremeUpper])));
+            if (visibleCandlesExtremums.ContainsKey(upperTag))
+                volume = (((visibleCandlesExtremums[upperTag] - (currentMousePosition.Y - volumeHistogramTopMargin) / (volumeHistogramHeight - volumeHistogramTopMargin - volumeHistogramBottomMargin) * visibleCandlesExtremums[upperTag])));
             return MyNumberFormatting.VolumeToLimitedLengthString(volume, candleChartCulture, decimalSeparator, decimalSeparatorArray);
         }
 

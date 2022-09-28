@@ -53,6 +53,8 @@
                 BearishCandleFill="{Binding Path=BearishCandleFill, Mode=OneWay}" 
                 BullishCandleStroke="{Binding Path=BullishCandleStroke, Mode=OneWay}"
                 BearishCandleStroke="{Binding Path=BearishCandleStroke, Mode=OneWay}" 
+                UpperTag="{Binding MainChartUpperTag, Mode=OneWay}"
+                LowerTag="{Binding MainChartLowerTag, Mode=OneWay}"
                 ToolTipService.PlacementTarget="{Binding ElementName=priceChartContainer}"
                 ToolTipService.Placement="Relative"
                 RenderOptions.EdgeMode="Aliased" RenderOptions.BitmapScalingMode="NearestNeighbor">
@@ -149,6 +151,8 @@
                             <Binding Path="PriceChartBottomMargin" Mode="OneWay"/>
                             <Binding Path="MaxNumberOfFractionalDigitsInPrice" Mode="OneWay"/>
                             <Binding Path="Culture" Mode="OneWay"/>
+                            <Binding Path="MainChartUpperTag" Mode="OneWay"/>
+                            <Binding Path="MainChartLowerTag" Mode="OneWay"/>
                         </MultiBinding>
                     </TextBlock.Text>
                 </TextBlock>
@@ -177,6 +181,8 @@
                                  MaxNumberOfFractionalDigitsInPrice ="{Binding Path=MaxNumberOfFractionalDigitsInPrice, Mode=OneWay}"
                                  VisibleCandlesExtremums="{Binding Path=VisibleCandlesExtremums, Mode=OneWay}"
                                  IsGridlinesEnabled="{Binding Path=IsHorizontalGridlinesEnabled, Mode=OneWay}"
+                                 UpperTag="{Binding Path=MainChartUpperTag, Mode=OneWay}"
+                                 LowerTag="{Binding Path=MainChartLowerTag, Mode=OneWay}"
                                  GridlinesPen="{Binding Path=HorizontalGridlinesPen, Mode=OneWay}"
                                  RenderOptions.EdgeMode="Aliased"/>
         <!-- ============================================================================================================================================================== -->

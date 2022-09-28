@@ -140,18 +140,20 @@ namespace FancyCandles.Indicators
             if (visibleCandlesRange.Count < 2 || visibleCandlesRange.Start_i < 0) return;
 
             double candleWidthPlusGap = candleWidth + gapBetweenCandles;
-            double range = visibleCandlesExtremums[Price.ExtremeUpper] - visibleCandlesExtremums[Price.ExtremeLower];
+            string upperTag = (TargetElement as Price).UpperTag;
+            string lowerTag = (TargetElement as Price).LowerTag;    
+            double range = visibleCandlesExtremums[upperTag] - visibleCandlesExtremums[lowerTag];
             double prevCndlCenterX = 0;
             double prevLocalIndicatorValue = 0;
 
             prevCndlCenterX = 0.5 * candleWidth;
             double prevIndicatorValue = GetIndicatorValue(visibleCandlesRange.Start_i);
-            prevLocalIndicatorValue = (1.0 - (prevIndicatorValue - visibleCandlesExtremums[Price.ExtremeLower]) / range) * RenderHeight;
+            prevLocalIndicatorValue = (1.0 - (prevIndicatorValue - visibleCandlesExtremums[lowerTag]) / range) * RenderHeight;
 
             for (int cndl_i = 1; cndl_i < visibleCandlesRange.Count; cndl_i++)
             {
                 double indicatorValue = GetIndicatorValue(visibleCandlesRange.Start_i + cndl_i);
-                double localIndicatorValue = (1.0 - (indicatorValue - visibleCandlesExtremums[Price.ExtremeLower]) / range) * RenderHeight;
+                double localIndicatorValue = (1.0 - (indicatorValue - visibleCandlesExtremums[lowerTag]) / range) * RenderHeight;
                 double cndlCenterX = cndl_i * candleWidthPlusGap + 0.5 * candleWidth;
 
                 //ClipLineSegment(prevCndlCenterX, prevLocalIndicatorValue, cndlCenterX, localIndicatorValue, RenderHeight, out Point newPoint0, out Point newPoint1);

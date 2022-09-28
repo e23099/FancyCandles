@@ -61,6 +61,22 @@ namespace FancyCandles.Graphs
         private ObservableCollection<OverlayIndicator> indicators;
 
         //---------------------------------------------------------------------------------------------------------------------------------------
+        public string UpperTag
+        {
+            get { return ((string)GetValue(UpperTagProperty)).ToString(); }
+            set { SetValue(UpperTagProperty, value); }
+        }
+        public static readonly DependencyProperty UpperTagProperty
+            = DependencyProperty.Register("UpperTag", typeof(string), typeof(VolumeChartElement), new FrameworkPropertyMetadata(""));
+        //---------------------------------------------------------------------------------------------------------------------------------------
+        public string LowerTag
+        {
+            get { return ((string)GetValue(LowerTagProperty)).ToString(); }
+            set { SetValue(LowerTagProperty, value); }
+        }
+        public static readonly DependencyProperty LowerTagProperty
+            = DependencyProperty.Register("LowerTag", typeof(string), typeof(VolumeChartElement), new FrameworkPropertyMetadata(""));
+        //---------------------------------------------------------------------------------------------------------------------------------------
         public CultureInfo Culture
         {
             get { return (CultureInfo)GetValue(CultureProperty); }
@@ -182,7 +198,7 @@ namespace FancyCandles.Graphs
                 ICandle cndl = CandlesSource[VisibleCandlesRange.Start_i + i];
                 Brush cndlBrush = (cndl.C > cndl.O) ? BullishBarFill : BearishBarFill;
 
-                double barHeight = Math.Max(1.0, cndl.V / VisibleCandlesExtremums[Volume.ExtremeUpper] * RenderSize.Height);
+                double barHeight = Math.Max(1.0, cndl.V / VisibleCandlesExtremums[UpperTag] * RenderSize.Height);
                 double volumeBarLeftX = halfDWidth + i * (volumeBarWidth + volumeBarGap);
 
                 drawingContext.DrawRectangle(cndlBrush, null, new Rect(new Point(volumeBarLeftX, RenderSize.Height), new Vector(volumeBarWidthNotLessThan1, -barHeight)));

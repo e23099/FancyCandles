@@ -22,20 +22,14 @@ namespace FancyCandles.Graphs
     public partial class TrueRange : Subgraph
     {
         private static int instance_count = 0;
-        public static readonly string ExtremeUpper = "trHigh";
-        public static readonly string ExtremeLower = "trLow";
-
-
 
         #region Properties
         public Brush TrueRangeBarFill;
         public static readonly DependencyProperty TrueRangeBarFillProperty = 
             DependencyProperty.Register("TrueRangeBarFill", typeof(Brush), typeof(TrueRange),
                 new PropertyMetadata(DefaultTrueRangeBarFill));
-        public static Brush DefaultTrueRangeBarFill { get { return (Brush)(new SolidColorBrush(Colors.LightSeaGreen)); } }
+        public static Brush DefaultTrueRangeBarFill { get { return (Brush)(new SolidColorBrush(Colors.Teal)); } }
 
-        public string UpperTag { get; private set; }
-        public string LowerTag { get; private set; }
 
         /// <summary>
         /// chart element top margin
@@ -112,16 +106,15 @@ namespace FancyCandles.Graphs
 
         public override void UpdateVisibleCandlesExtremums(ICandlesSource candles, int start, int length, Dictionary<string, double> vcExetremums)
         {
-            double high = double.MinValue, low = double.MaxValue;
+            double high = double.MinValue;
             if (thisSubgraphElement.CandlesTrueRange.Count == 0) return;
             for (int i = start; i < start + length; i++)
             {
                 double tr = thisSubgraphElement.CandlesTrueRange[i];
                 high = Math.Max(high, tr);
-                low = Math.Min(low, tr);
             }
             vcExetremums[UpperTag] = high;
-            vcExetremums[LowerTag] = low;
+            vcExetremums[LowerTag] = 0;
             Console.WriteLine("Update vcExtremums");
         }
     }

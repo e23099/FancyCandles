@@ -85,15 +85,15 @@
     </Compile>
     <Compile Include="Graphs\SubgraphInfo.cs" />
     <Compile Include="Graphs\TickElementTemplate.cs" />
-    <Compile Include="Graphs\Price.xaml.cs">
+    <Compile Include="Graphs\Price\Price.xaml.cs">
       <DependentUpon>Price.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Graphs\TrueRange.xaml.cs">
+    <Compile Include="Graphs\TrueRange\TrueRange.xaml.cs">
       <DependentUpon>TrueRange.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Graphs\TrueRangeChartElement.cs" />
-    <Compile Include="Graphs\TrueRangeTicksElement.cs" />
-    <Compile Include="Graphs\Volume.xaml.cs">
+    <Compile Include="Graphs\TrueRange\TrueRangeChartElement.cs" />
+    <Compile Include="Graphs\TrueRange\TrueRangeTicksElement.cs" />
+    <Compile Include="Graphs\Volume\Volume.xaml.cs">
       <DependentUpon>Volume.xaml</DependentUpon>
     </Compile>
     <Compile Include="ICandlesSource.cs" />
@@ -107,20 +107,20 @@
     <Compile Include="MyNumberFormatting.cs" />
     <Compile Include="MyWpfMath.cs" />
     <Compile Include="DiscreteRandomVariableSample.cs" />
-    <Compile Include="Graphs\PriceChartElement.cs" />
+    <Compile Include="Graphs\Price\PriceChartElement.cs" />
     <Compile Include="Indicators\OverlayIndicator.cs" />
     <Compile Include="CandleChartPropertiesWindow.xaml.cs">
       <DependentUpon>CandleChartPropertiesWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Graphs\PriceTicksElement.cs" />
+    <Compile Include="Graphs\Price\PriceTicksElement.cs" />
     <Compile Include="SelectCandleSourceWindow.xaml.cs">
       <DependentUpon>SelectCandleSourceWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="TimeFrame.cs" />
     <Compile Include="TimeTick.cs" />
     <Compile Include="TimeTicksElement.cs" />
-    <Compile Include="Graphs\VolumeChartElement.cs" />
-    <Compile Include="Graphs\VolumeTicksElement.cs" />
+    <Compile Include="Graphs\Volume\VolumeChartElement.cs" />
+    <Compile Include="Graphs\Volume\VolumeTicksElement.cs" />
     <Page Include="CandleChart.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -136,7 +136,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Graphs\Price.xaml">
+    <Page Include="Graphs\Price\Price.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -144,11 +144,11 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Graphs\TrueRange.xaml">
+    <Page Include="Graphs\TrueRange\TrueRange.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Graphs\Volume.xaml">
+    <Page Include="Graphs\Volume\Volume.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
