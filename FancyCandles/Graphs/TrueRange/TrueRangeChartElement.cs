@@ -105,7 +105,7 @@ namespace FancyCandles.Graphs
         private void ReCalc_VisibleCandlesExtremums()
         {
             double high = double.MinValue;
-            if (CandlesTrueRange.Count == 0) return;
+            if (CandlesTrueRange.Count == 0 || CandlesSource == null) return;
             for (int i = VisibleCandlesRange.Start_i; i < VisibleCandlesRange.Start_i + VisibleCandlesRange.Count; i++)
             {
                 double tr = CandlesTrueRange[i];
