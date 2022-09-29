@@ -246,9 +246,6 @@ namespace FancyCandles
                  || (values[6]).GetType() != typeof(string)
                  )
             {
-#if DEBUG
-                Console.WriteLine("something is wrong in CrossVolumeConverter");
-#endif
                 return "";
             }
 
@@ -293,9 +290,6 @@ namespace FancyCandles
                  || (values[8]).GetType() != typeof(int)
                  )
             {
-#if DEBUG
-                Console.WriteLine("something is wrong in CrossSubgraphValueConverter");
-#endif
                 return "";
             }
 
@@ -369,7 +363,6 @@ namespace FancyCandles
         {
             if (values == null || values.Length < 2 || (values[0]).GetType() != typeof(bool) || (values[1]).GetType() != typeof(bool))
             {
-                Console.WriteLine("something is wrong in squareBoolToVisibilityConverter");
                 return Visibility.Collapsed;
             }
 

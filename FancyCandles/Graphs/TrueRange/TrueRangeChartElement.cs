@@ -1,7 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Collections.Specialized;
+using System.ComponentModel;
 using System.Globalization;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
@@ -27,18 +30,15 @@ namespace FancyCandles.Graphs
 
         }
 
-        public ObservableCollection<OverlayIndicator> Indicators
-        {
-            get { return indicators; }
-        }
-        private ObservableCollection<OverlayIndicator> indicators;
-
         public List<double> CandlesTrueRange
         {
             get
             {
-                if (candlesTrueRange.Count == 0)
+                if (candlesTrueRange.Count == 0 && CandlesSource != null)
+                {
                     ReCalc_CandlesTrueRange();
+                    SetAll_OverlayIndicators();
+                }
                 return candlesTrueRange;
             }
         }
@@ -84,6 +84,7 @@ namespace FancyCandles.Graphs
             {
                 thisChart.ReCalc_CandlesTrueRange();
                 thisChart.ReCalc_VisibleCandlesExtremums();
+                thisChart.SetAll_OverlayIndicators();
             }
         }
 
@@ -99,7 +100,6 @@ namespace FancyCandles.Graphs
                 double TR = Math.Max(cndl.H, cndl_old.C) - Math.Min(cndl.L, cndl_old.C); // see https://en.wikipedia.org/wiki/Average_true_range
                 candlesTrueRange.Add(TR);
             }
-            Console.WriteLine("ReCalc CandlesTrueRange");
         }
 
         private void ReCalc_VisibleCandlesExtremums()
@@ -113,6 +113,14 @@ namespace FancyCandles.Graphs
             }
             VisibleCandlesExtremums[UpperTag] = high;
             VisibleCandlesExtremums[LowerTag] = 0;
+        }
+
+        private void SetAll_OverlayIndicators()
+        {
+            foreach (var indicator in Indicators)
+            {
+                indicator.TargetSource = CandlesTrueRange.Cast<object>().ToList();
+            }
         }
         //---------------------------------------------------------------------------------------------------------------------------------------
         public string UpperTag
@@ -131,6 +139,76 @@ namespace FancyCandles.Graphs
         public static readonly DependencyProperty LowerTagProperty
             = DependencyProperty.Register("LowerTag", typeof(string), typeof(TrueRangeChartElement), new FrameworkPropertyMetadata(null));
 
+        //---------------------------------------------------------------------------------------------------------------------------------------
+        #region Indicators
+        public static readonly DependencyProperty IndicatorsProperty
+            = DependencyProperty.Register("Indicators", typeof(ObservableCollection<OverlayIndicator>), typeof(TrueRangeChartElement), 
+                new FrameworkPropertyMetadata(null, OnIndicatorsChanged) { AffectsRender = true });
+        public ObservableCollection<OverlayIndicator> Indicators
+        {
+            get { return (ObservableCollection<OverlayIndicator>)GetValue(IndicatorsProperty); }
+            set { SetValue(IndicatorsProperty, value); }
+        }
+
+        static void OnIndicatorsChanged(DependencyObject obj, DependencyPropertyChangedEventArgs e)
+        {
+            TrueRangeChartElement thisTrueRangeChartElement = obj as TrueRangeChartElement;
+            if (thisTrueRangeChartElement == null) return;
+
+            ObservableCollection<OverlayIndicator> old_obsCollection = e.OldValue as ObservableCollection<OverlayIndicator>;
+            if (old_obsCollection != null)
+            {
+                old_obsCollection.CollectionChanged -= thisTrueRangeChartElement.OnIndicatorsCollectionChanged;
+
+                foreach (OverlayIndicator indicator in old_obsCollection)
+                    indicator.PropertyChanged -= thisTrueRangeChartElement.OnIndicatorsCollectionItemChanged;
+            }
+
+            ObservableCollection<OverlayIndicator> new_obsCollection = e.NewValue as ObservableCollection<OverlayIndicator>;
+            if (new_obsCollection != null)
+            {
+                new_obsCollection.CollectionChanged += thisTrueRangeChartElement.OnIndicatorsCollectionChanged;
+
+                foreach (OverlayIndicator indicator in new_obsCollection)
+                    indicator.PropertyChanged += thisTrueRangeChartElement.OnIndicatorsCollectionItemChanged;
+            }
+        }
+
+        private void OnIndicatorsCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            if (e.Action == NotifyCollectionChangedAction.Add)
+            {
+                foreach (OverlayIndicator indicator in e.NewItems)
+                    indicator.PropertyChanged += OnIndicatorsCollectionItemChanged;
+            }
+            else if (e.Action == NotifyCollectionChangedAction.Replace)
+            {
+                foreach (OverlayIndicator indicator in e.NewItems)
+                    indicator.PropertyChanged += OnIndicatorsCollectionItemChanged;
+
+                foreach (OverlayIndicator indicator in e.OldItems)
+                    indicator.PropertyChanged -= OnIndicatorsCollectionItemChanged;
+            }
+            else if (e.Action == NotifyCollectionChangedAction.Remove)
+            {
+                foreach (OverlayIndicator indicator in e.OldItems)
+                    indicator.PropertyChanged -= OnIndicatorsCollectionItemChanged;
+            }
+            else if (e.Action == NotifyCollectionChangedAction.Reset)
+            {
+                foreach (OverlayIndicator indicator in (sender as IEnumerable<OverlayIndicator>))
+                    indicator.PropertyChanged += OnIndicatorsCollectionItemChanged;
+            }
+            else if (e.Action == NotifyCollectionChangedAction.Move) {}
+
+            InvalidateVisual();
+        }
+
+        private void OnIndicatorsCollectionItemChanged(object source, PropertyChangedEventArgs args)
+        {
+            InvalidateVisual();
+        }
+        #endregion
         //---------------------------------------------------------------------------------------------------------------------------------------
         #region TargetChart Properties
         public CultureInfo Culture
@@ -218,10 +296,9 @@ namespace FancyCandles.Graphs
         //---------------------------------------------------------------------------------------------------------------------------------------
         public string GetTrueRangeValue(int candle_id)
         {
-            if (CandlesTrueRange.Count == 0) return "--";
+            if (CandlesSource == null || candle_id < 1 || CandlesTrueRange.Count == 0) return "--";
             string decimalSeparator = Culture.NumberFormat.NumberDecimalSeparator;
             char[] decimalSeparatorArray = decimalSeparator.ToCharArray();
-            if (CandlesSource == null || candle_id < 1) return "--";
             double TR = CandlesTrueRange[candle_id];
             string currentPriceLabelNumberFormat = $"N{MaxNumberOfFractionalDigitsInPrice}";
             string currentPriceString = MyNumberFormatting.PriceToString(TR, currentPriceLabelNumberFormat, Culture, decimalSeparator, decimalSeparatorArray);

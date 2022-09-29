@@ -42,6 +42,7 @@
                 MaxNumberOfFractionalDigitsInPrice="{Binding TargetChart.MaxNumberOfFractionalDigitsInPrice, Mode=OneWay}"
                 ToolTipService.PlacementTarget="{Binding ElementName=thisSubgraphContainer, Path=., Mode=OneWay}"
                 BarFill="{Binding TrueRangeBarFill, Mode=TwoWay}"
+                Indicators="{Binding Indicators, Mode=OneWay}"
                 UpperTag="{Binding UpperTag, Mode=OneWay}"
                 LowerTag="{Binding LowerTag, Mode=OneWay}"
                 ToolTipService.Placement="Relative"

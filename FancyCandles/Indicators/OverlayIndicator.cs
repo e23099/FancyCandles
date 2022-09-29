@@ -75,13 +75,20 @@ namespace FancyCandles.Indicators
         [JsonProperty]
         public string TypeName { get { return GetType().FullName; } }
         //---------------------------------------------------------------------------------------------------------------------------------------
-        private IList<ICandle> candlesSource;
+        /// <summary>
+        /// map an object from CandlesSource to a double value for the calculation of indicator
+        /// </summary>
+        public Func<object, double> ValueMapper { get; set; } = ClosePriceMapper;
+
+        public static Func<object,double> ClosePriceMapper = (cndl) => ((ICandle)cndl).C;
+
+        private IList<object> candlesSource;
         /// <summary>Gets or sets the underlying candle data collection.</summary>
         ///<value>The underlying candle data collection.</value>
         ///<remarks>
-        ///Each overlay indicator calculation is based on an underlying price data series. Usually you need to set the <see cref="OverlayIndicator.CandlesSource"/> property to the same collection that you use for the <see cref="CandleChart.CandlesSource"/> property of the underlying <see cref="CandleChart"/> object.
+        ///Each overlay indicator calculation is based on an underlying price data series. Usually you need to set the <see cref="OverlayIndicator.TargetSource"/> property to the same collection that you use for the <see cref="CandleChart.CandlesSource"/> property of the underlying <see cref="CandleChart"/> object.
         ///</remarks>
-        public IList<ICandle> CandlesSource 
+        public IList<object> TargetSource 
         {
             get { return candlesSource; }
             set
@@ -110,7 +117,10 @@ namespace FancyCandles.Indicators
             { }
         }
 
-        public FrameworkElement TargetElement { get; internal set; }
+        /// <summary>
+        /// the subgraph that this overlay indicator should apply to
+        /// </summary>
+        public Graphs.Subgraph TargetSubgraph { get; internal set; }
         //---------------- INotifyPropertyChanged ----------------------------------------------------------
 #pragma warning  disable CS1591
         public event PropertyChangedEventHandler PropertyChanged;

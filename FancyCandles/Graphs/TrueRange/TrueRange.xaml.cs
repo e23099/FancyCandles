@@ -14,6 +14,8 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
+using FancyCandles.Indicators;
+
 namespace FancyCandles.Graphs
 {
     /// <summary>
@@ -29,6 +31,17 @@ namespace FancyCandles.Graphs
             DependencyProperty.Register("TrueRangeBarFill", typeof(Brush), typeof(TrueRange),
                 new PropertyMetadata(DefaultTrueRangeBarFill));
         public static Brush DefaultTrueRangeBarFill { get { return (Brush)(new SolidColorBrush(Colors.Teal)); } }
+
+
+        public SimpleMovingAverage ATR
+        {
+            get { return (SimpleMovingAverage)GetValue(ATRProperty); }
+            set { SetValue(ATRProperty, value); }
+        }
+
+        public static readonly DependencyProperty ATRProperty =
+            DependencyProperty.Register("ATR", typeof(SimpleMovingAverage), typeof(TrueRange),
+                new PropertyMetadata(null));
 
 
         /// <summary>
@@ -66,7 +79,24 @@ namespace FancyCandles.Graphs
             instance_count++;
             UpperTag = $"TrueRange{instance_count}H";
             LowerTag = $"TrueRange{instance_count}L";
+            InitAllIndicators();
         }
+
+        public void InitAllIndicators()
+        {
+            ATR = new SimpleMovingAverage
+            {
+                TargetSubgraph = this,
+                ValueMapper = (tr) => (double)tr,
+                N = 3,
+            };
+            Indicators = new ObservableCollection<OverlayIndicator>
+            {
+                ATR
+            };
+        }
+
+
 
         public override string PropertiesEdtiorXAML
         {
@@ -92,7 +122,17 @@ namespace FancyCandles.Graphs
                                 <TextBlock Style=""{{StaticResource horizontalCaption}}"">True Range bar fill:</TextBlock>
                                 <fp:StandardColorPicker SelectedColor=""{{Binding TrueRangeBarFill, Converter={{StaticResource symColorBrushStringConverter}}, Mode=TwoWay}}"" VerticalAlignment=""Bottom""/>
                             </StackPanel>
-                            
+
+                            <StackPanel Style=""{{StaticResource settingsItem}}"">
+                                <TextBlock Style=""{{StaticResource horizontalCaption}}"">ATR N=</TextBlock>
+                                <fp:IntegerTextBox MinValue=""1"" Text=""{{Binding ATR.N, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}}"" VerticalAlignment=""Bottom""/>
+                            </StackPanel>
+
+                            <StackPanel Style=""{{StaticResource settingsItem}}"">
+                                <TextBlock Style=""{{StaticResource horizontalCaption}}"">ATR Line:</TextBlock>
+                                <fp:PenSelector SelectedPen=""{{Binding ATR.Pen, Mode = TwoWay}}"" VerticalAlignment=""Bottom""/>
+                            </StackPanel>
+
                         </StackPanel>
                         ";
             }
@@ -115,7 +155,6 @@ namespace FancyCandles.Graphs
             }
             vcExetremums[UpperTag] = high;
             vcExetremums[LowerTag] = 0;
-            Console.WriteLine("Update vcExtremums");
         }
     }
 }

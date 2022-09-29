@@ -55,12 +55,12 @@ namespace FancyCandles.Graphs
         /// <summary>
         /// get list of infos for this subgraph. (for displaying in ChartInfo)
         /// </summary>
-        public virtual ObservableCollection<SubgraphInfo> Infos { get; }
+        public virtual ObservableCollection<SubgraphInfo> Infos { get; internal set; }
 
         /// <summary>
         /// get list of indicators for this subgraph. subgraphs may or may not have indicators.
         /// </summary>
-        public virtual ObservableCollection<OverlayIndicator> Indicators { get; }
+        public virtual ObservableCollection<OverlayIndicator> Indicators { get; internal set; }
 
 
         /// <summary>

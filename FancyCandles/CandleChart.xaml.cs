@@ -444,7 +444,7 @@ namespace FancyCandles
             if (OverlayIndicators == null) return;
 
             for (int i = 0; i < OverlayIndicators.Count; i++)
-                OverlayIndicators[i].CandlesSource = CandlesSource;
+                OverlayIndicators[i].TargetSource = CandlesSource.ToList<object>();
         }
 
         private FancyPrimitives.RelayCommand removeOverlayIndicatorCommand;
@@ -529,10 +529,10 @@ namespace FancyCandles
                   {
                       Type overlayIndicatorType = (Type)parameter_overlayIndicatorType;
                       OverlayIndicator overlayIndicator = (OverlayIndicator)Activator.CreateInstance(overlayIndicatorType);
-                      overlayIndicator.TargetElement = _priceGraph;
+                      overlayIndicator.TargetSubgraph = _priceGraph;
                       OverlayIndicators.Add(overlayIndicator);
                       OverlayIndicator addedOverlayIndicator = OverlayIndicators[OverlayIndicators.Count - 1];
-                      addedOverlayIndicator.CandlesSource = CandlesSource;
+                      addedOverlayIndicator.TargetSource = CandlesSource.ToList<object>();
                   }));
             }
         }
@@ -1823,6 +1823,7 @@ namespace FancyCandles
                   (moveSubgraphDownCommand = new FancyPrimitives.RelayCommand(subgraph_i =>
                   {
                       int old_i = (int)subgraph_i;
+                      if (Subgraphs.Count < 2) return;
                       if (old_i == (Subgraphs.Count - 1)) return;
                       Subgraphs.Move(old_i, old_i + 1);
                   }));
@@ -1936,7 +1937,8 @@ namespace FancyCandles
         /// <summary>Identifies the <see cref="CandlesSource"/> dependency property.</summary>
         /// <value><see cref="DependencyProperty"/></value>
         public static readonly DependencyProperty CandlesSourceProperty =
-            DependencyProperty.Register("CandlesSource", typeof(ICandlesSource), typeof(CandleChart), new UIPropertyMetadata(null, OnCandlesSourceChanged, CoerceCandlesSource));
+            DependencyProperty.Register("CandlesSource", typeof(ICandlesSource), typeof(CandleChart), 
+                new UIPropertyMetadata(null, OnCandlesSourceChanged, CoerceCandlesSource));
 
         DateTime lastCenterCandleDateTime;
         internal static object CoerceCandlesSource(DependencyObject objWithOldDP, object newDPValue)

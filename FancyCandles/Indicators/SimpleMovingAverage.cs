@@ -93,7 +93,7 @@ namespace FancyCandles.Indicators
         {
             double s = 0;
             for (int i = 0; i < N; i++)
-                s += CandlesSource[candlesSource_i - i].C;
+                s += ValueMapper(TargetSource[candlesSource_i - i]);
             return s / N;
         }
         //---------------------------------------------------------------------------------------------------------------------------------------
@@ -101,22 +101,22 @@ namespace FancyCandles.Indicators
         protected override void ReCalcAllIndicatorValues()
         {
             indicatorValues = new List<double>();
-            if (CandlesSource == null || N > CandlesSource.Count) return;
+            if (TargetSource == null || N > TargetSource.Count) return;
 
-            for (int candlesSource_i = (N-1); candlesSource_i < CandlesSource.Count; candlesSource_i++)
+            for (int candlesSource_i = (N-1); candlesSource_i < TargetSource.Count; candlesSource_i++)
                 indicatorValues.Add(CalcIndicatorValue(candlesSource_i));
         }
         //---------------------------------------------------------------------------------------------------------------------------------------
         protected override void OnLastCandleChanged()
         {
-            if (N > CandlesSource.Count) return;
-            indicatorValues[indicatorValues.Count - 1] = CalcIndicatorValue(CandlesSource.Count - 1);
+            if (N > TargetSource.Count) return;
+            indicatorValues[indicatorValues.Count - 1] = CalcIndicatorValue(TargetSource.Count - 1);
         }
         //---------------------------------------------------------------------------------------------------------------------------------------
         protected override void OnNewCandleAdded()
         {
-            if (N > CandlesSource.Count) return;
-            indicatorValues.Add(CalcIndicatorValue(CandlesSource.Count - 1));
+            if (N > TargetSource.Count) return;
+            indicatorValues.Add(CalcIndicatorValue(TargetSource.Count - 1));
         }
 #pragma warning  restore CS1591
         //---------------------------------------------------------------------------------------------------------------------------------------
@@ -135,9 +135,11 @@ namespace FancyCandles.Indicators
                                       double candleWidth, double gapBetweenCandles, double RenderHeight)
         {
             double candleWidthPlusGap = candleWidth + gapBetweenCandles;
-            string upperTag = (TargetElement as Price).UpperTag;
-            string lowerTag = (TargetElement as Price).LowerTag;
-            double range = visibleCandlesExtremums[upperTag] - visibleCandlesExtremums[lowerTag];
+            string upperTag = TargetSubgraph.UpperTag;
+            string lowerTag = TargetSubgraph.LowerTag;
+            double range = 0;
+            if (visibleCandlesExtremums.ContainsKey(upperTag) && visibleCandlesExtremums.ContainsKey(lowerTag))
+                range = visibleCandlesExtremums[upperTag] - visibleCandlesExtremums[lowerTag];
             double prevCndlCenterX = 0;
             double prevLocalIndicatorValue = 0;
 

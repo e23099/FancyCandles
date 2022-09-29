@@ -90,12 +90,12 @@ namespace FancyCandles.Indicators
             return indicatorValues[candle_i];
         }
         //---------------------------------------------------------------------------------------------------------------------------------------
-        private double CalcIndicatorValue(int candle_i)
+        protected double CalcIndicatorValue(int candle_i)
         {
             if (candle_i == 0)
-                return CandlesSource[0].C;
+                return ValueMapper(TargetSource[0]);
 
-            double ema = CandlesSource[candle_i].C * Smoothing + GetIndicatorValue(candle_i - 1) * (1 - Smoothing);
+            double ema = ValueMapper(TargetSource[candle_i]) * Smoothing + GetIndicatorValue(candle_i - 1) * (1 - Smoothing);
             return ema;
         }
         //---------------------------------------------------------------------------------------------------------------------------------------
@@ -103,23 +103,23 @@ namespace FancyCandles.Indicators
         protected override void ReCalcAllIndicatorValues()
         {
             indicatorValues = new List<double>();
-            if (CandlesSource == null || CandlesSource.Count==0) return;
+            if (TargetSource == null || TargetSource.Count==0) return;
 
-            indicatorValues.Add(CandlesSource[0].C);
-            for (int candle_i = 1; candle_i < CandlesSource.Count; candle_i++)
+            indicatorValues.Add(ValueMapper(TargetSource[0]));
+            for (int candle_i = 1; candle_i < TargetSource.Count; candle_i++)
                 indicatorValues.Add(CalcIndicatorValue(candle_i));
         }
         //---------------------------------------------------------------------------------------------------------------------------------------
         protected override void OnLastCandleChanged()
         {
             //if (CandlesSource.Count == 1) return;
-            indicatorValues[indicatorValues.Count - 1] = CalcIndicatorValue(CandlesSource.Count - 1);
+            indicatorValues[indicatorValues.Count - 1] = CalcIndicatorValue(TargetSource.Count - 1);
         }
         //---------------------------------------------------------------------------------------------------------------------------------------
         protected override void OnNewCandleAdded()
         {
             //if (CandlesSource.Count == 1) return;
-            indicatorValues.Add(CalcIndicatorValue(CandlesSource.Count - 1));
+            indicatorValues.Add(CalcIndicatorValue(TargetSource.Count - 1));
         }
 #pragma warning  restore CS1591
         //---------------------------------------------------------------------------------------------------------------------------------------
@@ -140,8 +140,8 @@ namespace FancyCandles.Indicators
             if (visibleCandlesRange.Count < 2 || visibleCandlesRange.Start_i < 0) return;
 
             double candleWidthPlusGap = candleWidth + gapBetweenCandles;
-            string upperTag = (TargetElement as Price).UpperTag;
-            string lowerTag = (TargetElement as Price).LowerTag;    
+            string upperTag = TargetSubgraph.UpperTag;
+            string lowerTag = TargetSubgraph.LowerTag;    
             double range = visibleCandlesExtremums[upperTag] - visibleCandlesExtremums[lowerTag];
             double prevCndlCenterX = 0;
             double prevLocalIndicatorValue = 0;
