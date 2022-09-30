@@ -24,7 +24,7 @@ using System.Globalization;
 
 namespace FancyCandles.Graphs
 {
-    class VolumeTicksElement : TickElementTemplate
+    class VolumeTicksElement : SubgraphTickTemplate
     {
 
 

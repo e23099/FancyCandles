@@ -24,7 +24,7 @@ using System.Globalization;
 
 namespace FancyCandles.Graphs
 {
-    class PriceTicksElement : TickElementTemplate
+    class PriceTicksElement : SubgraphTickTemplate
     {
 
         public int MaxNumberOfFractionalDigitsInPrice

@@ -33,18 +33,10 @@ using FancyCandles.Indicators;
 
 namespace FancyCandles.Graphs
 {
-    class VolumeChartElement : FrameworkElement
+    class VolumeChartElement : SubgraphChartTemplate
     {
-        public VolumeChartElement()
+        public VolumeChartElement() : base()
         {
-            ToolTip tt = new ToolTip() { FontSize = CandleChart.ToolTipFontSize, BorderBrush = Brushes.Beige };
-            tt.Content = "";
-            ToolTip = tt;
-
-            // We set the delay time for the appearance of hints here, and the location of the hints (if it needs to be changed) is set in XAML:
-            ToolTipService.SetShowDuration(this, int.MaxValue);
-            ToolTipService.SetInitialShowDelay(this, 0);
-
             if (bearishBarPen == null)
             {
                 bearishBarPen = new Pen(Volume.DefaultBearishVolumeBarFill, 1);
@@ -54,54 +46,15 @@ namespace FancyCandles.Graphs
 
         }
 
-        public ObservableCollection<OverlayIndicator> Indicators
-        {
-            get { return indicators; }
-        }
-        private ObservableCollection<OverlayIndicator> indicators;
-
-        //---------------------------------------------------------------------------------------------------------------------------------------
-        public string UpperTag
-        {
-            get { return ((string)GetValue(UpperTagProperty)).ToString(); }
-            set { SetValue(UpperTagProperty, value); }
-        }
-        public static readonly DependencyProperty UpperTagProperty
-            = DependencyProperty.Register("UpperTag", typeof(string), typeof(VolumeChartElement), new FrameworkPropertyMetadata(""));
-        //---------------------------------------------------------------------------------------------------------------------------------------
-        public string LowerTag
-        {
-            get { return ((string)GetValue(LowerTagProperty)).ToString(); }
-            set { SetValue(LowerTagProperty, value); }
-        }
-        public static readonly DependencyProperty LowerTagProperty
-            = DependencyProperty.Register("LowerTag", typeof(string), typeof(VolumeChartElement), new FrameworkPropertyMetadata(""));
-        //---------------------------------------------------------------------------------------------------------------------------------------
-        public CultureInfo Culture
-        {
-            get { return (CultureInfo)GetValue(CultureProperty); }
-            set { SetValue(CultureProperty, value); }
-        }
-        public static readonly DependencyProperty CultureProperty =
-            DependencyProperty.Register("Culture", typeof(CultureInfo), typeof(VolumeChartElement), new FrameworkPropertyMetadata(CultureInfo.CurrentCulture) { AffectsRender = true });
-
-        //---------------------------------------------------------------------------------------------------------------------------------------
-        public static readonly DependencyProperty CandlesSourceProperty
-             = DependencyProperty.Register("CandlesSource", typeof(ICandlesSource), typeof(VolumeChartElement), new FrameworkPropertyMetadata(null));
-        public ICandlesSource CandlesSource
-        {
-            get { return (ICandlesSource)GetValue(CandlesSourceProperty); }
-            set { SetValue(CandlesSourceProperty, value); }
-        }
-        //---------------------------------------------------------------------------------------------------------------------------------------
-        public static readonly DependencyProperty BullishBarFillProperty
-            = DependencyProperty.Register("BullishBarFill", typeof(Brush), typeof(VolumeChartElement), 
-                new FrameworkPropertyMetadata(Volume.DefaultBullishVolumeBarFill, null, CoerceBullishCandleFill) { AffectsRender = true });
+        #region properties
         public Brush BullishBarFill
         {
             get { return (Brush)GetValue(BullishBarFillProperty); }
             set { SetValue(BullishBarFillProperty, value); }
         }
+        public static readonly DependencyProperty BullishBarFillProperty
+            = DependencyProperty.Register("BullishBarFill", typeof(Brush), typeof(VolumeChartElement), 
+                new FrameworkPropertyMetadata(Volume.DefaultBullishVolumeBarFill, null, CoerceBullishCandleFill) { AffectsRender = true });
 
         private static object CoerceBullishCandleFill(DependencyObject objWithOldDP, object newDPValue)
         {
@@ -118,14 +71,14 @@ namespace FancyCandles.Graphs
         //---------------------------------------------------------------------------------------------------------------------------------------
         private Pen bearishBarPen;
 
-        public static readonly DependencyProperty BearishBarFillProperty
-            = DependencyProperty.Register("BearishBarFill", typeof(Brush), typeof(VolumeChartElement), 
-                new FrameworkPropertyMetadata(Volume.DefaultBearishVolumeBarFill, null, CoerceBearishCandleFill) { AffectsRender = true });
         public Brush BearishBarFill
         {
             get { return (Brush)GetValue(BearishBarFillProperty); }
             set { SetValue(BearishBarFillProperty, value); }
         }
+        public static readonly DependencyProperty BearishBarFillProperty
+            = DependencyProperty.Register("BearishBarFill", typeof(Brush), typeof(VolumeChartElement), 
+                new FrameworkPropertyMetadata(Volume.DefaultBearishVolumeBarFill, null, CoerceBearishCandleFill) { AffectsRender = true });
 
         private static object CoerceBearishCandleFill(DependencyObject objWithOldDP, object newDPValue)
         {
@@ -149,32 +102,6 @@ namespace FancyCandles.Graphs
             }
         }
         //---------------------------------------------------------------------------------------------------------------------------------------
-        public static readonly DependencyProperty VisibleCandlesExtremumsProperty
-            = DependencyProperty.Register("VisibleCandlesExtremums", typeof(Dictionary<string,double>),
-                typeof(VolumeChartElement), new FrameworkPropertyMetadata(null) { AffectsRender = true });
-        public Dictionary<string,double> VisibleCandlesExtremums
-        {
-            get { return (Dictionary<string,double>)GetValue(VisibleCandlesExtremumsProperty); }
-            set { SetValue(VisibleCandlesExtremumsProperty, value); }
-        }
-        //---------------------------------------------------------------------------------------------------------------------------------------
-        public static readonly DependencyProperty VisibleCandlesRangeProperty
-             = DependencyProperty.Register("VisibleCandlesRange", typeof(IntRange), typeof(VolumeChartElement), new FrameworkPropertyMetadata(IntRange.Undefined));
-        public IntRange VisibleCandlesRange
-        {
-            get { return (IntRange)GetValue(VisibleCandlesRangeProperty); }
-            set { SetValue(VisibleCandlesRangeProperty, value); }
-        }
-        //---------------------------------------------------------------------------------------------------------------------------------------
-        public static readonly DependencyProperty CandleWidthAndGapProperty
-             = DependencyProperty.Register("CandleWidthAndGap", typeof(CandleDrawingParameters), typeof(VolumeChartElement),
-                 new FrameworkPropertyMetadata(new CandleDrawingParameters()));
-        public CandleDrawingParameters CandleWidthAndGap
-        {
-            get { return (CandleDrawingParameters)GetValue(CandleWidthAndGapProperty); }
-            set { SetValue(CandleWidthAndGapProperty, value); }
-        }
-        //---------------------------------------------------------------------------------------------------------------------------------------
         public double VolumeBarWidthToCandleWidthRatio
         {
             get { return (double)GetValue(VolumeBarWidthToCandleWidthRatioProperty); }
@@ -185,7 +112,14 @@ namespace FancyCandles.Graphs
         public static readonly DependencyProperty VolumeBarWidthToCandleWidthRatioProperty =
             DependencyProperty.Register("VolumeBarWidthToCandleWidthRatio", typeof(double), typeof(VolumeChartElement), 
                 new FrameworkPropertyMetadata(1.0) { AffectsRender = true });
-        //---------------------------------------------------------------------------------------------------------------------------------------
+        #endregion
+
+
+        protected override void OnCandlesSourceChanged()
+        {
+            // pass, because Volume is updated (where?)
+        }
+
         protected override void OnRender(DrawingContext drawingContext)
         {
             double volumeBarWidth = VolumeBarWidthToCandleWidthRatio * CandleWidthAndGap.Width;

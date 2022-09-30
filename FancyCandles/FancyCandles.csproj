@@ -83,8 +83,9 @@
     <Compile Include="Graphs\SubgraphAddWindow.xaml.cs">
       <DependentUpon>SubgraphAddWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Graphs\SubgraphChartTemplate.cs" />
     <Compile Include="Graphs\SubgraphInfo.cs" />
-    <Compile Include="Graphs\TickElementTemplate.cs" />
+    <Compile Include="Graphs\SubgraphTickTemplate.cs" />
     <Compile Include="Graphs\Price\Price.xaml.cs">
       <DependentUpon>Price.xaml</DependentUpon>
     </Compile>

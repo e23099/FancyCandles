@@ -4,7 +4,7 @@ using System.Windows;
 
 namespace FancyCandles.Graphs
 {
-    public class TrueRangeTicksElement : TickElementTemplate
+    public class TrueRangeTicksElement : SubgraphTickTemplate
     {
         public int MaxFractionalDigits
         {

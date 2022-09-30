@@ -210,6 +210,11 @@ namespace FancyCandles
                     subgraphEditor.DataContext = selectedSubgraph;
                     subgraphEditor.Children.Add(indicatorEditorElement);
                 }
+                else
+                {
+                    UIElement ui = new TextBlock { Text = $"resourceName '{resourceName}' not found." };
+                    subgraphEditor.Children.Add(ui);
+                }
             }
         }
         //----------------------------------------------------------------------------------------------------------------------------------

@@ -39,7 +39,7 @@
                 Culture="{Binding TargetChart.Culture, Mode=OneWay}"
                 VisibleCandlesRange="{Binding TargetChart.VisibleCandlesRange, Mode=OneWay}"
                 VisibleCandlesExtremums="{Binding TargetChart.VisibleCandlesExtremums, Mode=OneWay}"
-                MaxNumberOfFractionalDigitsInPrice="{Binding TargetChart.MaxNumberOfFractionalDigitsInPrice, Mode=OneWay}"
+                MaxFractionalDigits="{Binding TargetChart.MaxNumberOfFractionalDigitsInPrice, Mode=OneWay}"
                 ToolTipService.PlacementTarget="{Binding ElementName=thisSubgraphContainer, Path=., Mode=OneWay}"
                 BarFill="{Binding TrueRangeBarFill, Mode=TwoWay}"
                 Indicators="{Binding Indicators, Mode=OneWay}"

@@ -8,7 +8,7 @@ using System.Windows.Input;
 
 namespace FancyCandles.Graphs
 {
-    public abstract class TickElementTemplate : FrameworkElement
+    public abstract class SubgraphTickTemplate : FrameworkElement
     {
         /// <summary>
         /// Y axis scale mark's length
@@ -23,15 +23,15 @@ namespace FancyCandles.Graphs
         private Typeface currentTypeFace = new Typeface(SystemFonts.MessageFontFamily.ToString());
         private Pen tickPen;
         //---------------------------------------------------------------------------------------------------------------------------------------
-        static TickElementTemplate()
+        static SubgraphTickTemplate()
         {
             Pen defaultPen = new Pen(CandleChart.DefaultHorizontalGridlinesBrush, CandleChart.DefaultHorizontalGridlinesThickness);
             defaultPen.Freeze();
-            GridlinesPenProperty = DependencyProperty.Register("GridlinesPen", typeof(Pen), typeof(TickElementTemplate),
+            GridlinesPenProperty = DependencyProperty.Register("GridlinesPen", typeof(Pen), typeof(SubgraphTickTemplate),
                 new FrameworkPropertyMetadata(defaultPen, null, CoerceGridlinesPen) { AffectsRender = true });
         }
         //---------------------------------------------------------------------------------------------------------------------------------------
-        public TickElementTemplate()
+        public SubgraphTickTemplate()
         {
             if (tickPen == null)
             {
@@ -47,7 +47,7 @@ namespace FancyCandles.Graphs
             set { SetValue(PricePanelWidthProperty, value); }
         }
         public static readonly DependencyProperty PricePanelWidthProperty 
-            = DependencyProperty.Register("PriceAxisWidth", typeof(double), typeof(TickElementTemplate), new FrameworkPropertyMetadata(0.0) { AffectsRender = true });
+            = DependencyProperty.Register("PriceAxisWidth", typeof(double), typeof(SubgraphTickTemplate), new FrameworkPropertyMetadata(0.0) { AffectsRender = true });
         //---------------------------------------------------------------------------------------------------------------------------------------
         public string UpperTag
         {
@@ -55,7 +55,7 @@ namespace FancyCandles.Graphs
             set { SetValue(UpperTagProperty, value); }
         }
         public static readonly DependencyProperty UpperTagProperty
-            = DependencyProperty.Register("UpperTag", typeof(string), typeof(TickElementTemplate), new FrameworkPropertyMetadata(""));
+            = DependencyProperty.Register("UpperTag", typeof(string), typeof(SubgraphTickTemplate), new FrameworkPropertyMetadata(""));
 
         protected double Upper
         {
@@ -77,7 +77,7 @@ namespace FancyCandles.Graphs
             set { SetValue(LowerTagProperty, value); }
         }
         public static readonly DependencyProperty LowerTagProperty
-            = DependencyProperty.Register("LowerTag", typeof(string), typeof(TickElementTemplate), new FrameworkPropertyMetadata(""));
+            = DependencyProperty.Register("LowerTag", typeof(string), typeof(SubgraphTickTemplate), new FrameworkPropertyMetadata(""));
         protected double Lower
         {
             get
@@ -99,7 +99,7 @@ namespace FancyCandles.Graphs
         }
         public static readonly DependencyProperty VisibleCandlesExtremumsProperty
             = DependencyProperty.Register("VisibleCandlesExtremums", typeof(Dictionary<string, double>),
-                typeof(TickElementTemplate), new FrameworkPropertyMetadata(null) { AffectsRender = true });
+                typeof(SubgraphTickTemplate), new FrameworkPropertyMetadata(null) { AffectsRender = true });
         //---------------------------------------------------------------------------------------------------------------------------------------
         public CultureInfo Culture
         {
@@ -107,7 +107,7 @@ namespace FancyCandles.Graphs
             set { SetValue(CultureProperty, value); }
         }
         public static readonly DependencyProperty CultureProperty =
-            DependencyProperty.Register("Culture", typeof(CultureInfo), typeof(TickElementTemplate), new FrameworkPropertyMetadata(CultureInfo.CurrentCulture) { AffectsRender = true });
+            DependencyProperty.Register("Culture", typeof(CultureInfo), typeof(SubgraphTickTemplate), new FrameworkPropertyMetadata(CultureInfo.CurrentCulture) { AffectsRender = true });
         //---------------------------------------------------------------------------------------------------------------------------------------
         public Pen GridlinesPen
         {
@@ -128,7 +128,7 @@ namespace FancyCandles.Graphs
             set { SetValue(IsGridlinesEnabledProperty, value); }
         }
         public static readonly DependencyProperty IsGridlinesEnabledProperty
-            = DependencyProperty.Register("IsGridlinesEnabled", typeof(bool), typeof(TickElementTemplate), new FrameworkPropertyMetadata(true) { AffectsRender = true });
+            = DependencyProperty.Register("IsGridlinesEnabled", typeof(bool), typeof(SubgraphTickTemplate), new FrameworkPropertyMetadata(true) { AffectsRender = true });
         //---------------------------------------------------------------------------------------------------------------------------------------
 
         public FontFamily TickLabelFontFamily
@@ -137,11 +137,11 @@ namespace FancyCandles.Graphs
             set { SetValue(TickLabelFontFamilyProperty, value); }
         }
         public static readonly DependencyProperty TickLabelFontFamilyProperty =
-            DependencyProperty.Register("TickLabelFontFamily", typeof(FontFamily), typeof(TickElementTemplate), new FrameworkPropertyMetadata(SystemFonts.MessageFontFamily, OnTickLabelFontFamilyChanged));
+            DependencyProperty.Register("TickLabelFontFamily", typeof(FontFamily), typeof(SubgraphTickTemplate), new FrameworkPropertyMetadata(SystemFonts.MessageFontFamily, OnTickLabelFontFamilyChanged));
 
         static void OnTickLabelFontFamilyChanged(DependencyObject obj, DependencyPropertyChangedEventArgs e)
         {
-            TickElementTemplate thisElement = obj as TickElementTemplate;
+            SubgraphTickTemplate thisElement = obj as SubgraphTickTemplate;
             if (thisElement == null) return;
             thisElement.currentTypeFace = new Typeface(thisElement.TickLabelFontFamily.ToString());
         }
@@ -152,7 +152,7 @@ namespace FancyCandles.Graphs
             set { SetValue(GapBetweenTickLabelsProperty, value); }
         }
         public static readonly DependencyProperty GapBetweenTickLabelsProperty
-            = DependencyProperty.Register("GapBetweenTickLabels", typeof(double), typeof(TickElementTemplate), new FrameworkPropertyMetadata(0.0) { AffectsRender = true });
+            = DependencyProperty.Register("GapBetweenTickLabels", typeof(double), typeof(SubgraphTickTemplate), new FrameworkPropertyMetadata(0.0) { AffectsRender = true });
         //---------------------------------------------------------------------------------------------------------------------------------------
         public double ChartBottomMargin
         {
@@ -160,7 +160,7 @@ namespace FancyCandles.Graphs
             set { SetValue(ChartBottomMarginProperty, value); }
         }
         public static readonly DependencyProperty ChartBottomMarginProperty
-             = DependencyProperty.Register("ChartBottomMargin", typeof(double), typeof(TickElementTemplate), new FrameworkPropertyMetadata(15.0) { AffectsRender = true });
+             = DependencyProperty.Register("ChartBottomMargin", typeof(double), typeof(SubgraphTickTemplate), new FrameworkPropertyMetadata(15.0) { AffectsRender = true });
         //---------------------------------------------------------------------------------------------------------------------------------------
         public double ChartTopMargin
         {
@@ -168,7 +168,7 @@ namespace FancyCandles.Graphs
             set { SetValue(ChartTopMarginProperty, value); }
         }
         public static readonly DependencyProperty ChartTopMarginProperty
-            = DependencyProperty.Register("ChartTopMargin", typeof(double), typeof(TickElementTemplate), new FrameworkPropertyMetadata(15.0) { AffectsRender = true });
+            = DependencyProperty.Register("ChartTopMargin", typeof(double), typeof(SubgraphTickTemplate), new FrameworkPropertyMetadata(15.0) { AffectsRender = true });
         //---------------------------------------------------------------------------------------------------------------------------------------
         public double TickLabelFontSize
         {
@@ -176,7 +176,7 @@ namespace FancyCandles.Graphs
             set { SetValue(TickLabelFontSizeProperty, value); }
         }
         public static readonly DependencyProperty TickLabelFontSizeProperty
-            = DependencyProperty.Register("TickLabelFontSize", typeof(double), typeof(TickElementTemplate), new FrameworkPropertyMetadata(9.0) { AffectsRender = true });
+            = DependencyProperty.Register("TickLabelFontSize", typeof(double), typeof(SubgraphTickTemplate), new FrameworkPropertyMetadata(9.0) { AffectsRender = true });
         //---------------------------------------------------------------------------------------------------------------------------------------
 
         public Brush TickColor
@@ -185,12 +185,12 @@ namespace FancyCandles.Graphs
             set { SetValue(TickColorProperty, value); }
         }
         public static readonly DependencyProperty TickColorProperty
-            = DependencyProperty.Register("TickColor", typeof(Brush), typeof(TickElementTemplate),
+            = DependencyProperty.Register("TickColor", typeof(Brush), typeof(SubgraphTickTemplate),
                 new FrameworkPropertyMetadata(CandleChart.DefaultAxisTickColor, null, CoerceTickColor) { AffectsRender = true });
 
         private static object CoerceTickColor(DependencyObject objWithOldDP, object newDPValue)
         {
-            TickElementTemplate thisElement = (TickElementTemplate)objWithOldDP;
+            SubgraphTickTemplate thisElement = (SubgraphTickTemplate)objWithOldDP;
             Brush newBrushValue = (Brush)newDPValue;
 
             if (newBrushValue.IsFrozen)
@@ -218,7 +218,7 @@ namespace FancyCandles.Graphs
             set { SetValue(CurrentValueProperty, value); }
         }
         public static readonly DependencyProperty CurrentValueProperty =
-            DependencyProperty.Register("CurrentValue", typeof(double), typeof(TickElementTemplate), new FrameworkPropertyMetadata(0.0) { AffectsRender = true });
+            DependencyProperty.Register("CurrentValue", typeof(double), typeof(SubgraphTickTemplate), new FrameworkPropertyMetadata(0.0) { AffectsRender = true });
         //---------------------------------------------------------------------------------------------------------------------------------------
         public bool IsCurrentValueLabelVisible
         {
@@ -226,7 +226,7 @@ namespace FancyCandles.Graphs
             set { SetValue(IsCurrentValueLabelVisibleProperty, value); }
         }
         public static readonly DependencyProperty IsCurrentValueLabelVisibleProperty =
-            DependencyProperty.Register("IsCurrentValueLabelVisible", typeof(bool), typeof(TickElementTemplate), new FrameworkPropertyMetadata(false) { AffectsRender = true });
+            DependencyProperty.Register("IsCurrentValueLabelVisible", typeof(bool), typeof(SubgraphTickTemplate), new FrameworkPropertyMetadata(false) { AffectsRender = true });
         //---------------------------------------------------------------------------------------------------------------------------------------
         private Pen currentValueLabelForegroundPen;
 
@@ -236,12 +236,12 @@ namespace FancyCandles.Graphs
             set { SetValue(CurrentValueLabelForegroundProperty, value); }
         }
         public static readonly DependencyProperty CurrentValueLabelForegroundProperty =
-            DependencyProperty.Register("CurrentValueLabelForeground", typeof(Brush), typeof(TickElementTemplate), 
+            DependencyProperty.Register("CurrentValueLabelForeground", typeof(Brush), typeof(SubgraphTickTemplate), 
                 new FrameworkPropertyMetadata(CandleChart.DefaultCurrentPriceLabelForeground, null, CoerceCurrentValueLabelForeground) { AffectsRender = true });
 
         private static object CoerceCurrentValueLabelForeground(DependencyObject objWithOldDP, object newDPValue)
         {
-            TickElementTemplate thisElement = (TickElementTemplate)objWithOldDP;
+            SubgraphTickTemplate thisElement = (SubgraphTickTemplate)objWithOldDP;
             Brush newBrushValue = (Brush)newDPValue;
 
             if (newBrushValue.IsFrozen)
@@ -267,12 +267,12 @@ namespace FancyCandles.Graphs
             set { SetValue(CurrentValueLabelBackgroundProperty, value); }
         }
         public static readonly DependencyProperty CurrentValueLabelBackgroundProperty =
-            DependencyProperty.Register("CurrentValueLabelBackground", typeof(Brush), typeof(TickElementTemplate), 
+            DependencyProperty.Register("CurrentValueLabelBackground", typeof(Brush), typeof(SubgraphTickTemplate), 
                 new FrameworkPropertyMetadata(CandleChart.DefaultCurrentPriceLabelBackground, null, CoerceCurrentValueLabelBackground) { AffectsRender = true });
 
         private static object CoerceCurrentValueLabelBackground(DependencyObject objWithOldDP, object newDPValue)
         {
-            TickElementTemplate thisElement = (TickElementTemplate)objWithOldDP;
+            SubgraphTickTemplate thisElement = (SubgraphTickTemplate)objWithOldDP;
             Brush newBrushValue = (Brush)newDPValue;
 
             if (newBrushValue.IsFrozen)
