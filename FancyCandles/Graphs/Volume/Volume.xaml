@@ -44,6 +44,7 @@
                 BearishBarFill="{Binding BearishVolumeBarFill, Mode=TwoWay}" 
                 UpperTag="{Binding UpperTag, Mode=OneWay}"
                 LowerTag="{Binding LowerTag, Mode=OneWay}"
+                Indicators="{Binding Indicators, Mode=OneWay}"
                 ToolTipService.PlacementTarget="{Binding ElementName=volumeHistogramContainer, Path=., Mode=OneWay}"
                 ToolTipService.Placement="Relative"
                 RenderOptions.EdgeMode="Aliased">

@@ -49,4 +49,14 @@
 		<Slider Value="{Binding VolumeBarWidthToCandleWidthRatio, Mode=TwoWay}"
 				VerticalAlignment="Bottom" Width="70" Minimum="0" Maximum="1.0"/>
 	</StackPanel>
+
+	<StackPanel Style="{StaticResource settingsItem}">
+		<TextBlock Style="{StaticResource horizontalCaption}">Volume MA N=</TextBlock>
+		<fp:IntegerTextBox MinValue="1" Text="{Binding VolumeMA.N, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Bottom"/>
+	</StackPanel>
+
+	<StackPanel Style="{StaticResource settingsItem}">
+		<TextBlock Style="{StaticResource horizontalCaption}">Volume MA Line:</TextBlock>
+		<fp:PenSelector SelectedPen="{Binding VolumeMA.Pen, Mode = TwoWay}" VerticalAlignment="Bottom"/>
+	</StackPanel>
 </StackPanel>

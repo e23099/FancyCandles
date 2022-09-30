@@ -117,7 +117,10 @@ namespace FancyCandles.Graphs
 
         protected override void OnCandlesSourceChanged()
         {
-            // pass, because Volume is updated (where?)
+            foreach (var indicator in Indicators)
+            {
+                indicator.TargetSource = CandlesSource.ToList<object>();
+            }
         }
 
         protected override void OnRender(DrawingContext drawingContext)

@@ -26,8 +26,20 @@ namespace FancyCandles.Graphs
     public partial class Volume : Subgraph
     {
         private static int instance_count = 0;
-        
+
+
         #region VOLUME PROPERTIES
+        public SimpleMovingAverage VolumeMA
+        {
+            get { return (SimpleMovingAverage)GetValue(VolumeMAProperty); }
+            set { SetValue(VolumeMAProperty, value); }
+        }
+
+        public static readonly DependencyProperty VolumeMAProperty =
+            DependencyProperty.Register("VolumeMA", typeof(SimpleMovingAverage), typeof(TrueRange),
+                new PropertyMetadata(null));
+
+
         [UndoableProperty]
         [JsonProperty]
         public double VolumeBarWidthToCandleWidthRatio
@@ -99,7 +111,6 @@ namespace FancyCandles.Graphs
         ///     VolumeTickElement
         ///     Grid for showing Y label
         /// </summary>
-
         public Volume()
         {
             InitializeComponent();
@@ -114,7 +125,22 @@ namespace FancyCandles.Graphs
             instance_count++; 
             UpperTag = $"Volume{instance_count}H";
             LowerTag = $"Volume{instance_count}L";
+            InitAllIndicators();
         }
+        public void InitAllIndicators()
+        {
+            VolumeMA = new SimpleMovingAverage
+            {
+                TargetSubgraph = this,
+                ValueMapper = (cndl) => ((ICandle)cndl).V,
+                N = 5,
+            };
+            Indicators = new ObservableCollection<OverlayIndicator>
+            {
+                VolumeMA
+            };
+        }
+
         public override void UpdateVisibleCandlesExtremums(ICandlesSource candles, int start, int length, Dictionary<string,double> vcExetremums)
         {
             double upper = double.MinValue;
