@@ -441,7 +441,7 @@ namespace FancyCandles
 
         private void SetCandlesSourceForAll_OverlayIndicators()
         {
-            if (OverlayIndicators == null) return;
+            if (OverlayIndicators == null || CandlesSource == null) return;
 
             for (int i = 0; i < OverlayIndicators.Count; i++)
                 OverlayIndicators[i].TargetSource = CandlesSource.ToList<object>();
@@ -2207,7 +2207,7 @@ namespace FancyCandles
                 return newValue;
             // This is a hack to bind to the scroller when only the IntRange.Start_i component is passed and the IntRange.Count component is taken from the old property value:
             else if (IntRange.IsContainsOnlyStart_i(newValue))
-                return new IntRange(newValue.Start_i, thisCandleChart.VisibleCandlesRange.Count);
+                return new IntRange(Math.Max(0, newValue.Start_i), thisCandleChart.VisibleCandlesRange.Count);
             // And this is a common situation.:
             else
             {

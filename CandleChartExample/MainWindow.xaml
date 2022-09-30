@@ -17,7 +17,7 @@
         <fc:CandleChart CandlesSource="{Binding Path=Candles}"
                         ChartAreaBorderColor="IndianRed"
                         Grid.Row="0">
-            <fc:CandleChart.OverlayIndicators>
+            <!--fc:CandleChart.OverlayIndicators>
                 <local:ObservableOverlayIndicatorCollection>
                     <fci:SimpleMovingAverage N="7">
                         <fci:SimpleMovingAverage.Pen>
@@ -31,7 +31,7 @@
                         </fci:ExponentialMovingAverage.Pen>
                     </fci:ExponentialMovingAverage>
                 </local:ObservableOverlayIndicatorCollection>
-            </fc:CandleChart.OverlayIndicators>
+            </fc:CandleChart.OverlayIndicators-->
         </fc:CandleChart>
 
         <!--StackPanel Grid.Row="1" Margin="10 10 0 0">
