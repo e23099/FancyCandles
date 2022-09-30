@@ -194,20 +194,22 @@ namespace FancyCandles
             Subgraph selectedSubgraph = listElement.SelectedItem as Subgraph;
             if (selectedSubgraph != null)
             {
-                string indicatorXaml = selectedSubgraph.PropertiesEdtiorXAML;
-                ASCIIEncoding encoding = new ASCIIEncoding();
-                byte[] b = encoding.GetBytes(indicatorXaml);
                 ParserContext context = new ParserContext();
                 context.XmlnsDictionary.Add("", "http://schemas.microsoft.com/winfx/2006/xaml/presentation");
-                context.XmlnsDictionary.Add("x", "http://schemas.microsoft.com/winfx/2006/xaml");
                 context.XmlnsDictionary.Add("i", "clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity");
                 context.XmlnsDictionary.Add("local", "clr-namespace:FancyCandles;assembly=FancyCandles");
-                context.XmlnsDictionary.Add("fp", "clr-namespace:FancyPrimitives;assembly=FancyPrimitives");
-                UIElement indicatorEditorElement = (UIElement)XamlReader.Load(new MemoryStream(b), context);
+                string name = selectedSubgraph.GetType().Name;
 
+                var assembly = Assembly.GetExecutingAssembly();
+                var resourceName = $"FancyCandles.Graphs.{name}.{name}UiSetting.xml";
+                var stream = assembly.GetManifestResourceStream(resourceName);
                 subgraphEditor.Children.Clear();
-                subgraphEditor.DataContext = selectedSubgraph;
-                subgraphEditor.Children.Add(indicatorEditorElement);
+                if (stream != null)
+                {
+                    UIElement indicatorEditorElement = (UIElement)XamlReader.Load(stream, context);
+                    subgraphEditor.DataContext = selectedSubgraph;
+                    subgraphEditor.Children.Add(indicatorEditorElement);
+                }
             }
         }
         //----------------------------------------------------------------------------------------------------------------------------------

@@ -191,5 +191,11 @@
   <ItemGroup>
     <WCFMetadata Include="Connected Services\" />
   </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Graphs\Volume\VolumeUiSetting.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Graphs\TrueRange\TrueRangeUiSetting.xml" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

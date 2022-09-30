@@ -97,47 +97,6 @@ namespace FancyCandles.Graphs
         }
 
 
-
-        public override string PropertiesEdtiorXAML
-        {
-            get
-            {
-                return $@"
-                        <StackPanel VerticalAlignment=""Top"" Margin=""5 10 0 0"">
-                            <StackPanel.Resources>
-                                <Style x:Key=""horizontalCaption"" TargetType=""TextBlock"">
-                                    <Setter Property=""Margin"" Value=""0 0 5 3""/>
-                                    <Setter Property=""VerticalAlignment"" Value=""Bottom""/>
-                                </Style>
-                                <Style x:Key=""settingsItem"" TargetType=""StackPanel"">
-                                    <Setter Property=""Orientation"" Value=""Horizontal""/>
-                                    <Setter Property=""FrameworkElement.HorizontalAlignment"" Value=""Left""/>
-                                    <Setter Property=""FrameworkElement.Margin"" Value=""0 8 0 0""/>
-                                    <Setter Property=""ToolTipService.InitialShowDelay"" Value=""0""/>
-                                    <Setter Property=""ToolTipService.ShowDuration"" Value=""7000""/>
-                                </Style>
-                            </StackPanel.Resources>
-
-                            <StackPanel Style=""{{StaticResource settingsItem}}"">
-                                <TextBlock Style=""{{StaticResource horizontalCaption}}"">True Range bar fill:</TextBlock>
-                                <fp:StandardColorPicker SelectedColor=""{{Binding TrueRangeBarFill, Converter={{StaticResource symColorBrushStringConverter}}, Mode=TwoWay}}"" VerticalAlignment=""Bottom""/>
-                            </StackPanel>
-
-                            <StackPanel Style=""{{StaticResource settingsItem}}"">
-                                <TextBlock Style=""{{StaticResource horizontalCaption}}"">ATR N=</TextBlock>
-                                <fp:IntegerTextBox MinValue=""1"" Text=""{{Binding ATR.N, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}}"" VerticalAlignment=""Bottom""/>
-                            </StackPanel>
-
-                            <StackPanel Style=""{{StaticResource settingsItem}}"">
-                                <TextBlock Style=""{{StaticResource horizontalCaption}}"">ATR Line:</TextBlock>
-                                <fp:PenSelector SelectedPen=""{{Binding ATR.Pen, Mode = TwoWay}}"" VerticalAlignment=""Bottom""/>
-                            </StackPanel>
-
-                        </StackPanel>
-                        ";
-            }
-        }
-
         public override ObservableCollection<SubgraphInfo> Infos
         {
             get { return infos; }

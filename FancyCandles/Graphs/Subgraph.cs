@@ -46,13 +46,6 @@ namespace FancyCandles.Graphs
         public abstract void UpdateVisibleCandlesExtremums(ICandlesSource candles, int start, int length, Dictionary<string, double> vcExetremums);
 
         /// <summary>
-        /// xaml string for controling UI.
-        /// Plan to change it to return some UserControl.
-        /// </summary>
-        public abstract string PropertiesEdtiorXAML { get; }
-
-
-        /// <summary>
         /// get list of infos for this subgraph. (for displaying in ChartInfo)
         /// </summary>
         public virtual ObservableCollection<SubgraphInfo> Infos { get; internal set; }
