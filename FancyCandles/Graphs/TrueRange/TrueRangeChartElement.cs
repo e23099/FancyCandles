@@ -28,7 +28,7 @@ namespace FancyCandles.Graphs
                 if (candlesTrueRange.Count == 0 && CandlesSource != null)
                 {
                     ReCalc_CandlesTrueRange();
-                    SetAll_OverlayIndicators();
+                    SetTargetSourceForAll_OverlayIndicators();
                 }
                 return candlesTrueRange;
             }
@@ -63,7 +63,7 @@ namespace FancyCandles.Graphs
         {
             ReCalc_CandlesTrueRange();
             ReCalc_VisibleCandlesExtremums();
-            SetAll_OverlayIndicators();
+            SetTargetSourceForAll_OverlayIndicators();
         }
 
         private void ReCalc_CandlesTrueRange()
@@ -93,7 +93,7 @@ namespace FancyCandles.Graphs
             VisibleCandlesExtremums[LowerTag] = 0;
         }
 
-        private void SetAll_OverlayIndicators()
+        public override void SetTargetSourceForAll_OverlayIndicators()
         {
             foreach (var indicator in Indicators)
             {

@@ -109,6 +109,8 @@ namespace FancyCandles.Graphs
             if (thisSubgraphElement.CandlesTrueRange.Count == 0) return;
             for (int i = start; i < start + length; i++)
             {
+                if (i >= thisSubgraphElement.CandlesTrueRange.Count)
+                    continue;
                 double tr = thisSubgraphElement.CandlesTrueRange[i];
                 high = Math.Max(high, tr);
             }

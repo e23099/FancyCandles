@@ -124,6 +124,9 @@ namespace FancyCandles.Graphs
         {
             InvalidateVisual();
         }
+
+        public abstract void SetTargetSourceForAll_OverlayIndicators();
+
         #endregion
 
         #region Target Chart

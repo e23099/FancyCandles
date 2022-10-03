@@ -76,8 +76,7 @@ namespace FancyCandles
             Subgraphs.CollectionChanged += OnSubgraphsChanged;
 
             // set up default volume graph
-            var _defaultVolumeGraph = new Volume();
-            _defaultVolumeGraph.TargetChart = this;
+            var _defaultVolumeGraph = new Volume() { TargetChart = this };
             Subgraphs.Add(_defaultVolumeGraph);
         }
         public string MainChartUpperTag { get; private set; }

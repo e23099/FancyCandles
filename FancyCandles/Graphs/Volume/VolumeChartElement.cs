@@ -43,7 +43,6 @@ namespace FancyCandles.Graphs
                 if (!bearishBarPen.IsFrozen)
                     bearishBarPen.Freeze();
             }
-
         }
 
         #region properties
@@ -117,11 +116,17 @@ namespace FancyCandles.Graphs
 
         protected override void OnCandlesSourceChanged()
         {
+            SetTargetSourceForAll_OverlayIndicators();
+        }
+
+        public override void SetTargetSourceForAll_OverlayIndicators()
+        {
             foreach (var indicator in Indicators)
             {
                 indicator.TargetSource = CandlesSource.ToList<object>();
             }
         }
+
 
         protected override void OnRender(DrawingContext drawingContext)
         {

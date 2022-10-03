@@ -119,7 +119,7 @@ namespace FancyCandles.Graphs
                 new SubgraphInfo
                 {
                     Name = "成交量",
-                    GetValue = (candle_id) => volumeChartElement.GetVolumeValue(candle_id)
+                    GetValue = (candle_id) => thisChartElement.GetVolumeValue(candle_id)
                 }
             };
             instance_count++; 
@@ -144,6 +144,8 @@ namespace FancyCandles.Graphs
         public override void UpdateVisibleCandlesExtremums(ICandlesSource candles, int start, int length, Dictionary<string,double> vcExetremums)
         {
             double upper = double.MinValue;
+            if (VolumeMA.TargetSource == null)
+                thisChartElement.SetTargetSourceForAll_OverlayIndicators();
             for (int i = start; i < start + length; i++)
             {
                 ICandle candle = candles[i];
