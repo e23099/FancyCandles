@@ -21,8 +21,6 @@ namespace FancyCandles
     /// </summary>
     public partial class CandleInfo : UserControl
     {
-        public int CurrentSelectedCandleId;
-
         public CandleInfo()
         {
             InitializeComponent();

@@ -62,11 +62,10 @@ namespace CandleChartExample
         public MainWindow()
         {
             InitializeComponent();
+            DataContext = this;
 
             freq = 0.3;
             Candles = GenerateNewCandlesSource(500, 38650);
-
-            DataContext = this;
         }
         //-----------------------------------------------------------------------------------------------------------------
         private CandlesSource GenerateNewCandlesSource(int candlesCount, double shiftY)
