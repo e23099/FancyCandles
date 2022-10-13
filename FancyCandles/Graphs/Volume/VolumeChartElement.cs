@@ -123,7 +123,7 @@ namespace FancyCandles.Graphs
         {
             foreach (var indicator in Indicators)
             {
-                indicator.TargetSource = CandlesSource.ToList<object>();
+                indicator.TargetSource = CandlesSource?.ToList<object>();
             }
         }
 
@@ -134,9 +134,11 @@ namespace FancyCandles.Graphs
             double volumeBarWidthNotLessThan1 = Math.Max(1.0, volumeBarWidth);
             double halfDWidth = 0.5 * (CandleWidthAndGap.Width - volumeBarWidth);
             double volumeBarGap = (1.0 - VolumeBarWidthToCandleWidthRatio) * CandleWidthAndGap.Width + CandleWidthAndGap.Gap;
+            Console.WriteLine($"volume onRender vcRange {VisibleCandlesRange.Start_i} ({VisibleCandlesRange.Count}) {CandlesSource?.Count ?? 0}");
 
             for (int i = 0; i < VisibleCandlesRange.Count; i++)
             {
+                if (VisibleCandlesRange.Start_i + i >= CandlesSource.Count) continue;
                 ICandle cndl = CandlesSource[VisibleCandlesRange.Start_i + i];
                 Brush cndlBrush = (cndl.C > cndl.O) ? BullishBarFill : BearishBarFill;
 
@@ -145,9 +147,7 @@ namespace FancyCandles.Graphs
 
                 drawingContext.DrawRectangle(cndlBrush, null, new Rect(new Point(volumeBarLeftX, RenderSize.Height), new Vector(volumeBarWidthNotLessThan1, -barHeight)));
             }
-            if (Indicators == null) return; 
-            for (int i = 0; i < Indicators.Count ; i++)
-                Indicators[i].OnRender(drawingContext, VisibleCandlesRange, VisibleCandlesExtremums, CandleWidthAndGap.Width, CandleWidthAndGap.Gap, RenderSize.Height);
+            RenderIndicators(drawingContext);
         }
         //---------------------------------------------------------------------------------------------------------------------------------------
         protected override void OnMouseMove(MouseEventArgs e)

@@ -127,6 +127,16 @@ namespace FancyCandles.Graphs
 
         public abstract void SetTargetSourceForAll_OverlayIndicators();
 
+        protected void RenderIndicators(DrawingContext drawingContext)
+        {
+            if (Indicators == null) return; 
+            for (int i = 0; i < Indicators.Count ; i++)
+            {
+                if (Indicators[i].IsVisible)
+                    Indicators[i].OnRender(drawingContext, VisibleCandlesRange, VisibleCandlesExtremums, CandleWidthAndGap.Width, CandleWidthAndGap.Gap, RenderSize.Height);
+            }
+        }
+
         #endregion
 
         #region Target Chart

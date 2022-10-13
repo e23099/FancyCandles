@@ -118,9 +118,7 @@ namespace FancyCandles.Graphs
 
                 drawingContext.DrawRectangle(BarFill, null, new Rect(new Point(volumeBarLeftX, RenderSize.Height), new Vector(volumeBarWidthNotLessThan1, -barHeight)));
             }
-            if (Indicators == null) return; 
-            for (int i = 0; i < Indicators.Count ; i++)
-                Indicators[i].OnRender(drawingContext, VisibleCandlesRange, VisibleCandlesExtremums, CandleWidthAndGap.Width, CandleWidthAndGap.Gap, RenderSize.Height);
+            RenderIndicators(drawingContext);
         }
         //---------------------------------------------------------------------------------------------------------------------------------------
         protected override void OnMouseMove(MouseEventArgs e)

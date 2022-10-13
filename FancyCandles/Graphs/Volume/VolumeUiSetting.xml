@@ -51,6 +51,11 @@
 	</StackPanel>
 
 	<StackPanel Style="{StaticResource settingsItem}">
+		<TextBlock Style="{StaticResource horizontalCaption}">Volume MA Visible</TextBlock>
+		<CheckBox IsChecked="{Binding VolumeMA.IsVisible, Mode=TwoWay}"/>
+	</StackPanel>
+
+	<StackPanel Style="{StaticResource settingsItem}">
 		<TextBlock Style="{StaticResource horizontalCaption}">Volume MA N=</TextBlock>
 		<fp:IntegerTextBox MinValue="1" Text="{Binding VolumeMA.N, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Bottom"/>
 	</StackPanel>

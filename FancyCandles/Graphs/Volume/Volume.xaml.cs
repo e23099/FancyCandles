@@ -36,8 +36,13 @@ namespace FancyCandles.Graphs
         }
 
         public static readonly DependencyProperty VolumeMAProperty =
-            DependencyProperty.Register("VolumeMA", typeof(SimpleMovingAverage), typeof(TrueRange),
+            DependencyProperty.Register("VolumeMA", typeof(SimpleMovingAverage), typeof(Volume),
                 new PropertyMetadata(null));
+
+        public bool VolumeMaIsVisible;
+        public static readonly DependencyProperty VolumeMaIsVisiblePoperty =
+            DependencyProperty.Register("VolumeMaIsVisible", typeof(bool), typeof(Volume),
+                new FrameworkPropertyMetadata(true) { AffectsRender = true });
 
 
         [UndoableProperty]
@@ -144,7 +149,7 @@ namespace FancyCandles.Graphs
         public override void UpdateVisibleCandlesExtremums(ICandlesSource candles, int start, int length, Dictionary<string,double> vcExetremums)
         {
             double upper = double.MinValue;
-            if (VolumeMA.TargetSource == null)
+            if (VolumeMA.TargetSource == null && TargetChart.CandlesSource != null)
                 thisChartElement.SetTargetSourceForAll_OverlayIndicators();
             for (int i = start; i < start + length; i++)
             {

@@ -121,6 +121,12 @@ namespace FancyCandles.Indicators
         /// the subgraph that this overlay indicator should apply to
         /// </summary>
         public Graphs.Subgraph TargetSubgraph { get; internal set; }
+        public bool IsVisible
+        {
+            get { return isVisible; }
+            set { isVisible = value; OnPropertyChanged(); }
+        }
+        private bool isVisible = true;
         //---------------- INotifyPropertyChanged ----------------------------------------------------------
 #pragma warning  disable CS1591
         public event PropertyChangedEventHandler PropertyChanged;

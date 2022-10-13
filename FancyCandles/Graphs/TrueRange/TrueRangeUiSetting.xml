@@ -21,6 +21,11 @@
 	</StackPanel>
 
 	<StackPanel Style="{StaticResource settingsItem}">
+		<TextBlock Style="{StaticResource horizontalCaption}">ATR Visible</TextBlock>
+		<CheckBox IsChecked="{Binding ATR.N, Mode=TwoWay}"/>
+	</StackPanel>
+
+	<StackPanel Style="{StaticResource settingsItem}">
 		<TextBlock Style="{StaticResource horizontalCaption}">ATR N=</TextBlock>
 		<fp:IntegerTextBox MinValue="1" Text="{Binding ATR.N, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Bottom"/>
 	</StackPanel>

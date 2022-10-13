@@ -301,6 +301,7 @@ namespace FancyCandles.Graphs
             double range = pHigh - pLow;
             double correctedCndlWidth = CandleWidthAndGap.Width - 1.0;
             double candleWidthPlusGap = CandleWidthAndGap.Width + CandleWidthAndGap.Gap;
+            Console.WriteLine($"Price onRender vcRange {VisibleCandlesRange.Start_i} ({VisibleCandlesRange.Count}) {CandlesSource?.Count ?? 0}");
 
             for (int i = 0; i < VisibleCandlesRange.Count; i++)
             {
