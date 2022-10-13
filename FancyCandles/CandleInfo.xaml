@@ -8,6 +8,7 @@
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="200">
     <UserControl.Resources>
+        <local:CandleInfoPriceConverter x:Key="candleInfoPriceConverter" />
         <local:OverlayIndicatorValueConverter x:Key="overlayIndicatorValueConverter" />
         <local:SubgraphInfoValueConverter x:Key="subgraphInfoValueConverter" />
     </UserControl.Resources>
@@ -23,19 +24,47 @@
                     </DockPanel>
                     <DockPanel>
                         <TextBlock Text="開盤" />
-                        <TextBlock TextAlignment="Right" Text="{Binding SelectedCandle.O}"/>
+                        <TextBlock TextAlignment="Right">
+                            <TextBlock.Text>
+                                <MultiBinding Converter="{StaticResource candleInfoPriceConverter}">
+                                    <Binding Path="SelectedCandle.O"/>
+                                    <Binding ElementName="candleInfo" Path="DataContext.MaxNumberOfFractionalDigitsInPrice"/>
+                                </MultiBinding>
+                            </TextBlock.Text>
+                        </TextBlock>
                     </DockPanel>
                     <DockPanel>
                         <TextBlock Text="最高" />
-                        <TextBlock TextAlignment="Right" Text="{Binding SelectedCandle.H}"/>
+                        <TextBlock TextAlignment="Right">
+                            <TextBlock.Text>
+                                <MultiBinding Converter="{StaticResource candleInfoPriceConverter}">
+                                    <Binding Path="SelectedCandle.H"/>
+                                    <Binding ElementName="candleInfo" Path="DataContext.MaxNumberOfFractionalDigitsInPrice"/>
+                                </MultiBinding>
+                            </TextBlock.Text>
+                        </TextBlock>
                     </DockPanel>
                     <DockPanel>
                         <TextBlock Text="最低" />
-                        <TextBlock TextAlignment="Right" Text="{Binding SelectedCandle.L}"/>
+                        <TextBlock TextAlignment="Right">
+                            <TextBlock.Text>
+                                <MultiBinding Converter="{StaticResource candleInfoPriceConverter}">
+                                    <Binding Path="SelectedCandle.L"/>
+                                    <Binding ElementName="candleInfo" Path="DataContext.MaxNumberOfFractionalDigitsInPrice"/>
+                                </MultiBinding>
+                            </TextBlock.Text>
+                        </TextBlock>
                     </DockPanel>
                     <DockPanel>
                         <TextBlock Text="收盤" />
-                        <TextBlock TextAlignment="Right" Text="{Binding SelectedCandle.C}"/>
+                        <TextBlock TextAlignment="Right">
+                            <TextBlock.Text>
+                                <MultiBinding Converter="{StaticResource candleInfoPriceConverter}">
+                                    <Binding Path="SelectedCandle.C"/>
+                                    <Binding ElementName="candleInfo" Path="DataContext.MaxNumberOfFractionalDigitsInPrice"/>
+                                </MultiBinding>
+                            </TextBlock.Text>
+                        </TextBlock>
                     </DockPanel>
                 </StackPanel>
                 <!-- Display overlayIndicator info of the main price chart -->

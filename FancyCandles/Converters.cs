@@ -528,6 +528,29 @@ namespace FancyCandles
         { throw new NotImplementedException(); }
     }
     //*******************************************************************************************************************************************************************
+    // CandleInfo price converter
+    class CandleInfoPriceConverter : IMultiValueConverter
+    {
+        // values[0] - double   price to be converted
+        // values[1] - int      maxFractionalDigitsInPrice
+        public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
+        {
+            if (values == null || values.Length < 2 || (values[0]).GetType() != typeof(double) ||
+                (values[1]).GetType() != typeof(int))
+            {
+                return "--";
+            }
+
+            double price = (double)values[0];
+            int digits = (int)values[1];
+            string fmt = $"N{digits}"; 
+            return price.ToString(fmt, CultureInfo.InvariantCulture);
+        }
+
+        public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
+        { throw new NotImplementedException(); }
+    }
+    //*******************************************************************************************************************************************************************
     //*******************************************************************************************************************************************************************
     //*******************************************************************************************************************************************************************
 }
