@@ -96,7 +96,7 @@ namespace FancyCandles.Graphs
         public static readonly DependencyProperty BullishVolumeBarFillProperty =
             DependencyProperty.Register("BullishVolumeBarFill", typeof(Brush), typeof(Volume), new PropertyMetadata(DefaultBullishVolumeBarFill));
 
-        public static Brush DefaultBullishVolumeBarFill { get { return (Brush)(new SolidColorBrush(Colors.Green)).GetCurrentValueAsFrozen(); } }
+        public static Brush DefaultBullishVolumeBarFill { get { return (Brush)(new SolidColorBrush(Colors.Red)).GetCurrentValueAsFrozen(); } }
         [UndoableProperty]
         [JsonProperty]
         public Brush BearishVolumeBarFill
@@ -107,7 +107,7 @@ namespace FancyCandles.Graphs
         public static readonly DependencyProperty BearishVolumeBarFillProperty =
             DependencyProperty.Register("BearishVolumeBarFill", typeof(Brush), typeof(Volume), new PropertyMetadata(DefaultBearishVolumeBarFill));
 
-        public static Brush DefaultBearishVolumeBarFill { get { return (Brush)(new SolidColorBrush(Colors.Red)).GetCurrentValueAsFrozen(); } }
+        public static Brush DefaultBearishVolumeBarFill { get { return (Brush)(new SolidColorBrush(Colors.Green)).GetCurrentValueAsFrozen(); } }
         #endregion
 
         /// <summary>

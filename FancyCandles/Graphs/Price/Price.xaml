@@ -48,6 +48,7 @@
                 MaxNumberOfFractionalDigitsInPrice ="{Binding Path=MaxNumberOfFractionalDigitsInPrice, Mode=OneWay}"
                 Indicators="{Binding Path=OverlayIndicators,Mode=OneWay}"
                 VisibleCandlesRange="{Binding Path=VisibleCandlesRange, Mode=OneWay}"
+                KeyCandleI="{Binding Path=KeyCandleI, Mode=OneWay}"
                 VisibleCandlesExtremums="{Binding Path=VisibleCandlesExtremums, Mode=OneWay}"
                 BullishCandleFill="{Binding Path=BullishCandleFill, Mode=OneWay}"
                 BearishCandleFill="{Binding Path=BearishCandleFill, Mode=OneWay}" 

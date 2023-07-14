@@ -282,6 +282,14 @@ namespace FancyCandles.Graphs
             get { return (IntRange)GetValue(VisibleCandlesRangeProperty); }
             set { SetValue(VisibleCandlesRangeProperty, value); }
         }
+        public int KeyCandleI
+        {
+            get { return (int)GetValue(KeyCandleIProperty); }
+            set { SetValue(KeyCandleIProperty, value); }
+        }
+        public static readonly DependencyProperty KeyCandleIProperty =
+            DependencyProperty.Register("KeyCandleI", typeof(int), typeof(PriceChartElement),
+                new FrameworkPropertyMetadata(0));
         //---------------------------------------------------------------------------------------------------------------------------------------
         public static readonly DependencyProperty CandleWidthAndGapProperty
             = DependencyProperty.Register("CandleWidthAndGap", typeof(CandleDrawingParameters), typeof(PriceChartElement), new FrameworkPropertyMetadata(new CandleDrawingParameters()));
@@ -301,7 +309,6 @@ namespace FancyCandles.Graphs
             double range = pHigh - pLow;
             double correctedCndlWidth = CandleWidthAndGap.Width - 1.0;
             double candleWidthPlusGap = CandleWidthAndGap.Width + CandleWidthAndGap.Gap;
-            Console.WriteLine($"Price onRender vcRange {VisibleCandlesRange.Start_i} ({VisibleCandlesRange.Count}) {CandlesSource?.Count ?? 0}");
 
             for (int i = 0; i < VisibleCandlesRange.Count; i++)
             {
@@ -326,6 +333,20 @@ namespace FancyCandles.Graphs
                 else
                     drawingContext.DrawLine(cndlPen, new Point(cndlLeftX, wnd_O), new Point(cndlLeftX + CandleWidthAndGap.Width, wnd_O)); // 實體K棒一點以下就畫一條橫線
                     // new Point(左邊過來多遠, 上面過來多遠);
+
+                if ((VisibleCandlesRange.Start_i + i) == KeyCandleI)
+                {
+                    var start = new Point(cndlCenterX, wnd_H - 5);
+
+                    var segments = new[]
+                    {
+                      new LineSegment(new Point(cndlCenterX - 4, wnd_H - 12), true),
+                      new LineSegment(new Point(cndlCenterX + 4, wnd_H - 12), true)
+                    };
+                    var figure = new PathFigure(start, segments, true);
+                    var geo = new PathGeometry(new[] { figure });
+                    drawingContext.DrawGeometry(Brushes.Blue, new Pen(Brushes.Blue, 1), geo);
+                }
             }
 
             if (Indicators == null) return; // priceChart 先建立，Indicators 可能還沒建立好

@@ -8,17 +8,22 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using FancyCandles.Indicators;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 
 namespace FancyCandles.Graphs
 {
     /// <summary>
     /// a Subgraph abstract class that targets the CandleChart instance as its DataContext to display what it needs to display.
     /// </summary>
+    [JsonObject(MemberSerialization.OptIn)]
     public abstract class Subgraph : UserControl, ICloneable
     {
         /// <summary>
         /// return Name of this subgraph
         /// </summary>
+        [JsonProperty]
+
         public string GraphName
         {
             get { return this.GetType().Name; }
@@ -31,10 +36,12 @@ namespace FancyCandles.Graphs
         /// <summary>
         /// tag for getting the upper extrema from VisibleCandlesExtremums
         /// </summary>
+        [JsonProperty]
         public string UpperTag { get; protected set; }
         /// <summary>
         /// tag for getting the lower extrema from VisibleCandlesExtremums
         /// </summary>
+        [JsonProperty]
         public string LowerTag { get; protected set; }
         /// <summary>
         /// calculate it's own upper and lower extremums.
@@ -48,11 +55,13 @@ namespace FancyCandles.Graphs
         /// <summary>
         /// get list of infos for this subgraph. (for displaying in ChartInfo)
         /// </summary>
+        [JsonProperty]
         public virtual ObservableCollection<SubgraphInfo> Infos { get; internal set; }
 
         /// <summary>
         /// get list of indicators for this subgraph. subgraphs may or may not have indicators.
         /// </summary>
+        [JsonProperty]
         public virtual ObservableCollection<OverlayIndicator> Indicators { get; internal set; }
 
 

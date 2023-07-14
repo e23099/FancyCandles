@@ -46,7 +46,7 @@ namespace FancyCandles.Indicators
         ///</remarks>
         public override string FullName { get { return $"Simple Moving Average, N={N}"; } }
         //---------------------------------------------------------------------------------------------------------------------------------------
-        private Pen pen = new Pen(Brushes.Black, 1);
+        private Pen pen = new Pen(Brushes.DarkOrange, 1);
 
         ///<summary>Gets or sets the <see href="https://docs.microsoft.com/en-us/dotnet/api/system.windows.media.pen?view=netframework-4.7.2">Pen</see> to draw the indicator chart.</summary>
         ///<value>The <see href="https://docs.microsoft.com/en-us/dotnet/api/system.windows.media.pen?view=netframework-4.7.2">Pen</see> to draw the indicator chart. The default value is <c>Pen(SolidColorBrush=Black, Thickness=1)</c>.</value>

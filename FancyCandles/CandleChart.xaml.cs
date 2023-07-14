@@ -38,6 +38,7 @@ using Microsoft.Win32;
 using FancyCandles.Indicators;
 
 using FancyCandles.Graphs;
+using System.Windows.Media.Imaging;
 
 namespace FancyCandles
 {
@@ -283,8 +284,11 @@ namespace FancyCandles
 
         private string SerializeToJson(object objToSerialize)
         {
-            return JsonConvert.SerializeObject(objToSerialize, Formatting.Indented,
-                                               new JsonSerializerSettings { ContractResolver = new CandleChartContractResolver() });
+            var jsonSerializeSettings = new JsonSerializerSettings
+            {
+                ContractResolver = new CandleChartContractResolver(),
+            };
+            return JsonConvert.SerializeObject(objToSerialize, Formatting.Indented, jsonSerializeSettings);
         }
 
         private ObservableCollection<OverlayIndicator> DeserializeOverlayIndicatorsFromJson(string overlayIndicatorsJsonString)
@@ -319,10 +323,13 @@ namespace FancyCandles
             foreach (JProperty property in candleChartJToken.Properties())
             {
                 PropertyInfo propertyInfo = typeof(CandleChart).GetProperty(property.Name);
-                Type propertyType = propertyInfo.PropertyType;
-                MethodInfo getMethodTInfo = getMethodInfo.MakeGenericMethod(propertyType);
-                object propertyValue = getMethodTInfo.Invoke(property.Value, null);
-                FancyPrimitives.MyUtility.SetProperty(this, property.Name, propertyValue, out _);
+                if (propertyInfo != null)
+                {
+                    Type propertyType = propertyInfo.PropertyType;
+                    MethodInfo getMethodTInfo = getMethodInfo.MakeGenericMethod(propertyType);
+                    object propertyValue = getMethodTInfo.Invoke(property.Value, null);
+                    FancyPrimitives.MyUtility.SetProperty(this, property.Name, propertyValue, out _);
+                }
             }
         }
 
@@ -935,7 +942,7 @@ namespace FancyCandles
         ///<summary>Gets the default value for the BullishCandleFill property.</summary>
         ///<value>The default value for the BullishCandleFill property: <c>Brushes.Green</c>.</value>
         ///<seealso cref = "BullishCandleFill">BullishCandleFill</seealso>
-        public static Brush DefaultBullishCandleFill { get { return (Brush)(new SolidColorBrush(Colors.Green)).GetCurrentValueAsFrozen(); } }
+        public static Brush DefaultBullishCandleFill { get { return (Brush)(new SolidColorBrush(Colors.Red)).GetCurrentValueAsFrozen(); } }
         //----------------------------------------------------------------------------------------------------------------------------------
         ///<summary>Gets or sets the Brush that specifies how the body of the bearish candle is painted.</summary>
         ///<value>The brush to paint the bodies of the bearish candles. The default value is determined by the <see cref="DefaultBearishCandleFill"/> property.</value>
@@ -966,7 +973,7 @@ namespace FancyCandles
         ///<summary>Gets the default value for the BearishCandleFill property.</summary>
         ///<value>The default value for the BearishCandleFill property: <c>Brushes.Red</c>.</value>
         ///<seealso cref = "BearishCandleFill">BearishCandleFill</seealso>
-        public static Brush DefaultBearishCandleFill { get { return (Brush)(new SolidColorBrush(Colors.Red)).GetCurrentValueAsFrozen(); } }
+        public static Brush DefaultBearishCandleFill { get { return (Brush)(new SolidColorBrush(Colors.Green)).GetCurrentValueAsFrozen(); } }
         //----------------------------------------------------------------------------------------------------------------------------------
         ///<summary>Gets or sets the Brush that specifies how the outline of the bullish candle is painted.</summary>
         ///<value>The Brush to paint the tails and the body outline of the bullish candles. The default value is determined by the <see cref="DefaultBullishCandleStroke"/> property.</value>
@@ -997,7 +1004,7 @@ namespace FancyCandles
         ///<summary>Gets the default value for the BullishCandleStroke property.</summary>
         ///<value>The default value for the BullishCandleStroke property: <c>Brushes.Green</c>.</value>
         ///<seealso cref = "BullishCandleStroke">BullishCandleStroke</seealso>
-        public static Brush DefaultBullishCandleStroke { get { return (Brush)(new SolidColorBrush(Colors.Green)).GetCurrentValueAsFrozen(); } }
+        public static Brush DefaultBullishCandleStroke { get { return (Brush)(new SolidColorBrush(Colors.Red)).GetCurrentValueAsFrozen(); } }
         //----------------------------------------------------------------------------------------------------------------------------------
         ///<summary>Gets or sets the Brush that specifies how the outline of the bearish candle is painted.</summary>
         ///<value>The Brush to paint the tails and the body outline of the bearish candles. The default value is determined by the <see cref="DefaultBearishCandleStroke"/> property.</value>
@@ -1028,7 +1035,7 @@ namespace FancyCandles
         ///<summary>Gets the default value for the BearishCandleStroke property.</summary>
         ///<value>The default value for the BearishCandleStroke property: <c>Brushes.Red</c>.</value>
         ///<seealso cref = "BearishCandleStroke">BearishCandleStroke</seealso>
-        public static Brush DefaultBearishCandleStroke { get { return (Brush)(new SolidColorBrush(Colors.Red)).GetCurrentValueAsFrozen(); } }
+        public static Brush DefaultBearishCandleStroke { get { return (Brush)(new SolidColorBrush(Colors.Green)).GetCurrentValueAsFrozen(); } }
         //----------------------------------------------------------------------------------------------------------------------------------
         ///<summary>Gets or sets the initial candle width.</summary>
         ///<value>The initial width of the candle, in device-independent units (1/96th inch per unit). 
@@ -1759,6 +1766,32 @@ namespace FancyCandles
 
         #endregion **********************************************************************************************************************************************
         //----------------------------------------------------------------------------------------------------------------------------------
+        
+        #region Save Png ****************************************************************************************************************************
+        private void CopyPng_Click(object sender, RoutedEventArgs e)
+        {
+            var ui = thisUserControl;
+            double scale = 300 / 96;// resolution 300 * 300 @ 96 dpi
+            double width = ui.ActualWidth;
+            double height = ui.ActualHeight;
+            RenderTargetBitmap bmpCopied = new RenderTargetBitmap
+            (
+              (int)(scale * (width)),
+              (int)(scale * (height)),
+              scale * 96,
+              scale * 96,
+              PixelFormats.Default
+            );
+            DrawingVisual dv = new DrawingVisual();
+            using (DrawingContext dc = dv.RenderOpen())
+            {
+                VisualBrush vb = new VisualBrush(ui);
+                dc.DrawRectangle(vb, null, new Rect(new Point(), new Size(width, height)));
+            }
+            bmpCopied.Render(dv);
+            Clipboard.SetImage(bmpCopied);
+        }
+        #endregion
 
         #region SUBGRAPHS
         public static readonly DependencyProperty SubgraphsProperty =
@@ -1770,7 +1803,6 @@ namespace FancyCandles
         /// <summary>
         /// collection of subgraph to display the CandlesSource
         /// </summary>
-        [JsonProperty]
         public ObservableCollection<Subgraph> Subgraphs
         {
             get { return (ObservableCollection<Subgraph>)GetValue(SubgraphsProperty); }
@@ -2027,8 +2059,8 @@ namespace FancyCandles
                 DateTime old_lastCenterCandleDateTime = thisCandleChart.lastCenterCandleDateTime;
                 thisCandleChart.ReCalc_VisibleCandlesRange();
 
-                if (old_lastCenterCandleDateTime != DateTime.MinValue)
-                    thisCandleChart.SetVisibleCandlesRangeCenter(old_lastCenterCandleDateTime);
+                //if (old_lastCenterCandleDateTime != DateTime.MinValue)
+                //    thisCandleChart.SetVisibleCandlesRangeCenter(old_lastCenterCandleDateTime);
                 //else
                   //  thisCandleChart.ReCalc_VisibleCandlesRange();
 
@@ -2186,6 +2218,16 @@ namespace FancyCandles
             DependencyProperty.Register("VisibleCandlesRange", typeof(IntRange), typeof(CandleChart),
                 new PropertyMetadata(IntRange.Undefined, OnVisibleCandlesRangeChanged, CoerceVisibleCandlesRange));
 
+        public int KeyCandleI
+        {
+            get { return (int)GetValue(KeyCandleIProperty); }
+            set { SetValue(KeyCandleIProperty, value);}
+        }
+
+        public static readonly DependencyProperty KeyCandleIProperty =
+            DependencyProperty.Register("KeyCandleI", typeof(int), typeof(CandleChart),
+                new PropertyMetadata(0));
+
         internal static void OnVisibleCandlesRangeChanged(DependencyObject obj, DependencyPropertyChangedEventArgs e)
         {
             CandleChart thisCandleChart = (CandleChart)obj;
@@ -2248,8 +2290,41 @@ namespace FancyCandles
                 new_start_i = CandlesSource.Count - newCount;
 
             VisibleCandlesRange = new IntRange(new_start_i, newCount);
+            if (FindCandle(CandlesSource, KeyDay) > -1 && KeyDay != null)
+            {
+                SetVisibleCandlesRangeCenter(KeyDay.Value);
+            }
         }
 
+        public DateTime? KeyDay { get; set; }
+
+        static int FindCandle(IList<ICandle> source, DateTime? date)
+        {
+            if (source == null || source.Count == 0)
+                return -1;
+
+            if (date == null)
+                return source.Count - 1;
+
+            int left = 0;
+            int right = source.Count - 1;
+
+            while (left <= right)
+            {
+                int mid = (left + right) / 2;
+                ICandle candle = source[mid];
+
+                if (candle.t == date)
+                    return mid;
+
+                if (candle.t < date)
+                    left = mid + 1;
+                else
+                    right = mid - 1;
+            }
+
+            return source.Count - 1; // 没有找到匹配的 candle
+        }
         private void Reset_CurrentPrice()
         {
             if (CandlesSource == null) return;
@@ -2287,7 +2362,9 @@ namespace FancyCandles
                 return;
             }
 
-            VisibleCandlesRange = IntRange.CreateContainingOnlyStart_i(FindCandleByDatetime(CandlesSource, visibleCandlesRangeCenter) - VisibleCandlesRange.Count / 2);
+            int keyId = FindCandleByDatetime(CandlesSource, visibleCandlesRangeCenter);
+            KeyCandleI = keyId;
+            VisibleCandlesRange = IntRange.CreateContainingOnlyStart_i(keyId - VisibleCandlesRange.Count / 2);
         }
 
         ///<summary>Sets the range of visible candles, that starts and ends at specified moments in time.</summary>

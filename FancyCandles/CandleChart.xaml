@@ -156,7 +156,7 @@
 
     </UserControl.Resources>
     
-    <Grid DataContext="{Binding ElementName=thisUserControl, Path=.}" Background="{Binding Path=Background, Mode=OneWay}">
+    <Grid DataContext="{Binding ElementName=thisUserControl, Path=.}" Background="{Binding Path=ChartAreaBackground, Mode=OneWay}">
         <Grid.RowDefinitions>
             <RowDefinition Height="4*"/>
             <RowDefinition Height="{Binding Path=TimeAxisHeight, Mode=OneWay}"/>
@@ -174,7 +174,8 @@
                     <MenuItem Header="Load Settings" Click="OpenLoadSettingsDialog"/>
                     <MenuItem Header="Save Settings As" Click="OpenSaveSettingsAsDialog"/>
                     <MenuItem Header="Select New Security" Command="{Binding Path=OpenSelectCandleSourceWindowCommand, Mode=OneWay}"/>
-                    <MenuItem Header="Time Frame" ItemsSource="{Binding Path=CandlesSourceProvider.SupportedTimeFrames, Mode=OneWay}" 
+                    <MenuItem Header="Time Frame" 
+                              ItemsSource="{Binding Path=CandlesSourceProvider.SupportedTimeFrames, Mode=OneWay}" 
                               Command="{Binding Path=ChangeCurrentTimeframeCommand}">
                         <MenuItem.ItemContainerStyle>
                             <Style TargetType="MenuItem">
@@ -183,6 +184,7 @@
                             </Style>
                         </MenuItem.ItemContainerStyle>
                     </MenuItem>
+                    <MenuItem Header="Copy Png" Click="CopyPng_Click"/>
                 </ContextMenu>
             </control:SplitPanel.ContextMenu>
 

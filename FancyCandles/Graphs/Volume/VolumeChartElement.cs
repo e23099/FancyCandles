@@ -134,7 +134,6 @@ namespace FancyCandles.Graphs
             double volumeBarWidthNotLessThan1 = Math.Max(1.0, volumeBarWidth);
             double halfDWidth = 0.5 * (CandleWidthAndGap.Width - volumeBarWidth);
             double volumeBarGap = (1.0 - VolumeBarWidthToCandleWidthRatio) * CandleWidthAndGap.Width + CandleWidthAndGap.Gap;
-            Console.WriteLine($"volume onRender vcRange {VisibleCandlesRange.Start_i} ({VisibleCandlesRange.Count}) {CandlesSource?.Count ?? 0}");
 
             for (int i = 0; i < VisibleCandlesRange.Count; i++)
             {
