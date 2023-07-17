@@ -2294,17 +2294,18 @@ namespace FancyCandles
             {
                 SetVisibleCandlesRangeCenter(KeyDay.Value);
             }
+            else
+            {
+                KeyCandleI = -1;
+            }
         }
 
         public DateTime? KeyDay { get; set; }
 
         static int FindCandle(IList<ICandle> source, DateTime? date)
         {
-            if (source == null || source.Count == 0)
+            if (source == null || source.Count == 0 || date == null || date < source[0].t || date > source[source.Count-1].t)
                 return -1;
-
-            if (date == null)
-                return source.Count - 1;
 
             int left = 0;
             int right = source.Count - 1;
